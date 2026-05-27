@@ -335,6 +335,127 @@
   /* === SLIDE 8 — PORTFÓLIO · COR === */
   .slide-8 { background: radial-gradient(ellipse at 90% 5%, rgba(168,85,247,0.08) 0%, transparent 45%), radial-gradient(ellipse at 0% 90%, rgba(51,173,229,0.05) 0%, transparent 40%); }
 
+
+  /* === PHASE DETAIL SLIDES: IMERSÃO / SPRINT / OPERAÇÃO === */
+  .slide-imersao {
+    background: radial-gradient(ellipse at 88% 0%, rgba(51,173,229,0.1) 0%, transparent 52%),
+                radial-gradient(ellipse at 12% 90%, rgba(168,85,247,0.05) 0%, transparent 40%),
+                linear-gradient(180deg,#0a1628 0%,#0d1d36 100%);
+  }
+  .slide-sprint {
+    background: radial-gradient(ellipse at 88% 0%, rgba(168,85,247,0.09) 0%, transparent 52%),
+                radial-gradient(ellipse at 12% 90%, rgba(51,173,229,0.05) 0%, transparent 40%),
+                linear-gradient(180deg,#0a1628 0%,#0d1d36 100%);
+  }
+  .slide-operacao {
+    background: radial-gradient(ellipse at 80% 10%, rgba(51,173,229,0.08) 0%, transparent 40%),
+                radial-gradient(ellipse at 20% 85%, rgba(168,85,247,0.07) 0%, transparent 40%),
+                linear-gradient(180deg,#0a1628 0%,#0d1d36 100%);
+  }
+  .phase-kv { display:grid; grid-template-columns:1fr 1fr; gap:3vw; flex:1; margin-top:2vh; align-items:start; }
+  .phase-left { display:flex; flex-direction:column; gap:2vh; }
+  .phase-duration {
+    font-family:var(--mono); font-size:11px; color:var(--purple);
+    text-transform:uppercase; letter-spacing:3px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .phase-duration::before { content:''; width:20px; height:1px; background:var(--purple); }
+  .phase-promise { font-size:clamp(14px,1.2vw,18px); color:var(--text-2); line-height:1.65; }
+  .phase-pricing { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .price-cell {
+    background:var(--navy-card); border:1px solid rgba(51,173,229,0.15);
+    border-radius:10px; padding:12px 10px; text-align:center;
+  }
+  .price-cell-label { font-family:var(--mono); font-size:9px; color:var(--text-4); text-transform:uppercase; letter-spacing:2px; margin-bottom:6px; }
+  .price-cell-value { font-size:clamp(11px,0.9vw,14px); color:var(--cyan); font-weight:600; }
+  .phase-right { display:flex; flex-direction:column; gap:1.5vh; }
+  .phase-right-label { font-family:var(--mono); font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:2px; margin-bottom:0.5vh; }
+  .deliverable { display:flex; align-items:flex-start; gap:12px; opacity:0; transform:translateX(16px); transition:opacity 0.5s ease,transform 0.5s ease; }
+  .slide.active .deliverable:nth-child(1){opacity:1;transform:translateX(0);transition-delay:0.30s;}
+  .slide.active .deliverable:nth-child(2){opacity:1;transform:translateX(0);transition-delay:0.45s;}
+  .slide.active .deliverable:nth-child(3){opacity:1;transform:translateX(0);transition-delay:0.60s;}
+  .slide.active .deliverable:nth-child(4){opacity:1;transform:translateX(0);transition-delay:0.75s;}
+  .slide.active .deliverable:nth-child(5){opacity:1;transform:translateX(0);transition-delay:0.90s;}
+  .deliverable-num { font-family:var(--mono); font-size:10px; color:var(--cyan); min-width:24px; padding-top:2px; }
+  .deliverable-text { font-size:clamp(13px,1.1vw,16px); color:var(--text-2); line-height:1.4; }
+  /* Sprint timeline */
+  .sprint-layout { display:flex; flex-direction:column; flex:1; gap:2.5vh; margin-top:2vh; }
+  .timeline-bar-outer { height:8px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
+  .timeline-bar-fill {
+    height:100%; width:0; border-radius:4px;
+    background:linear-gradient(90deg,var(--cyan) 0%,var(--purple) 55%,#4ade80 100%);
+    transition:width 1.4s cubic-bezier(0.16,1,0.3,1);
+    box-shadow:0 0 16px rgba(51,173,229,0.4);
+  }
+  .slide-sprint.active .timeline-bar-fill { width:100%; }
+  .timeline-phases { display:grid; grid-template-columns:3fr 7fr 2fr; gap:12px; }
+  .timeline-phase { background:var(--navy-card); border-radius:10px; padding:14px 16px; }
+  .tph-1 { border-left:2px solid var(--cyan); }
+  .tph-2 { border-left:2px solid var(--purple); }
+  .tph-3 { border-left:2px solid #4ade80; }
+  .tph-weeks { font-family:var(--mono); font-size:10px; letter-spacing:1px; margin-bottom:6px; }
+  .tph-1 .tph-weeks { color:var(--cyan); }
+  .tph-2 .tph-weeks { color:var(--purple); }
+  .tph-3 .tph-weeks { color:#4ade80; }
+  .tph-name { font-size:clamp(12px,1.1vw,15px); font-weight:600; color:var(--text); margin-bottom:4px; }
+  .tph-desc { font-size:clamp(11px,0.9vw,13px); color:var(--text-3); line-height:1.4; }
+  .sprint-bottom { display:grid; grid-template-columns:1fr 1fr; gap:2vw; align-items:start; }
+  /* Operação / Compass */
+  .operacao-layout { display:grid; grid-template-columns:1fr auto; gap:3vw; flex:1; margin-top:2vh; align-items:start; }
+  .operacao-left { display:flex; flex-direction:column; gap:2vh; }
+  .operacao-pricing { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .compass-visual { position:relative; width:200px; height:200px; flex-shrink:0; }
+  @keyframes compass-spin-cw  { to { transform:rotate(360deg);  } }
+  @keyframes compass-spin-ccw { to { transform:rotate(-360deg); } }
+  .compass-ring-a {
+    position:absolute; inset:0; border-radius:50%;
+    border:1.5px solid rgba(51,173,229,0.4); border-top-color:var(--cyan);
+    animation:compass-spin-cw 22s linear infinite;
+  }
+  .compass-ring-b {
+    position:absolute; inset:20px; border-radius:50%;
+    border:1px solid rgba(168,85,247,0.35); border-bottom-color:var(--purple);
+    animation:compass-spin-ccw 16s linear infinite;
+  }
+  .compass-ring-c {
+    position:absolute; inset:38px; border-radius:50%;
+    border:1px dashed rgba(51,173,229,0.18);
+    animation:compass-spin-cw 32s linear infinite;
+  }
+  .compass-core {
+    position:absolute; inset:54px; border-radius:50%;
+    background:radial-gradient(ellipse,rgba(51,173,229,0.14),rgba(168,85,247,0.07),transparent);
+    border:1px solid rgba(51,173,229,0.3);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  }
+  .compass-dot { width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); }
+  .compass-core-label { font-family:var(--mono); font-size:7px; color:var(--cyan); text-transform:uppercase; letter-spacing:1.5px; text-align:center; line-height:1.4; }
+  /* Differentiators */
+  .differentiators { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .diff-item {
+    background:var(--navy-card); border:1px solid rgba(51,173,229,0.15);
+    border-radius:12px; padding:16px 14px;
+    position:relative; overflow:hidden;
+    opacity:0; transform:translateY(12px);
+    transition:opacity 0.5s ease,transform 0.5s ease;
+  }
+  .diff-item::before {
+    content:''; position:absolute; top:0; left:-100%;
+    width:100%; height:1px;
+    background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+    animation:scan 4s linear infinite;
+  }
+  .slide.active .diff-item:nth-child(1){opacity:1;transform:translateY(0);transition-delay:0.25s;}
+  .slide.active .diff-item:nth-child(2){opacity:1;transform:translateY(0);transition-delay:0.40s;}
+  .slide.active .diff-item:nth-child(3){opacity:1;transform:translateY(0);transition-delay:0.55s;}
+  .slide.active .diff-item:nth-child(4){opacity:1;transform:translateY(0);transition-delay:0.70s;}
+  .diff-item.d-compass { border-color:rgba(51,173,229,0.4); background:linear-gradient(135deg,rgba(51,173,229,0.1),rgba(168,85,247,0.06)); }
+  .diff-item.d-compass::before { background:linear-gradient(90deg,transparent,var(--cyan),var(--purple),transparent); animation-duration:3s; }
+  .diff-num { font-family:var(--mono); font-size:9px; color:var(--text-4); letter-spacing:2px; margin-bottom:7px; }
+  .diff-title { font-size:clamp(13px,1.1vw,15px); font-weight:700; color:var(--text); margin-bottom:5px; }
+  .d-compass .diff-title { color:var(--cyan); }
+  .diff-desc { font-size:clamp(11px,0.9vw,13px); color:var(--text-3); line-height:1.4; }
+
   @keyframes scan {
     from { left: -100%; }
     to { left: 100%; }
@@ -377,7 +498,7 @@
 <section class="slide slide-1 active" data-slide="1">
   <div class="slide-header reveal" style="margin-bottom: 0;">
     <div class="logo"><div class="logo-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080"><defs><linearGradient id="logoGrad" x1="75.42" y1="540" x2="1004.58" y2="540" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#157e9c"/><stop offset=".39" stop-color="#0d5f72"/><stop offset=".72" stop-color="#208ea0"/><stop offset="1" stop-color="#0d5f72"/></linearGradient></defs><rect x="82.92" y="82.92" width="914.16" height="914.16" rx="118.23" ry="118.23" fill="#010a18" stroke="url(#logoGrad)" stroke-miterlimit="10" stroke-width="15"/><path d="M769.93,540.54c0,49.36-13.81,95.49-37.77,134.75-5.32,8.7-11.13,17.09-17.42,25.09-42.83,54.54-107.11,91.45-180.11,98.06h-224.55v-98.06h200.87c31.64,0,61.14-9.2,85.96-25.09,44.3-28.38,73.68-78.04,73.68-134.56,0-69.82-44.82-129.18-107.27-150.85-16.41-5.71-34.03-8.79-52.38-8.79h-102.8v180.74l-41.89,46.42-56.18,62.26v-388.96h200.87c44.29,0,85.98,11.12,122.43,30.72,31.78,17.07,59.58,40.6,81.65,68.82,34.41,43.95,54.91,99.31,54.91,159.45Z" fill="#dfe9ea"/></svg></div><div class="logo-text">DALTON <span>LAB</span></div></div>
-    <div class="slide-num"><strong>01</strong> / 15</div>
+    <div class="slide-num"><strong>01</strong> / 18</div>
   </div>
   <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 1400px;">
     <div class="meta reveal">APRESENTAÇÃO COMERCIAL</div>
@@ -388,13 +509,13 @@
   <div class="slide-footer reveal" style="margin-top: 0;">
     <span class="brand">DALTON <strong>LAB</strong></span>
     <span>APRESENTAÇÃO COMERCIAL — DALTON LAB</span>
-    <span><strong>01</strong> / 15</span>
+    <span><strong>01</strong> / 18</span>
   </div>
 </section>
 
 <!-- SLIDE 2 — AI LAST -->
 <section class="slide slide-2" data-slide="2">
-  <div class="slide-header"><div class="slide-tag">CONTEXTO</div><div class="slide-num">02 / <strong>15</strong></div></div>
+  <div class="slide-header"><div class="slide-tag">CONTEXTO</div><div class="slide-num">02 / <strong>18</strong></div></div>
   <div class="stat-block">
     <div class="reveal eyebrow">A REALIDADE QUE NINGUÉM DISCUTE</div>
     <div class="stat-number reveal">95%</div>
@@ -402,12 +523,12 @@
     <div class="stat-source reveal">MIT 2024 · STANFORD 2025</div>
     <div class="stat-conclusion reveal">A causa não é a tecnologia. <strong>É a sequência.</strong></div>
   </div>
-  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>CONTEXTO</span><span><strong>02</strong> / 15</span></div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>CONTEXTO</span><span><strong>02</strong> / 18</span></div>
 </section>
 
 <!-- SLIDE 3 — METODOLOGIA -->
 <section class="slide slide-3" data-slide="3">
-  <div class="slide-header"><div class="slide-tag">METODOLOGIA</div><div class="slide-num">03 / <strong>15</strong></div></div>
+  <div class="slide-header"><div class="slide-tag">METODOLOGIA</div><div class="slide-num">03 / <strong>18</strong></div></div>
   <div class="reveal"><h2 class="display-lg">A sequência <em class="highlight">que funciona</em>.</h2></div>
   <div class="venn-wrap">
     <svg class="venn-svg" viewBox="0 0 820 520" xmlns="http://www.w3.org/2000/svg">
@@ -460,12 +581,12 @@
       <text class="vcenter-label" x="410" y="293" text-anchor="middle" fill="#e8eef5" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="2.5" font-weight="700">NO BACKOFFICE</text>
     </svg>
   </div>
-  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>METODOLOGIA</span><span><strong>03</strong> / 15</span></div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>METODOLOGIA</span><span><strong>03</strong> / 18</span></div>
 </section>
 
 <!-- SLIDE 4 — TRIO -->
 <section class="slide slide-4" data-slide="4">
-  <div class="slide-header"><div class="slide-tag">QUEM SOMOS</div><div class="slide-num">04 / <strong>15</strong></div></div>
+  <div class="slide-header"><div class="slide-tag">QUEM SOMOS</div><div class="slide-num">04 / <strong>18</strong></div></div>
   <div class="reveal"><h2 class="display-lg">Founders <em class="highlight">na linha de frente do negócio</em>.</h2></div>
   <div class="trio reveal">
     <div class="person-card">
@@ -487,12 +608,12 @@
       <p class="person-tag">Conselheiro Rede Brasil. 30 anos em estratégia comercial de varejo.</p>
     </div>
   </div>
-  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>QUEM SOMOS</span><span><strong>04</strong> / 15</span></div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>QUEM SOMOS</span><span><strong>04</strong> / 18</span></div>
 </section>
 
 <!-- SLIDE 5 — TRAÇÃO -->
 <section class="slide slide-5" data-slide="5">
-  <div class="slide-header"><div class="slide-tag">TRAÇÃO</div><div class="slide-num">05 / <strong>15</strong></div></div>
+  <div class="slide-header"><div class="slide-tag">TRAÇÃO</div><div class="slide-num">05 / <strong>18</strong></div></div>
   <div class="reveal"><h2 class="display-lg">Operação <em class="highlight">rodando hoje</em>.</h2></div>
   <div class="stats-row reveal">
     <div class="stat-card"><div class="stat-card-num">21</div><div class="stat-card-label">Clientes ativos</div></div>
@@ -518,12 +639,12 @@
     </div>
   </div>
 
-  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>TRAÇÃO</span><span><strong>05</strong> / 15</span></div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>TRAÇÃO</span><span><strong>05</strong> / 18</span></div>
 </section>
 
 <!-- SLIDE 6 — JEISYS -->
 <section class="slide slide-6" data-slide="6">
-  <div class="slide-header"><div class="slide-tag">CASE EM DESTAQUE · 01</div><div class="slide-num">06 / <strong>15</strong></div></div>
+  <div class="slide-header"><div class="slide-tag">CASE EM DESTAQUE · 01</div><div class="slide-num">06 / <strong>18</strong></div></div>
   <div class="case-hero reveal">
     <div class="case-hero-info">
       <div class="case-vertical-tag">MEDTECH · GRUPO SUL-COREANO · ~US$ 150M/ANO</div>
@@ -546,12 +667,12 @@
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>JEISYS MEDICAL</span><span><strong>06</strong> / 15</span></div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>JEISYS MEDICAL</span><span><strong>06</strong> / 18</span></div>
 </section>
 
 <!-- SLIDE 7 — COBRANÇA -->
 <section class="slide slide-7" data-slide="7">
-  <div class="slide-header"><div class="slide-tag">CASE EM DESTAQUE · 02</div><div class="slide-num">07 / <strong>15</strong></div></div>
+  <div class="slide-header"><div class="slide-tag">CASE EM DESTAQUE · 02</div><div class="slide-num">07 / <strong>18</strong></div></div>
   <div class="case-numbers reveal">
     <div class="case-numbers-info">
       <div class="case-vertical-tag">SAÚDE · PLANO DE SAÚDE</div>
@@ -572,12 +693,12 @@
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>COBRANÇA AGÊNTICA</span><span><strong>07</strong> / 15</span></div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>COBRANÇA AGÊNTICA</span><span><strong>07</strong> / 18</span></div>
 </section>
 
 <!-- SLIDE 8 — GALERIA -->
 <section class="slide slide-8" data-slide="8">
-  <div class="slide-header"><div class="slide-tag">PORTFÓLIO — VISÃO RÁPIDA</div><div class="slide-num">08 / <strong>15</strong></div></div>
+  <div class="slide-header"><div class="slide-tag">PORTFÓLIO — VISÃO RÁPIDA</div><div class="slide-num">08 / <strong>18</strong></div></div>
   <div class="reveal"><h2 class="display-lg"><em class="highlight">Outros</em> cases ativos.</h2></div>
   <div class="gallery reveal">
     <div class="gallery-card">
@@ -617,12 +738,12 @@
       <div class="gallery-desc">Agente preenche o CRM a partir das reuniões e movimenta os cards conforme o pipeline avança.</div>
     </div>
   </div>
-  <div class="slide-footer" style="margin-top: 3vh;"><span class="brand">DALTON <strong>LAB</strong></span><span>PORTFÓLIO</span><span><strong>08</strong> / 15</span></div>
+  <div class="slide-footer" style="margin-top: 3vh;"><span class="brand">DALTON <strong>LAB</strong></span><span>PORTFÓLIO</span><span><strong>08</strong> / 18</span></div>
 </section>
 
 <!-- SLIDE 9 — NEO -->
 <section class="slide slide-9" data-slide="9">
-  <div class="slide-header"><div class="slide-tag">CASE INTERNO — NEO</div><div class="slide-num">09 / <strong>15</strong></div></div>
+  <div class="slide-header"><div class="slide-tag">CASE INTERNO — NEO</div><div class="slide-num">09 / <strong>18</strong></div></div>
   <div class="neo-grid reveal">
     <div class="neo-info">
       <div class="eyebrow">CHIEF OF STAFF DIGITAL</div>
@@ -660,12 +781,12 @@
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>NEO · CASE INTERNO</span><span><strong>09</strong> / 15</span></div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>NEO · CASE INTERNO</span><span><strong>09</strong> / 18</span></div>
 </section>
 
 <!-- SLIDE 10 — DALTON LAB OS — MAPA DA EMPRESA -->
 <section class="slide slide-10map" data-slide="10">
-  <div class="slide-header reveal"><div class="slide-tag">GOVERNANÇA — DALTON LAB OS</div><div class="slide-num">10 / <strong>15</strong></div></div>
+  <div class="slide-header reveal"><div class="slide-tag">GOVERNANÇA — DALTON LAB OS</div><div class="slide-num">10 / <strong>18</strong></div></div>
   <div class="map-os-win reveal">
     <div class="map-os-topbar">
       <span class="map-os-brand"><span>DALTON</span> LAB OS</span>
@@ -790,12 +911,12 @@
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>DALTON LAB OS — MAPA DA EMPRESA</span><span><strong>10</strong> / 15</span></div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>DALTON LAB OS — MAPA DA EMPRESA</span><span><strong>10</strong> / 18</span></div>
 </section>
 
 <!-- SLIDE 11 — DALTON OS -->
 <section class="slide slide-10" data-slide="11">
-  <div class="slide-header"><div class="slide-tag">GOVERNANÇA — DALTON LAB OS</div><div class="slide-num">11 / <strong>15</strong></div></div>
+  <div class="slide-header"><div class="slide-tag">GOVERNANÇA — DALTON LAB OS</div><div class="slide-num">11 / <strong>18</strong></div></div>
   <div class="reveal" style="margin-bottom: 2vh;"><h2 class="display-lg"><em class="highlight">Dalton Lab OS</em>.</h2></div>
   <div class="os-grid reveal">
 
@@ -826,12 +947,12 @@
     </div>
 
   </div>
-  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>DALTON LAB OS</span><span><strong>11</strong> / 15</span></div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>DALTON LAB OS</span><span><strong>11</strong> / 18</span></div>
 </section>
 
 <!-- SLIDE 11 — AI PARTNER REDESENHADO -->
 <section class="slide slide-11" data-slide="12">
-  <div class="slide-header"><div class="slide-tag">MODELO AI PARTNER</div><div class="slide-num">12 / <strong>15</strong></div></div>
+  <div class="slide-header"><div class="slide-tag">MODELO AI PARTNER</div><div class="slide-num">12 / <strong>18</strong></div></div>
   <div class="partner-hero reveal">
     <div class="partner-side bad">
       <div class="partner-side-headline">Fornecedor</div>
@@ -849,12 +970,12 @@
     <div class="partner-action"><div class="partner-action-num">[ 03 ]</div><div class="partner-action-title">Dalton Compass</div><div class="partner-action-desc">Agente estratégico que mantém o Estoque de Oportunidades vivo e propõe o próximo Sprint a cada trimestre.</div></div>
     <div class="partner-action"><div class="partner-action-num">[ 04 ]</div><div class="partner-action-title">Dalton Lab OS</div><div class="partner-action-desc">Governança e telemetria de agentes. Logs auditáveis, multi-vendor, tempo real.</div></div>
   </div>
-  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>AI PARTNER</span><span><strong>12</strong> / 15</span></div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>AI PARTNER</span><span><strong>12</strong> / 18</span></div>
 </section>
 
 <!-- SLIDE 12 — MODELO COMERCIAL -->
 <section class="slide slide-12" data-slide="13">
-  <div class="slide-header"><div class="slide-tag">MODELO COMERCIAL</div><div class="slide-num">13 / <strong>15</strong></div></div>
+  <div class="slide-header"><div class="slide-tag">MODELO COMERCIAL</div><div class="slide-num">13 / <strong>18</strong></div></div>
   <div class="reveal"><h2 class="display-lg">Modelo <em class="highlight">win-win</em>.</h2></div>
   <div class="fees reveal">
     <div class="fee-card">
@@ -883,12 +1004,136 @@
     </div>
   </div>
   <div class="fee-anchor reveal">Garantia <strong>Win-Your-Money-Back</strong>: ROI projetado na Imersão cravado em contrato. Não bateu em 12 meses, devolvemos a diferença.</div>
-  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>MODELO COMERCIAL</span><span><strong>13</strong> / 15</span></div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>MODELO COMERCIAL</span><span><strong>13</strong> / 18</span></div>
+</section>
+
+<!-- SLIDE 14 — IMERSÃO AGÊNTICA -->
+<section class="slide slide-imersao" data-slide="14">
+  <div class="slide-header"><div class="slide-tag">IMERSÃO AGÊNTICA</div><div class="slide-num">14 / <strong>18</strong></div></div>
+  <div class="reveal"><h2 class="display-lg">3 semanas. Clareza <em class="highlight">absoluta</em>.</h2></div>
+  <div class="phase-kv">
+    <div class="phase-left">
+      <div class="phase-duration reveal">3 SEMANAS &middot; FEE ÚNICA</div>
+      <p class="phase-promise reveal">Mapeamos seus processos, identificamos as maiores oportunidades de automação e entregamos um <strong>business case com ROI cravado em contrato</strong>. Sem essa etapa, não avançamos.</p>
+      <div class="phase-pricing reveal">
+        <div class="price-cell"><div class="price-cell-label">PEQUENA</div><div class="price-cell-value">R$ 25k</div></div>
+        <div class="price-cell"><div class="price-cell-label">MÉDIA</div><div class="price-cell-value">R$ 30k</div></div>
+        <div class="price-cell"><div class="price-cell-label">GRANDE</div><div class="price-cell-value">R$ 40k</div></div>
+        <div class="price-cell"><div class="price-cell-label">ENTERPRISE</div><div class="price-cell-value">R$ 50k+</div></div>
+      </div>
+    </div>
+    <div class="phase-right reveal">
+      <div class="phase-right-label">Entregáveis</div>
+      <div class="deliverable"><div class="deliverable-num">01</div><div class="deliverable-text">Mapa de processos priorizados por impacto e volume</div></div>
+      <div class="deliverable"><div class="deliverable-num">02</div><div class="deliverable-text">Estoque de Oportunidades com ROI estimado por frente</div></div>
+      <div class="deliverable"><div class="deliverable-num">03</div><div class="deliverable-text">Business case financeiro detalhado para cada automação</div></div>
+      <div class="deliverable"><div class="deliverable-num">04</div><div class="deliverable-text">Roadmap de implantação com fases e critérios de sucesso</div></div>
+      <div class="deliverable"><div class="deliverable-num">05</div><div class="deliverable-text">Validação e contrato Win-Your-Money-Back assinado</div></div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>IMERSÃO AGÊNTICA</span><span><strong>14</strong> / 18</span></div>
+</section>
+
+<!-- SLIDE 15 — SPRINT AGÊNTICO -->
+<section class="slide slide-sprint" data-slide="15">
+  <div class="slide-header"><div class="slide-tag">SPRINT AGÊNTICO</div><div class="slide-num">15 / <strong>18</strong></div></div>
+  <div class="reveal"><h2 class="display-lg">Do papel à <em class="highlight">produção</em>. 12 semanas.</h2></div>
+  <div class="sprint-layout">
+    <div class="timeline-bar-outer reveal">
+      <div class="timeline-bar-fill"></div>
+    </div>
+    <div class="timeline-phases reveal">
+      <div class="timeline-phase tph-1">
+        <div class="tph-weeks">SEM 01–03</div>
+        <div class="tph-name">Design &amp; Prototipagem</div>
+        <div class="tph-desc">Arquitetura dos agentes, integrações mapeadas, protótipo funcional validado com o time</div>
+      </div>
+      <div class="timeline-phase tph-2">
+        <div class="tph-weeks">SEM 04–10</div>
+        <div class="tph-name">Desenvolvimento &amp; Integração</div>
+        <div class="tph-desc">Build completo com testes, integração com sistemas legados, Dalton Lab OS configurado e treinamento do time interno</div>
+      </div>
+      <div class="timeline-phase tph-3">
+        <div class="tph-weeks">SEM 11–12</div>
+        <div class="tph-name">Deploy &amp; Validação</div>
+        <div class="tph-desc">Produção com monitoramento ativo e business case atualizado com resultados reais</div>
+      </div>
+    </div>
+    <div class="sprint-bottom reveal">
+      <div class="phase-right">
+        <div class="phase-right-label">Entregáveis</div>
+        <div class="deliverable"><div class="deliverable-num">01</div><div class="deliverable-text">Agentes em produção com monitoramento ativo</div></div>
+        <div class="deliverable"><div class="deliverable-num">02</div><div class="deliverable-text">Integração com sistemas e bases legadas</div></div>
+        <div class="deliverable"><div class="deliverable-num">03</div><div class="deliverable-text">Dalton Lab OS configurado para a operação</div></div>
+        <div class="deliverable"><div class="deliverable-num">04</div><div class="deliverable-text">Time interno capacitado para colaborar com os agentes</div></div>
+        <div class="deliverable"><div class="deliverable-num">05</div><div class="deliverable-text">Business case atualizado com resultados reais</div></div>
+      </div>
+      <div class="phase-left">
+        <div class="phase-duration">POR ESCOPO &middot; FEE FIXA</div>
+        <div class="phase-pricing">
+          <div class="price-cell"><div class="price-cell-label">PEQUENA</div><div class="price-cell-value">R$ 30k</div></div>
+          <div class="price-cell"><div class="price-cell-label">MÉDIA</div><div class="price-cell-value">R$ 90k</div></div>
+          <div class="price-cell"><div class="price-cell-label">GRANDE</div><div class="price-cell-value">R$ 200k</div></div>
+          <div class="price-cell"><div class="price-cell-label">ENTERPRISE</div><div class="price-cell-value">R$ 600k+</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>SPRINT AGÊNTICO</span><span><strong>15</strong> / 18</span></div>
+</section>
+
+<!-- SLIDE 16 — OPERAÇÃO AGÊNTICA -->
+<section class="slide slide-operacao" data-slide="16">
+  <div class="slide-header"><div class="slide-tag">OPERAÇÃO AGÊNTICA</div><div class="slide-num">16 / <strong>18</strong></div></div>
+  <div class="reveal"><h2 class="display-lg">Recorrência que <em class="highlight">expande</em>.</h2></div>
+  <div class="operacao-layout">
+    <div class="operacao-left">
+      <p class="phase-promise reveal">A cada Sprint entregue, um novo ciclo começa. O Dalton Compass monitora performance continuamente — e a cada trimestre, propomos o próximo Sprint com business case completo.</p>
+      <div class="differentiators">
+        <div class="diff-item d-compass">
+          <div class="diff-num">[ 01 ]</div>
+          <div class="diff-title">Dalton Compass</div>
+          <div class="diff-desc">Monitoramento contínuo de performance dos agentes. Alertas proativos, benchmarks setoriais e relatórios executivos mensais.</div>
+        </div>
+        <div class="diff-item">
+          <div class="diff-num">[ 02 ]</div>
+          <div class="diff-title">Dalton Lab OS</div>
+          <div class="diff-desc">Plataforma de gestão de todas as automações: visibilidade em tempo real, controle de custos e logs para o time.</div>
+        </div>
+        <div class="diff-item">
+          <div class="diff-num">[ 03 ]</div>
+          <div class="diff-title">Win-Your-Money-Back</div>
+          <div class="diff-desc">ROI projetado na Imersão cravado em contrato. Não atingiu em 12 meses de Operação, devolvemos a diferença.</div>
+        </div>
+        <div class="diff-item">
+          <div class="diff-num">[ 04 ]</div>
+          <div class="diff-title">Exit Service</div>
+          <div class="diff-desc">Documentação técnica e transferência de propriedade garantidas. O cliente pode sair a qualquer momento.</div>
+        </div>
+      </div>
+      <div class="operacao-pricing reveal">
+        <div class="price-cell"><div class="price-cell-label">PEQUENA</div><div class="price-cell-value">R$ 2k/mês</div></div>
+        <div class="price-cell"><div class="price-cell-label">MÉDIA</div><div class="price-cell-value">R$ 8k/mês</div></div>
+        <div class="price-cell"><div class="price-cell-label">GRANDE</div><div class="price-cell-value">R$ 20k/mês</div></div>
+        <div class="price-cell"><div class="price-cell-label">ENTERPRISE</div><div class="price-cell-value">R$ 50k/mês</div></div>
+      </div>
+    </div>
+    <div class="compass-visual reveal">
+      <div class="compass-ring-a"></div>
+      <div class="compass-ring-b"></div>
+      <div class="compass-ring-c"></div>
+      <div class="compass-core">
+        <div class="compass-dot"></div>
+        <div class="compass-core-label">DALTON<br>COMPASS</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>OPERAÇÃO AGÊNTICA</span><span><strong>16</strong> / 18</span></div>
 </section>
 
 <!-- SLIDE 13 — PRÓXIMOS PASSOS -->
-<section class="slide slide-13" data-slide="14">
-  <div class="slide-header"><div class="slide-tag">PRÓXIMOS PASSOS</div><div class="slide-num">14 / <strong>15</strong></div></div>
+<section class="slide slide-13" data-slide="17">
+  <div class="slide-header"><div class="slide-tag">PRÓXIMOS PASSOS</div><div class="slide-num">17 / <strong>18</strong></div></div>
   <div class="ending-content">
     <div class="reveal"><h2>Vamos <em>começar</em>.</h2></div>
     <div class="timeline-simple reveal">
@@ -909,12 +1154,12 @@
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>PRÓXIMOS PASSOS</span><span><strong>14</strong> / 15</span></div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>PRÓXIMOS PASSOS</span><span><strong>17</strong> / 18</span></div>
 </section>
 
 <!-- SLIDE 14 — FINAL -->
-<section class="slide slide-14" data-slide="15">
-  <div class="slide-header"><div class="slide-tag">DALTON LAB</div><div class="slide-num">15 / <strong>15</strong></div></div>
+<section class="slide slide-14" data-slide="18">
+  <div class="slide-header"><div class="slide-tag">DALTON LAB</div><div class="slide-num">18 / <strong>18</strong></div></div>
 
   <div class="final-content">
     <div class="final-logo reveal">
@@ -935,7 +1180,7 @@
     <h2 class="final-tagline reveal">Prepare-se para se tornar uma<br><em>Organização Agêntica</em>.</h2>
   </div>
 
-  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>DALTONLAB.AI</span><span><strong>15</strong> / 15</span></div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>DALTONLAB.AI</span><span><strong>18</strong> / 18</span></div>
 </section>
 
 </div>
