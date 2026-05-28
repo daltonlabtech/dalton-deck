@@ -738,6 +738,33 @@
 .ba-result-num { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(20px, 2vw, 30px); font-weight: 700; color: var(--cyan); }
 .ba-result-label { font-size: 10px; color: var(--text-3); font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
 
+
+/* ============================================================
+   Case Story Slides - Process Flow
+   ============================================================ */
+.case-story { display: flex; flex-direction: column; gap: 1.5vh; }
+.cs-tag { font-family: var(--mono); font-size: 10px; color: var(--text-4); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.cs-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(22px, 2.3vw, 34px); font-weight: 700; color: var(--text-1); margin: 0 0 8px; line-height: 1.1; }
+.cs-context { font-size: clamp(12px, 1.2vw, 15px); color: var(--text-3); line-height: 1.55; max-width: 900px; margin: 0; }
+.cs-flow-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 2vw; padding: 1.5vh 0; }
+.cs-flow-label { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; padding: 4px 10px; border-radius: 4px; display: inline-block; }
+.cs-flow-before { background: rgba(255,100,100,0.1); color: #ff7070; border: 1px solid rgba(255,100,100,0.25); }
+.cs-flow-after  { background: rgba(74,222,128,0.1);  color: #4ade80; border: 1px solid rgba(74,222,128,0.25); }
+.process-flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pf-box { padding: 10px 12px; border-radius: 9px; font-size: clamp(10px, 0.95vw, 12px); text-align: center; line-height: 1.4; min-width: 74px; }
+.pf-box-neutral { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: var(--text-2); }
+.pf-box-ai      { background: rgba(51,173,229,0.1); border: 2px solid rgba(51,173,229,0.45); color: var(--cyan); font-weight: 700; }
+.pf-box-result  { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.35); color: #4ade80; font-weight: 600; }
+.pf-box-problem { background: rgba(255,100,100,0.08); border: 1px solid rgba(255,100,100,0.3); color: #ff7070; }
+.pf-arrow { color: var(--text-4); font-size: 18px; flex-shrink: 0; }
+.cs-flow-note { font-size: clamp(10px, 0.88vw, 11px); margin-top: 10px; font-family: var(--mono); letter-spacing: 0.3px; }
+.cs-note-bad  { color: rgba(255,100,100,0.55); }
+.cs-note-good { color: rgba(74,222,128,0.65); }
+.cs-results-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5vw; }
+.cs-result-box { text-align: center; padding: 1.2vh 0.5vw; background: rgba(51,173,229,0.05); border: 1px solid rgba(51,173,229,0.14); border-radius: 10px; }
+.cs-rnum  { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(18px, 1.9vw, 28px); font-weight: 700; color: var(--cyan); }
+.cs-rlabel { font-size: 10px; color: var(--text-3); font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
+
 </style>
 </head>
 <body>
@@ -786,7 +813,7 @@
       <div class="mf-ghost" aria-hidden="true">01</div>
       <div class="mf-label">01</div>
       <div class="mf-title">Processos</div>
-      <div class="mf-sub">Identificar trabalho robótico vs. humano e priorizar por impacto financeiro.</div>
+      <div class="mf-sub">Entender como o trabalho é feito hoje — e onde está o gargalo que custa mais caro.</div>
       <div class="mf-tag">Diagnóstico</div>
     </div>
     <div class="mf-sep"></div>
@@ -794,7 +821,7 @@
       <div class="mf-ghost" aria-hidden="true" style="color:var(--purple)">02</div>
       <div class="mf-label" style="color:var(--purple)">02</div>
       <div class="mf-title">Pessoas</div>
-      <div class="mf-sub">Construir cultura agêntica antes de qualquer ferramenta. Time compra o processo.</div>
+      <div class="mf-sub">Preparar a equipe para a mudança antes de implementar qualquer tecnologia.</div>
       <div class="mf-tag" style="color:var(--purple);border-color:rgba(168,85,247,0.25)">Cultura</div>
     </div>
     <div class="mf-sep"></div>
@@ -802,7 +829,7 @@
       <div class="mf-ghost" aria-hidden="true" style="color:#4ade80">03</div>
       <div class="mf-label" style="color:#4ade80">03</div>
       <div class="mf-title">Tecnologia</div>
-      <div class="mf-sub">IA aplicada onde o ROI é mensurável, rastreável e contratável.</div>
+      <div class="mf-sub">Aplicar IA somente onde o problema foi identificado — com resultado claro e mensurável.</div>
       <div class="mf-tag" style="color:#4ade80;border-color:rgba(74,222,128,0.25)">Execução</div>
     </div>
   </div>
@@ -843,9 +870,9 @@
   <div class="reveal"><h2 class="display-lg">Operação <em class="highlight">rodando hoje</em>.</h2></div>
   <div class="stats-row reveal">
     <div class="stat-card"><div class="stat-card-num">21</div><div class="stat-card-label">Clientes ativos</div></div>
-    <div class="stat-card"><div class="stat-card-num">+584</div><div class="stat-card-label">Processos<br>impactados</div></div>
-    <div class="stat-card"><div class="stat-card-num">+80</div><div class="stat-card-label">Agentes em<br>operação</div></div>
-    <div class="stat-card"><div class="stat-card-num">>56%</div><div class="stat-card-label">Redução média de<br>tempo/esforço por processo</div></div>
+    <div class="stat-card"><div class="stat-card-num">+584</div><div class="stat-card-label">Tarefas<br>automatizadas</div></div>
+    <div class="stat-card"><div class="stat-card-num">+80</div><div class="stat-card-label">Automações<br>de IA ativas</div></div>
+    <div class="stat-card"><div class="stat-card-num">>56%</div><div class="stat-card-label">Menos tempo<br>nas tarefas automatizadas</div></div>
   </div>
 
   <div class="brands-section reveal">
@@ -870,27 +897,45 @@
 
 <!-- SLIDE 6 — JEISYS -->
 <section class="slide slide-6" data-slide="6">
-  <div class="slide-header"><div class="slide-tag">CASE EM DESTAQUE · 01</div></div>
-  <div class="case-hero reveal">
-    <div class="case-hero-info">
-      <div class="case-vertical-tag">MEDTECH · GRUPO SUL-COREANO · ~US$ 150M/ANO</div>
-      <h2 class="case-hero-title">Jeisys Medical<br>Brasil</h2>
-      <p class="case-hero-context">Squad agêntico de suporte para operação B2B2C completa: vendas para distribuidores, suporte técnico, atendimento a clínicas e consumidor final. <strong style="color: var(--cyan-bright);">Consideram o Dalton Lab parceiro estratégico</strong> da transformação agêntica.</p>
+  <div class="slide-header"><div class="slide-tag">CASE · JEISYS MEDICAL</div></div>
+  <div class="case-story">
+    <div class="cs-header reveal">
+      <div class="cs-company">
+        <div class="cs-tag">MedTech · Grupo Sul-Coreano · US$ 150M/ano</div>
+        <h2 class="cs-title">Jeisys Medical Brasil</h2>
+        <p class="cs-context">Distribuidores, clínicas e consumidores fazem perguntas técnicas todos os dias. Antes: uma equipe sobrecarregada, em horário comercial, respondendo um canal por vez. Com a Dalton Lab: atendimento automático, 24 horas por dia, em todos os canais ao mesmo tempo.</p>
+      </div>
     </div>
-    <div class="case-hero-visual">
-      <div class="squad-block">
-        <div class="squad-num">46</div>
-        <div class="squad-info"><div class="squad-title">Implementações de IA</div><div class="squad-subtitle">B2B2C — END-TO-END</div></div>
+    <div class="cs-flow-wrap reveal">
+      <div class="cs-flow-col">
+        <div class="cs-flow-label cs-flow-before">ANTES</div>
+        <div class="process-flow">
+          <div class="pf-box pf-box-neutral">Dúvida<br>técnica<br>chega</div>
+          <span class="pf-arrow">→</span>
+          <div class="pf-box pf-box-neutral">Equipe<br>analisa<br>manualmente</div>
+          <span class="pf-arrow">→</span>
+          <div class="pf-box pf-box-neutral">Aguarda<br>na fila</div>
+          <span class="pf-arrow">→</span>
+          <div class="pf-box pf-box-problem">Resposta<br>com<br>atraso ⚠</div>
+        </div>
+        <div class="cs-flow-note cs-note-bad">Só em horário comercial · Um canal por vez · Fila crescendo</div>
       </div>
-      <div class="squad-divider"></div>
-      <div class="squad-block">
-        <div class="squad-num" style="font-size: clamp(64px, 7vw, 110px);">+3</div>
-        <div class="squad-info"><div class="squad-title">Agentes de produto</div><div class="squad-subtitle">DÚVIDAS TÉCNICAS DE CLIENTES</div></div>
+      <div class="cs-flow-col">
+        <div class="cs-flow-label cs-flow-after">COM IA</div>
+        <div class="process-flow">
+          <div class="pf-box pf-box-neutral">Dúvida<br>técnica<br>chega</div>
+          <span class="pf-arrow">→</span>
+          <div class="pf-box pf-box-ai">Agente<br>de IA<br>responde</div>
+          <span class="pf-arrow">→</span>
+          <div class="pf-box pf-box-result">Resposta<br>imediata<br>✔</div>
+        </div>
+        <div class="cs-flow-note cs-note-good">24h por dia · Todos os canais ao mesmo tempo · Humano só nos casos difíceis</div>
       </div>
-      <div class="case-results-bar">
-        <div class="case-result-item"><div class="case-result-num">B2B2C</div><div class="case-result-label">Cobertura<br>completa do funil</div></div>
-        <div class="case-result-item"><div class="case-result-num">Global</div><div class="case-result-label">Replicável para<br>outras filiais</div></div>
-      </div>
+    </div>
+    <div class="cs-results-row reveal">
+      <div class="cs-result-box"><div class="cs-rnum">46</div><div class="cs-rlabel">automações implementadas</div></div>
+      <div class="cs-result-box"><div class="cs-rnum">24/7</div><div class="cs-rlabel">atendimento sem parar</div></div>
+      <div class="cs-result-box"><div class="cs-rnum">3 canais</div><div class="cs-rlabel">cobertos ao mesmo tempo</div></div>
     </div>
   </div>
   <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span></div>
@@ -898,25 +943,43 @@
 
 <!-- SLIDE 7 — COBRANÇA -->
 <section class="slide slide-7" data-slide="7">
-  <div class="slide-header"><div class="slide-tag">CASE EM DESTAQUE · 02</div></div>
-  <div class="case-numbers reveal">
-    <div class="case-numbers-info">
-      <div class="case-vertical-tag">SAÚDE · PLANO DE SAÚDE</div>
-      <h2 class="case-hero-title">Agente<br>de cobrança.</h2>
-      <p class="case-hero-context">Agente assumiu toda a régua de cobrança ativa, com escalonamento humano só nos casos em que faz diferença. Operação contínua, 24/7.</p>
-      <div class="case-hero-quote"><strong>Operação no primeiro mês de mensuração</strong>, mas já com pedido de expansão para outras 3 BUs.</div>
+  <div class="slide-header"><div class="slide-tag">CASE · COBRANÇA ATIVA</div></div>
+  <div class="case-story">
+    <div class="cs-header reveal">
+      <div class="cs-company">
+        <div class="cs-tag">Saúde · Plano de saúde · Brasil</div>
+        <h2 class="cs-title">Cobrança que não para de trabalhar.</h2>
+        <p class="cs-context">Empresa de saúde com centenas de milhares de pacientes inadimplentes. Antes: equipe humana, horário comercial, capacidade limitada. Com a Dalton Lab: 1 agente de IA, 300 mil pessoas gerenciadas, 3.000 cobranças por dia — sem parar.</p>
+      </div>
     </div>
-    <div class="case-numbers-visual">
-      <div class="big-number-block">
-        <div class="big-number">300mil</div>
-        <div class="big-number-label">CPFs sob gestão</div>
-        <div class="big-number-sub">UM ÚNICO AGENTE</div>
+    <div class="cs-flow-wrap reveal">
+      <div class="cs-flow-col">
+        <div class="cs-flow-label cs-flow-before">ANTES</div>
+        <div class="process-flow">
+          <div class="pf-box pf-box-neutral">Paciente<br>inadimplente<br>identificado</div>
+          <span class="pf-arrow">→</span>
+          <div class="pf-box pf-box-neutral">Equipe<br>liga ou<br>envia SMS</div>
+          <span class="pf-arrow">→</span>
+          <div class="pf-box pf-box-problem">Capacidade<br>esgotada<br>⚠</div>
+        </div>
+        <div class="cs-flow-note cs-note-bad">Horário comercial · Poucos contatos por dia · Equipe sobrecarregada</div>
       </div>
-      <div class="big-number-block">
-        <div class="big-number">3mil</div>
-        <div class="big-number-label">cobranças por dia</div>
-        <div class="big-number-sub">EM MÉDIA — CRESCENTE</div>
+      <div class="cs-flow-col">
+        <div class="cs-flow-label cs-flow-after">COM IA</div>
+        <div class="process-flow">
+          <div class="pf-box pf-box-neutral">Paciente<br>inadimplente<br>identificado</div>
+          <span class="pf-arrow">→</span>
+          <div class="pf-box pf-box-ai">Agente<br>contata e<br>negocia</div>
+          <span class="pf-arrow">→</span>
+          <div class="pf-box pf-box-result">Pagamento<br>recuperado<br>✔</div>
+        </div>
+        <div class="cs-flow-note cs-note-good">24h por dia · Escala ilimitada · Humano só nos casos que precisam</div>
       </div>
+    </div>
+    <div class="cs-results-row reveal">
+      <div class="cs-result-box"><div class="cs-rnum">300 mil</div><div class="cs-rlabel">CPFs gerenciados</div></div>
+      <div class="cs-result-box"><div class="cs-rnum">3.000</div><div class="cs-rlabel">cobranças por dia</div></div>
+      <div class="cs-result-box"><div class="cs-rnum">24/7</div><div class="cs-rlabel">operação contínua</div></div>
     </div>
   </div>
   <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span></div>
@@ -1312,10 +1375,10 @@
   <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span></div>
 </section>
 
-<!-- SLIDE 14 — IMERSÃO AGÊNTICA -->
+<!-- SLIDE 14 — DIAGNÓSTICO · PASSO 1 -->
 <section class="slide slide-imersao" data-slide="14">
-  <div class="slide-header"><div class="slide-tag">IMERSÃO AGÊNTICA</div></div>
-  <div class="reveal"><h2 class="display-lg">Entenda onde <em class="highlight">a IA</em> faz diferença.</h2></div>
+  <div class="slide-header"><div class="slide-tag">DIAGNÓSTICO · PASSO 1</div></div>
+  <div class="reveal"><h2 class="display-lg">A gente descobre onde a IA <em class="highlight">vai fazer diferença</em>.</h2></div>
   <div class="phase-hero">
     <div class="phase-hero-left reveal">
       <div class="phase-hero-tag">01 · Diagnóstico</div>
@@ -1341,10 +1404,10 @@
     <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span></div>
 </section>
 
-<!-- SLIDE 15 — SPRINT AGÊNTICO -->
+<!-- SLIDE 15 — IMPLEMENTAÇÃO · PASSO 2 -->
 <section class="slide slide-sprint" data-slide="15">
-  <div class="slide-header"><div class="slide-tag">SPRINT AGÊNTICO</div></div>
-  <div class="reveal"><h2 class="display-lg">Do papel à <em class="highlight">produção</em>.</h2></div>
+  <div class="slide-header"><div class="slide-tag">IMPLEMENTAÇÃO · PASSO 2</div></div>
+  <div class="reveal"><h2 class="display-lg">A gente pega o maior gargalo e <em class="highlight">resolve em 12 semanas</em>.</h2></div>
   <div class="sprint-simple">
     <div class="sprint-bar-wrap reveal">
       <div class="sprint-bar-track"><div class="sprint-bar-fill-v2"></div></div>
@@ -1367,7 +1430,7 @@
       <div class="phase-hero-left reveal">
         <div class="phase-hero-tag">02 · Implementação</div>
         <div class="phase-hero-num">12<span>semanas</span></div>
-        <p class="phase-hero-desc">A gente implementa o processo escolhido em 12 semanas. Sistema em produção, time treinado, e o ativo fica com você — não depende da gente para operar.</p>
+        <p class="phase-hero-desc">Em 12 semanas, a solução está rodando dentro da sua empresa. O sistema é seu — você não depende da Dalton Lab para operar.</p>
         <div class="phase-hero-price">R$ 30k — 600k+</div>
       </div>
       <div class="phase-hero-right">
@@ -1389,9 +1452,9 @@
     <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span></div>
 </section>
 
-<!-- SLIDE 16 — OPERAÇÃO AGÊNTICA -->
+<!-- SLIDE 16 — RECORRÊNCIA · PASSO 3 (OPCIONAL) -->
 <section class="slide slide-operacao" data-slide="16">
-  <div class="slide-header"><div class="slide-tag">OPERAÇÃO AGÊNTICA</div></div>
+  <div class="slide-header"><div class="slide-tag">RECORRÊNCIA · PASSO 3 (OPCIONAL)</div></div>
   <div class="reveal"><h2 class="display-lg">O sistema melhora <em class="highlight">mês a mês</em>.</h2></div>
   <div class="operacao-simple">
     <div class="operacao-simple-left reveal">
