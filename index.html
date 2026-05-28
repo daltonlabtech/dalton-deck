@@ -765,6 +765,44 @@
 .cs-rnum  { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(18px, 1.9vw, 28px); font-weight: 700; color: var(--cyan); }
 .cs-rlabel { font-size: 10px; color: var(--text-3); font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
 
+
+/* ============================================================
+   B+C Mix Case Slides — redesign 28mai2026
+   ============================================================ */
+.bc-case { display: flex; flex-direction: column; gap: 1.8vh; flex: 1; }
+.bc-meta { font-family: var(--mono); font-size: 10px; color: var(--text-4); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
+.bc-headline { font-size: clamp(24px, 2.9vw, 44px); font-weight: 800; color: var(--text); line-height: 1.08; letter-spacing: -0.02em; }
+.bc-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5vw; }
+.bc-col { background: rgba(255,255,255,0.025); border-radius: 14px; padding: 1.8vh 1.6vw; display: flex; flex-direction: column; gap: 1vh; }
+.bc-col-before { border: 1px solid rgba(255,100,100,0.22); }
+.bc-col-after  { border: 1px solid rgba(51,173,229,0.28); }
+.bc-col-label { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 2px; padding: 3px 8px; border-radius: 4px; display: inline-block; align-self: flex-start; }
+.bc-label-before { background: rgba(255,100,100,0.1); color: #ff7070; border: 1px solid rgba(255,100,100,0.25); }
+.bc-label-after  { background: rgba(51,173,229,0.1); color: var(--cyan); border: 1px solid rgba(51,173,229,0.25); }
+.icon-row { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 2px; }
+.dot-person { display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.28); }
+.dot-ai { display: inline-block; width: 20px; height: 20px; border-radius: 5px; background: rgba(51,173,229,0.18); border: 1.5px solid rgba(51,173,229,0.55); }
+.bc-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.bc-list li { font-size: clamp(11px, 1.05vw, 14px); color: var(--text-3); padding-left: 14px; position: relative; line-height: 1.4; }
+.bc-list li::before { content: "·"; position: absolute; left: 0; color: var(--text-4); }
+.bc-list-good li { color: var(--text-2); }
+.bc-list-good li::before { color: var(--cyan); }
+.bc-token-cost { margin-top: 4px; font-family: var(--mono); font-size: 10px; color: var(--cyan); background: rgba(51,173,229,0.07); border: 1px solid rgba(51,173,229,0.18); padding: 5px 10px; border-radius: 6px; }
+.bc-cost-block { margin-top: 6px; padding: 10px 12px; border-radius: 8px; }
+.bc-cost-block-bad  { background: rgba(255,100,100,0.05); border: 1px solid rgba(255,100,100,0.15); }
+.bc-cost-block-good { background: rgba(51,173,229,0.05); border: 1px solid rgba(51,173,229,0.15); }
+.bc-cost-total-line { font-family: "Bricolage Grotesque", sans-serif; font-size: clamp(16px, 1.6vw, 22px); font-weight: 700; line-height: 1.2; }
+.bc-cost-total-line.bad  { color: #ff7070; }
+.bc-cost-total-line.good { color: var(--cyan); }
+.bc-cost-unit { font-size: 0.6em; font-weight: 400; color: var(--text-4); }
+.bc-cost-sub { font-size: 10px; font-family: var(--mono); color: var(--text-4); margin-top: 3px; }
+.bc-cost-breakdown { margin-top: 6px; border-top: 1px solid rgba(255,255,255,0.07); padding-top: 5px; display: flex; flex-direction: column; gap: 2px; }
+.bc-cost-row { display: flex; justify-content: space-between; font-size: 11px; font-family: var(--mono); color: var(--text-3); }
+.bc-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5vw; margin-top: auto; }
+.bc-result { text-align: center; padding: 1.1vh 0; background: rgba(51,173,229,0.05); border: 1px solid rgba(51,173,229,0.14); border-radius: 10px; }
+.bc-rnum  { font-family: "Bricolage Grotesque", sans-serif; font-size: clamp(16px, 1.7vw, 26px); font-weight: 700; color: var(--cyan); }
+.bc-rlabel { font-size: 10px; color: var(--text-3); font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
 </style>
 </head>
 <body>
@@ -898,44 +936,44 @@
 <!-- SLIDE 6 — JEISYS -->
 <section class="slide slide-6" data-slide="6">
   <div class="slide-header"><div class="slide-tag">CASE · JEISYS MEDICAL</div></div>
-  <div class="case-story">
-    <div class="cs-header reveal">
-      <div class="cs-company">
-        <div class="cs-tag">MedTech · Grupo Sul-Coreano · US$ 150M/ano</div>
-        <h2 class="cs-title">Jeisys Medical Brasil</h2>
-        <p class="cs-context">Distribuidores, clínicas e consumidores fazem perguntas técnicas todos os dias. Antes: uma equipe sobrecarregada, em horário comercial, respondendo um canal por vez. Com a Dalton Lab: atendimento automático, 24 horas por dia, em todos os canais ao mesmo tempo.</p>
+  <div class="bc-case">
+    <div class="reveal">
+      <p class="bc-meta">MedTech · Grupo Sul-Coreano · US$ 150M/ano</p>
+      <h2 class="bc-headline">Atendimento técnico 24h.<br>Sem precisar de mais equipe.</h2>
+    </div>
+    <div class="bc-cols reveal">
+      <div class="bc-col bc-col-before">
+        <span class="bc-col-label bc-label-before">ANTES</span>
+        <div class="icon-row">
+          <span class="dot-person"></span><span class="dot-person"></span>
+          <span class="dot-person"></span><span class="dot-person"></span>
+        </div>
+        <ul class="bc-list">
+          <li>Equipe respondendo manualmente</li>
+          <li>Só horário comercial</li>
+          <li>Um canal por vez</li>
+          <li>Fila de dúvidas crescendo</li>
+        </ul>
+      </div>
+      <div class="bc-col bc-col-after">
+        <span class="bc-col-label bc-label-after">COM IA</span>
+        <div class="icon-row">
+          <span class="dot-person"></span>
+          <span class="dot-ai"></span><span class="dot-ai"></span><span class="dot-ai"></span>
+        </div>
+        <ul class="bc-list bc-list-good">
+          <li>1 supervisor + agentes de IA</li>
+          <li>24h por dia, todos os dias</li>
+          <li>3 canais ao mesmo tempo</li>
+          <li>Humano só nos casos difíceis</li>
+        </ul>
+        <div class="bc-token-cost">Custo IA: ~R$ 4.000/mês em tokens</div>
       </div>
     </div>
-    <div class="cs-flow-wrap reveal">
-      <div class="cs-flow-col">
-        <div class="cs-flow-label cs-flow-before">ANTES</div>
-        <div class="process-flow">
-          <div class="pf-box pf-box-neutral">Dúvida<br>técnica<br>chega</div>
-          <span class="pf-arrow">→</span>
-          <div class="pf-box pf-box-neutral">Equipe<br>analisa<br>manualmente</div>
-          <span class="pf-arrow">→</span>
-          <div class="pf-box pf-box-neutral">Aguarda<br>na fila</div>
-          <span class="pf-arrow">→</span>
-          <div class="pf-box pf-box-problem">Resposta<br>com<br>atraso ⚠</div>
-        </div>
-        <div class="cs-flow-note cs-note-bad">Só em horário comercial · Um canal por vez · Fila crescendo</div>
-      </div>
-      <div class="cs-flow-col">
-        <div class="cs-flow-label cs-flow-after">COM IA</div>
-        <div class="process-flow">
-          <div class="pf-box pf-box-neutral">Dúvida<br>técnica<br>chega</div>
-          <span class="pf-arrow">→</span>
-          <div class="pf-box pf-box-ai">Agente<br>de IA<br>responde</div>
-          <span class="pf-arrow">→</span>
-          <div class="pf-box pf-box-result">Resposta<br>imediata<br>✔</div>
-        </div>
-        <div class="cs-flow-note cs-note-good">24h por dia · Todos os canais ao mesmo tempo · Humano só nos casos difíceis</div>
-      </div>
-    </div>
-    <div class="cs-results-row reveal">
-      <div class="cs-result-box"><div class="cs-rnum">46</div><div class="cs-rlabel">automações implementadas</div></div>
-      <div class="cs-result-box"><div class="cs-rnum">24/7</div><div class="cs-rlabel">atendimento sem parar</div></div>
-      <div class="cs-result-box"><div class="cs-rnum">3 canais</div><div class="cs-rlabel">cobertos ao mesmo tempo</div></div>
+    <div class="bc-results reveal">
+      <div class="bc-result"><div class="bc-rnum">46</div><div class="bc-rlabel">automações ativas</div></div>
+      <div class="bc-result"><div class="bc-rnum">24/7</div><div class="bc-rlabel">sem interrupção</div></div>
+      <div class="bc-result"><div class="bc-rnum">3 canais</div><div class="bc-rlabel">ao mesmo tempo</div></div>
     </div>
   </div>
   <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span></div>
@@ -944,42 +982,45 @@
 <!-- SLIDE 7 — COBRANÇA -->
 <section class="slide slide-7" data-slide="7">
   <div class="slide-header"><div class="slide-tag">CASE · COBRANÇA ATIVA</div></div>
-  <div class="case-story">
-    <div class="cs-header reveal">
-      <div class="cs-company">
-        <div class="cs-tag">Saúde · Plano de saúde · Brasil</div>
-        <h2 class="cs-title">Cobrança que não para de trabalhar.</h2>
-        <p class="cs-context">Empresa de saúde com centenas de milhares de pacientes inadimplentes. Antes: equipe humana, horário comercial, capacidade limitada. Com a Dalton Lab: 1 agente de IA, 300 mil pessoas gerenciadas, 3.000 cobranças por dia — sem parar.</p>
+  <div class="bc-case">
+    <div class="reveal">
+      <p class="bc-meta">Saúde · Plano de saúde · Brasil</p>
+      <h2 class="bc-headline">300 mil devedores.<br>1 agente. Sem folga.</h2>
+    </div>
+    <div class="bc-cols reveal">
+      <div class="bc-col bc-col-before">
+        <span class="bc-col-label bc-label-before">ANTES</span>
+        <div class="icon-row">
+          <span class="dot-person"></span><span class="dot-person"></span>
+          <span class="dot-person"></span><span class="dot-person"></span>
+          <span class="dot-person"></span>
+        </div>
+        <ul class="bc-list">
+          <li>Equipe de cobrança manual</li>
+          <li>Horário comercial</li>
+          <li>~100 contatos por dia</li>
+          <li>300 mil CPFs sem cobertura</li>
+        </ul>
+      </div>
+      <div class="bc-col bc-col-after">
+        <span class="bc-col-label bc-label-after">COM IA</span>
+        <div class="icon-row">
+          <span class="dot-person"></span>
+          <span class="dot-ai"></span>
+        </div>
+        <ul class="bc-list bc-list-good">
+          <li>1 supervisor + 1 agente de IA</li>
+          <li>24h por dia, 7 dias por semana</li>
+          <li>3.000 cobranças por dia</li>
+          <li>Escala ilimitada</li>
+        </ul>
+        <div class="bc-token-cost">Custo IA: ~R$ 1.500/mês em tokens</div>
       </div>
     </div>
-    <div class="cs-flow-wrap reveal">
-      <div class="cs-flow-col">
-        <div class="cs-flow-label cs-flow-before">ANTES</div>
-        <div class="process-flow">
-          <div class="pf-box pf-box-neutral">Paciente<br>inadimplente<br>identificado</div>
-          <span class="pf-arrow">→</span>
-          <div class="pf-box pf-box-neutral">Equipe<br>liga ou<br>envia SMS</div>
-          <span class="pf-arrow">→</span>
-          <div class="pf-box pf-box-problem">Capacidade<br>esgotada<br>⚠</div>
-        </div>
-        <div class="cs-flow-note cs-note-bad">Horário comercial · Poucos contatos por dia · Equipe sobrecarregada</div>
-      </div>
-      <div class="cs-flow-col">
-        <div class="cs-flow-label cs-flow-after">COM IA</div>
-        <div class="process-flow">
-          <div class="pf-box pf-box-neutral">Paciente<br>inadimplente<br>identificado</div>
-          <span class="pf-arrow">→</span>
-          <div class="pf-box pf-box-ai">Agente<br>contata e<br>negocia</div>
-          <span class="pf-arrow">→</span>
-          <div class="pf-box pf-box-result">Pagamento<br>recuperado<br>✔</div>
-        </div>
-        <div class="cs-flow-note cs-note-good">24h por dia · Escala ilimitada · Humano só nos casos que precisam</div>
-      </div>
-    </div>
-    <div class="cs-results-row reveal">
-      <div class="cs-result-box"><div class="cs-rnum">300 mil</div><div class="cs-rlabel">CPFs gerenciados</div></div>
-      <div class="cs-result-box"><div class="cs-rnum">3.000</div><div class="cs-rlabel">cobranças por dia</div></div>
-      <div class="cs-result-box"><div class="cs-rnum">24/7</div><div class="cs-rlabel">operação contínua</div></div>
+    <div class="bc-results reveal">
+      <div class="bc-result"><div class="bc-rnum">300 mil</div><div class="bc-rlabel">CPFs gerenciados</div></div>
+      <div class="bc-result"><div class="bc-rnum">3.000</div><div class="bc-rlabel">cobranças por dia</div></div>
+      <div class="bc-result"><div class="bc-rnum">24/7</div><div class="bc-rlabel">operação contínua</div></div>
     </div>
   </div>
   <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span></div>
@@ -988,77 +1029,54 @@
 
 <!-- SLIDE NEOGRID — ANTES E DEPOIS -->
 <section class="slide slide-neogrid" data-slide="8n">
-  <div class="slide-header"><div class="slide-tag">CASO REAL — ANTES E DEPOIS</div></div>
-  <div class="reveal" style="margin-bottom:1.5vh">
-    <h2 class="display-lg">O processo <em class="highlight">redesenhado</em> com IA.</h2>
-  </div>
-  <div class="ba-grid reveal">
-    <div class="ba-col ba-col-before">
-      <div class="ba-col-header">
-        <span class="ba-badge ba-badge-before">ANTES</span>
-        <span class="ba-context">Neogrid · Homologação de propostas</span>
-      </div>
-      <div class="ba-metrics">
-        <div class="ba-metric-row">
-          <div class="ba-metric-val ba-val-neutral">350</div>
-          <div class="ba-metric-desc">propostas por mês necessárias</div>
-        </div>
-        <div class="ba-metric-row">
-          <div class="ba-metric-val ba-val-bad">160</div>
-          <div class="ba-metric-desc">processadas pela equipe (capacidade máxima)</div>
-        </div>
-        <div class="ba-metric-row">
-          <div class="ba-metric-val ba-val-bad">9</div>
-          <div class="ba-metric-desc">pessoas dedicadas ao processo</div>
-        </div>
-      </div>
-      <div class="ba-cost-block ba-cost-before">
-        <div class="ba-cost-val">R$ 153.000<span>/mês</span></div>
-        <div class="ba-cost-label">custo de equipe</div>
-      </div>
-      <div class="ba-tag-bad">⚠ 100% das entregas com atraso</div>
+  <div class="slide-header"><div class="slide-tag">CASO REAL · NEOGRID</div></div>
+  <div class="bc-case">
+    <div class="reveal">
+      <p class="bc-meta">Supply Chain · Homologação de propostas · Brasil</p>
+      <h2 class="bc-headline">9 pessoas viraram 1.</h2>
     </div>
-    <div class="ba-divider">
-      <div class="ba-arrow-icon">→</div>
-    </div>
-    <div class="ba-col ba-col-after">
-      <div class="ba-col-header">
-        <span class="ba-badge ba-badge-after">COM IA</span>
-        <span class="ba-context"> </span>
-      </div>
-      <div class="ba-metrics">
-        <div class="ba-metric-row">
-          <div class="ba-metric-val ba-val-good">350</div>
-          <div class="ba-metric-desc">processadas pelos agentes (100% da demanda)</div>
+    <div class="bc-cols reveal">
+      <div class="bc-col bc-col-before">
+        <span class="bc-col-label bc-label-before">ANTES</span>
+        <div class="icon-row">
+          <span class="dot-person"></span><span class="dot-person"></span><span class="dot-person"></span>
+          <span class="dot-person"></span><span class="dot-person"></span><span class="dot-person"></span>
+          <span class="dot-person"></span><span class="dot-person"></span><span class="dot-person"></span>
         </div>
-        <div class="ba-metric-row">
-          <div class="ba-metric-val ba-val-good">100%</div>
-          <div class="ba-metric-desc">dentro do prazo, 24 horas por dia</div>
-        </div>
-        <div class="ba-metric-row">
-          <div class="ba-metric-val ba-val-good">1</div>
-          <div class="ba-metric-desc">pessoa supervisora + agentes de IA</div>
+        <ul class="bc-list">
+          <li>9 pessoas no processo</li>
+          <li>160 de 350 propostas/mês</li>
+          <li>100% das entregas com atraso</li>
+        </ul>
+        <div class="bc-cost-block bc-cost-block-bad">
+          <div class="bc-cost-total-line bad">R$ 153.000<span class="bc-cost-unit">/mês</span></div>
+          <div class="bc-cost-sub">9 × R$ 17.000 de salário</div>
         </div>
       </div>
-      <div class="ba-cost-block ba-cost-after">
-        <div class="ba-cost-val">≈ R$ 20.000<span>/mês</span></div>
-        <div class="ba-cost-label">custo total da operação</div>
+      <div class="bc-col bc-col-after">
+        <span class="bc-col-label bc-label-after">COM IA</span>
+        <div class="icon-row">
+          <span class="dot-person"></span>
+          <span class="dot-ai"></span><span class="dot-ai"></span><span class="dot-ai"></span>
+        </div>
+        <ul class="bc-list bc-list-good">
+          <li>1 pessoa supervisora</li>
+          <li>350 propostas/mês (100%)</li>
+          <li>100% no prazo, 24h por dia</li>
+        </ul>
+        <div class="bc-cost-block bc-cost-block-good">
+          <div class="bc-cost-total-line good">≈ R$ 19.000<span class="bc-cost-unit">/mês</span></div>
+          <div class="bc-cost-breakdown">
+            <div class="bc-cost-row"><span>Salário</span><span>R$ 17.000</span></div>
+            <div class="bc-cost-row"><span>Tokens IA</span><span>~R$ 2.000</span></div>
+          </div>
+        </div>
       </div>
-      <div class="ba-tag-good">✔ R$ 133k/mês economizado</div>
     </div>
-  </div>
-  <div class="ba-results-bar reveal">
-    <div class="ba-result-item">
-      <div class="ba-result-num">+119%</div>
-      <div class="ba-result-label">capacidade de processamento</div>
-    </div>
-    <div class="ba-result-item">
-      <div class="ba-result-num">−87%</div>
-      <div class="ba-result-label">custo por proposta</div>
-    </div>
-    <div class="ba-result-item">
-      <div class="ba-result-num">24/7</div>
-      <div class="ba-result-label">operação contínua</div>
+    <div class="bc-results reveal">
+      <div class="bc-result"><div class="bc-rnum">+119%</div><div class="bc-rlabel">capacidade</div></div>
+      <div class="bc-result"><div class="bc-rnum">−87%</div><div class="bc-rlabel">custo operacional</div></div>
+      <div class="bc-result"><div class="bc-rnum">R$ 134k</div><div class="bc-rlabel">economizados/mês</div></div>
     </div>
   </div>
   <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span></div>
