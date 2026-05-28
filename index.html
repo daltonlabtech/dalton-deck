@@ -703,6 +703,41 @@
   .nav-section { font-family: var(--mono); font-size: 9px; color: var(--text-4); text-transform: uppercase; letter-spacing: 2px; white-space: nowrap; line-height: 1; }
   .nav-counter { color: var(--text-3); font-size: 12px; letter-spacing: 1px; }
 
+
+/* ============================================================
+   Before/After Case Slide
+   ============================================================ */
+.ba-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: start; margin-bottom: 1.8vh; }
+.ba-col { background: rgba(255,255,255,0.025); border-radius: 14px; padding: 1.8vh 1.8vw; }
+.ba-col-before { border: 1px solid rgba(255,100,100,0.2); }
+.ba-col-after { border: 1px solid rgba(51,173,229,0.25); }
+.ba-col-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.4vh; }
+.ba-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 2px; padding: 4px 10px; border-radius: 4px; }
+.ba-badge-before { background: rgba(255,100,100,0.12); color: #ff7070; border: 1px solid rgba(255,100,100,0.3); }
+.ba-badge-after { background: rgba(51,173,229,0.12); color: var(--cyan); border: 1px solid rgba(51,173,229,0.3); }
+.ba-context { font-family: var(--mono); font-size: 10px; color: var(--text-4); text-transform: uppercase; letter-spacing: 1px; }
+.ba-metrics { display: flex; flex-direction: column; gap: 0.9vh; margin-bottom: 1.4vh; }
+.ba-metric-row { display: flex; align-items: center; gap: 14px; }
+.ba-metric-val { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(26px, 2.6vw, 40px); font-weight: 700; min-width: 78px; line-height: 1; }
+.ba-val-neutral { color: var(--text-2); }
+.ba-val-bad { color: #ff7070; }
+.ba-val-good { color: #4ade80; }
+.ba-metric-desc { font-size: clamp(11px, 1.05vw, 13px); color: var(--text-3); line-height: 1.3; }
+.ba-cost-block { padding: 1.1vh 1.2vw; border-radius: 10px; margin-bottom: 0.8vh; }
+.ba-cost-before { background: rgba(255,100,100,0.05); border: 1px solid rgba(255,100,100,0.15); }
+.ba-cost-after { background: rgba(51,173,229,0.05); border: 1px solid rgba(51,173,229,0.15); }
+.ba-cost-val { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(17px, 1.7vw, 24px); font-weight: 700; color: var(--text-1); }
+.ba-cost-val span { font-size: 0.65em; color: var(--text-4); font-weight: 400; }
+.ba-cost-label { font-size: 10px; color: var(--text-4); font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.ba-tag-bad { font-size: clamp(10px, 1vw, 12px); color: #ff7070; font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px; }
+.ba-tag-good { font-size: clamp(10px, 1vw, 12px); color: #4ade80; font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+.ba-divider { display: flex; align-items: center; justify-content: center; padding: 0 1.5vw; }
+.ba-arrow-icon { font-size: clamp(22px, 2.2vw, 32px); color: var(--cyan); opacity: 0.4; }
+.ba-results-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5vw; }
+.ba-result-item { text-align: center; padding: 1.2vh 0; background: rgba(51,173,229,0.05); border: 1px solid rgba(51,173,229,0.15); border-radius: 10px; }
+.ba-result-num { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(20px, 2vw, 30px); font-weight: 700; color: var(--cyan); }
+.ba-result-label { font-size: 10px; color: var(--text-3); font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
+
 </style>
 </head>
 <body>
@@ -845,7 +880,7 @@
     <div class="case-hero-visual">
       <div class="squad-block">
         <div class="squad-num">46</div>
-        <div class="squad-info"><div class="squad-title">Agentes operacionais</div><div class="squad-subtitle">B2B2C — END-TO-END</div></div>
+        <div class="squad-info"><div class="squad-title">Implementações de IA</div><div class="squad-subtitle">B2B2C — END-TO-END</div></div>
       </div>
       <div class="squad-divider"></div>
       <div class="squad-block">
@@ -882,6 +917,85 @@
         <div class="big-number-label">cobranças por dia</div>
         <div class="big-number-sub">EM MÉDIA — CRESCENTE</div>
       </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span></div>
+</section>
+
+
+<!-- SLIDE NEOGRID — ANTES E DEPOIS -->
+<section class="slide slide-neogrid" data-slide="8n">
+  <div class="slide-header"><div class="slide-tag">CASO REAL — ANTES E DEPOIS</div></div>
+  <div class="reveal" style="margin-bottom:1.5vh">
+    <h2 class="display-lg">O processo <em class="highlight">redesenhado</em> com IA.</h2>
+  </div>
+  <div class="ba-grid reveal">
+    <div class="ba-col ba-col-before">
+      <div class="ba-col-header">
+        <span class="ba-badge ba-badge-before">ANTES</span>
+        <span class="ba-context">Neogrid · Homologação de propostas</span>
+      </div>
+      <div class="ba-metrics">
+        <div class="ba-metric-row">
+          <div class="ba-metric-val ba-val-neutral">350</div>
+          <div class="ba-metric-desc">propostas por mês necessárias</div>
+        </div>
+        <div class="ba-metric-row">
+          <div class="ba-metric-val ba-val-bad">160</div>
+          <div class="ba-metric-desc">processadas pela equipe (capacidade máxima)</div>
+        </div>
+        <div class="ba-metric-row">
+          <div class="ba-metric-val ba-val-bad">9</div>
+          <div class="ba-metric-desc">pessoas dedicadas ao processo</div>
+        </div>
+      </div>
+      <div class="ba-cost-block ba-cost-before">
+        <div class="ba-cost-val">R$ 153.000<span>/mês</span></div>
+        <div class="ba-cost-label">custo de equipe</div>
+      </div>
+      <div class="ba-tag-bad">⚠ 100% das entregas com atraso</div>
+    </div>
+    <div class="ba-divider">
+      <div class="ba-arrow-icon">→</div>
+    </div>
+    <div class="ba-col ba-col-after">
+      <div class="ba-col-header">
+        <span class="ba-badge ba-badge-after">COM IA</span>
+        <span class="ba-context"> </span>
+      </div>
+      <div class="ba-metrics">
+        <div class="ba-metric-row">
+          <div class="ba-metric-val ba-val-good">350</div>
+          <div class="ba-metric-desc">processadas pelos agentes (100% da demanda)</div>
+        </div>
+        <div class="ba-metric-row">
+          <div class="ba-metric-val ba-val-good">100%</div>
+          <div class="ba-metric-desc">dentro do prazo, 24 horas por dia</div>
+        </div>
+        <div class="ba-metric-row">
+          <div class="ba-metric-val ba-val-good">1</div>
+          <div class="ba-metric-desc">pessoa supervisora + agentes de IA</div>
+        </div>
+      </div>
+      <div class="ba-cost-block ba-cost-after">
+        <div class="ba-cost-val">≈ R$ 20.000<span>/mês</span></div>
+        <div class="ba-cost-label">custo total da operação</div>
+      </div>
+      <div class="ba-tag-good">✔ R$ 133k/mês economizado</div>
+    </div>
+  </div>
+  <div class="ba-results-bar reveal">
+    <div class="ba-result-item">
+      <div class="ba-result-num">+119%</div>
+      <div class="ba-result-label">capacidade de processamento</div>
+    </div>
+    <div class="ba-result-item">
+      <div class="ba-result-num">−87%</div>
+      <div class="ba-result-label">custo por proposta</div>
+    </div>
+    <div class="ba-result-item">
+      <div class="ba-result-num">24/7</div>
+      <div class="ba-result-label">operação contínua</div>
     </div>
   </div>
   <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span></div>
@@ -1201,26 +1315,26 @@
 <!-- SLIDE 14 — IMERSÃO AGÊNTICA -->
 <section class="slide slide-imersao" data-slide="14">
   <div class="slide-header"><div class="slide-tag">IMERSÃO AGÊNTICA</div></div>
-  <div class="reveal"><h2 class="display-lg">Clareza <em class="highlight">absoluta</em>.</h2></div>
+  <div class="reveal"><h2 class="display-lg">Entenda onde <em class="highlight">a IA</em> faz diferença.</h2></div>
   <div class="phase-hero">
     <div class="phase-hero-left reveal">
       <div class="phase-hero-tag">01 · Diagnóstico</div>
       <div class="phase-hero-num">3<span>semanas</span></div>
-      <p class="phase-hero-desc">Mapeamento de processos, priorização por ROI e business case cravado em contrato. Sem essa etapa, não avançamos.</p>
+      <p class="phase-hero-desc">A gente entra na empresa, entrevista os times e mapeia onde estão os gargalos. Em 3 semanas você sabe exatamente o que automatizar — e qual o retorno esperado de cada processo.</p>
       <div class="phase-hero-price">R$ 25k — 50k+</div>
     </div>
     <div class="phase-hero-right">
       <div class="phase-item">
         <span class="phase-item-icon">→</span>
-        <span>Estoque de Oportunidades com ROI estimado por frente</span>
+        <span>Lista dos processos com maior potencial — com retorno estimado de cada um</span>
       </div>
       <div class="phase-item">
         <span class="phase-item-icon">→</span>
-        <span>Roadmap de implantação com fases e critérios de sucesso</span>
+        <span>Plano de implementação com cronograma e metas claras</span>
       </div>
       <div class="phase-item">
         <span class="phase-item-icon">→</span>
-        <span>Contrato Win-Your-Money-Back assinado antes de avançar</span>
+        <span>Garantia contratual de resultado — você decide se avança só depois de ver o plano</span>
       </div>
     </div>
   </div>
@@ -1253,21 +1367,21 @@
       <div class="phase-hero-left reveal">
         <div class="phase-hero-tag">02 · Implementação</div>
         <div class="phase-hero-num">12<span>semanas</span></div>
-        <p class="phase-hero-desc">Do papel à produção. Entrega com monitoramento ativo e time treinado.</p>
+        <p class="phase-hero-desc">A gente implementa o processo escolhido em 12 semanas. Sistema em produção, time treinado, e o ativo fica com você — não depende da gente para operar.</p>
         <div class="phase-hero-price">R$ 30k — 600k+</div>
       </div>
       <div class="phase-hero-right">
         <div class="phase-item">
           <span class="phase-item-icon">→</span>
-          <span>Agentes em produção com monitoramento ativo</span>
+          <span>Agentes funcionando e monitorados em tempo real</span>
         </div>
         <div class="phase-item">
           <span class="phase-item-icon">→</span>
-          <span>Dalton Lab OS configurado para a operação</span>
+          <span>Painel de controle configurado para sua equipe acompanhar</span>
         </div>
         <div class="phase-item">
           <span class="phase-item-icon">→</span>
-          <span>Time interno capacitado para operar com os agentes</span>
+          <span>Time treinado para usar e supervisionar os agentes</span>
         </div>
       </div>
     </div>
@@ -1278,18 +1392,18 @@
 <!-- SLIDE 16 — OPERAÇÃO AGÊNTICA -->
 <section class="slide slide-operacao" data-slide="16">
   <div class="slide-header"><div class="slide-tag">OPERAÇÃO AGÊNTICA</div></div>
-  <div class="reveal"><h2 class="display-lg">Recorrência que <em class="highlight">expande</em>.</h2></div>
+  <div class="reveal"><h2 class="display-lg">O sistema melhora <em class="highlight">mês a mês</em>.</h2></div>
   <div class="operacao-simple">
     <div class="operacao-simple-left reveal">
       <div class="phase-hero-tag">03 · Recorrência</div>
       <div class="operacao-bullets">
         <div class="op-bullet">
           <div class="op-bullet-period">Todo mês</div>
-          <div class="op-bullet-text">Compass + Dalton Lab OS — monitoramento contínuo e relatório executivo mensal.</div>
+          <div class="op-bullet-text">Monitoramos os agentes e entregamos um relatório mensal de performance. Você sabe exatamente o que está funcionando.</div>
         </div>
         <div class="op-bullet">
           <div class="op-bullet-period">Todo trimestre</div>
-          <div class="op-bullet-text">Sprint proposto com business case completo. Você decide se avança.</div>
+          <div class="op-bullet-text">A cada 3 meses, propomos a próxima melhoria com retorno estimado. Você decide se quer avançar ou não.</div>
         </div>
       </div>
       <div class="phase-hero-price">R$ 2k — 50k / mês</div>
