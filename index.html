@@ -62,7 +62,7 @@
   .logo-text { font-family: var(--display); font-weight: 600; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--text); }
   .logo-text span { color: var(--cyan); }
   .nav { position: fixed; bottom: 24px; right: 32px; display: flex; align-items: center; gap: 16px; z-index: 50; font-family: var(--mono); }
-  .nav-btn { width: 38px; height: 38px; background: var(--bg-card); backdrop-filter: blur(10px); border: 1px solid var(--cyan-faint); border-radius: 8px; color: var(--text-2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.2s; }
+  .nav-btn { width: 44px; height: 44px; background: var(--bg-card); backdrop-filter: blur(10px); border: 1px solid var(--cyan-faint); border-radius: 8px; color: var(--text-2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.2s; }
   .nav-btn:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(51, 173, 229, 0.1); }
   .nav-counter { color: var(--text-3); font-size: 12px; letter-spacing: 1px; min-width: 56px; text-align: center; }
   .nav-counter strong { color: var(--cyan); font-weight: 500; }
@@ -82,13 +82,13 @@
   .slide-2 .stat-number { font-size: clamp(140px, 18vw, 280px); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; background: linear-gradient(180deg, var(--cyan) 0%, rgba(51, 173, 229, 0.4) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .slide-2 .stat-label { font-size: clamp(24px, 2.6vw, 40px); font-weight: 500; color: var(--text); line-height: 1.2; max-width: 900px; }
   .slide-2 .stat-source { font-family: var(--mono); font-size: 12px; color: var(--purple); text-transform: uppercase; letter-spacing: 2px; }
-  .slide-2 .stat-conclusion { margin-top: 16px; padding-top: 20px; border-top: 1px solid var(--cyan-faint); font-size: clamp(18px, 1.6vw, 26px); color: var(--text-2); line-height: 1.4; max-width: 900px; }
-  .slide-2 .stat-conclusion strong { color: var(--text); }
+  .slide-2 .stat-conclusion { margin-top: 20px; padding: 18px 28px; font-size: clamp(18px, 1.6vw, 26px); color: var(--text); line-height: 1.4; max-width: 900px; }
+  .slide-2 .stat-conclusion strong { color: var(--cyan); }
 
   /* SLIDE 3 — METODOLOGIA */
   .slide-3 .method { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 6vh; flex: 1; align-items: center; }
   .method-step { background: var(--navy-card, #0c1c33); backdrop-filter: blur(10px); border: 1px solid rgba(51, 173, 229, 0.18); border-radius: 14px; padding: 50px 36px; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 16px; min-height: 320px; justify-content: center; }
-  .method-step::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--cyan), transparent); }
+  .method-step::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), transparent); }
   .method-num { font-family: var(--mono); font-size: 14px; color: var(--cyan); letter-spacing: 2px; font-weight: 600; }
   .method-name { font-size: clamp(32px, 3.2vw, 48px); font-weight: 700; color: var(--text); letter-spacing: -0.02em; line-height: 1; }
   .method-desc { font-size: clamp(14px, 1.15vw, 18px); color: var(--text-2); line-height: 1.4; margin-top: 4px; }
@@ -105,7 +105,7 @@
   .person-name { font-size: clamp(24px, 2.2vw, 34px); font-weight: 700; color: var(--text); line-height: 1.05; letter-spacing: -0.02em; }
   .person-tag { font-size: clamp(14px, 1.15vw, 17px); color: var(--text-2); line-height: 1.4; }
   .person-quote { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--cyan-faint); font-style: italic; font-family: 'Fraunces', serif; color: var(--purple); font-size: clamp(13px, 1vw, 15px); line-height: 1.4; }
-  .slide-4 .trio-callout { margin-top: 24px; padding: 16px 24px; background: rgba(51, 173, 229, 0.08); border-left: 3px solid var(--cyan); border-radius: 4px; color: var(--text); font-size: clamp(15px, 1.25vw, 19px); font-weight: 500; }
+  .slide-4 .trio-callout { margin-top: 24px; padding: 18px 28px; color: var(--text); font-size: clamp(15px, 1.25vw, 19px); font-weight: 500; }
   .slide-4 .trio-callout strong { color: var(--cyan); }
 
   /* SLIDE 5 — TRAÇÃO */
@@ -629,7 +629,7 @@
     to { left: 100%; }
   }
 
-  .neo-callout, .slide-4 .trio-callout, .slide-12 .fee-anchor {
+  .neo-callout, .slide-4 .trio-callout, .slide-12 .fee-anchor, .slide-2 .stat-conclusion {
     position: relative;
     overflow: hidden;
     background: linear-gradient(135deg, rgba(51, 173, 229, 0.12) 0%, rgba(168, 85, 247, 0.05) 100%);
@@ -637,7 +637,7 @@
     border-radius: 10px;
     border-left: none;
   }
-  .neo-callout::before, .slide-4 .trio-callout::before, .slide-12 .fee-anchor::before {
+  .neo-callout::before, .slide-4 .trio-callout::before, .slide-12 .fee-anchor::before, .slide-2 .stat-conclusion::before {
     content: '';
     position: absolute;
     top: 0;
@@ -655,6 +655,54 @@
     .slide { opacity: 1 !important; visibility: visible !important; page-break-after: always; position: relative !important; width: 1920px; height: 1080px; }
     .nav, .progress { display: none !important; }
   }
+
+  /* === FIX 3: display-lg scale variations for dense/phase slides === */
+  .slide-8 .display-lg { font-size: clamp(28px, 3.2vw, 48px); }
+  .slide-imersao .display-lg, .slide-sprint .display-lg, .slide-operacao .display-lg {
+    font-size: clamp(22px, 2.4vw, 36px); color: var(--text-3); font-weight: 600; letter-spacing: -0.02em;
+  }
+
+  /* === FIX 5: prefers-reduced-motion === */
+  @media (prefers-reduced-motion: reduce) {
+    .slide { transition: none !important; }
+    .slide.active .reveal { animation: none !important; opacity: 1 !important; transform: none !important; }
+    .progress { transition: none !important; }
+    .mf-sep, .mf-col { transition: none !important; opacity: 1 !important; transform: none !important; }
+    .phase-item { transition: none !important; opacity: 1 !important; transform: none !important; }
+    .compass-ring-a, .compass-ring-b, .compass-ring-c,
+    .compass-ring-lg-a, .compass-ring-lg-b, .compass-ring-lg-c { animation: none !important; }
+    .neo-callout::before, .slide-4 .trio-callout::before,
+    .slide-12 .fee-anchor::before, .slide-2 .stat-conclusion::before { animation: none !important; }
+  }
+
+  /* === FIX 6: Logo wall — centered last row === */
+  .logo-wall { display: flex !important; flex-wrap: wrap; justify-content: center; }
+  .logo-tile { flex: 0 0 calc(25% - 11px); }
+
+  /* === FIX 7: Slide 18 premium closing === */
+  .slide-14 .final-content {
+    position: relative; display: flex; flex-direction: column; gap: 2.5vh;
+    align-items: center; justify-content: center; flex: 1; width: 100%; text-align: center;
+  }
+  .slide-14 .final-content::before {
+    content: ''; position: absolute; width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(51, 173, 229, 0.10) 0%, transparent 65%);
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    pointer-events: none; z-index: 0;
+  }
+  .slide-14 .final-logo { position: relative; z-index: 1; width: clamp(120px, 14vw, 180px); height: clamp(120px, 14vw, 180px); filter: drop-shadow(0 0 50px rgba(51, 173, 229, 0.45)); }
+  .final-caption { position: relative; z-index: 1; font-family: var(--mono); font-size: 11px; color: var(--cyan); text-transform: uppercase; letter-spacing: 3px; }
+  .final-tagline { position: relative; z-index: 1; font-size: clamp(28px, 3.5vw, 56px); font-weight: 600; color: var(--text); line-height: 1.15; letter-spacing: -0.02em; }
+  .final-tagline em { font-family: 'Fraunces', serif; font-style: italic; font-weight: 400; color: var(--cyan); -webkit-text-fill-color: var(--cyan); }
+  .final-contact { position: relative; z-index: 1; display: flex; align-items: center; gap: 20px; margin-top: 1vh; }
+  .final-cta-item { font-family: var(--mono); font-size: 13px; color: var(--text-3); letter-spacing: 1px; }
+  .final-cta-sep { font-family: var(--mono); color: var(--cyan-dim); font-size: 18px; }
+
+  /* === FIX 8: Nav section indicator === */
+  .nav-center { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 100px; }
+  .nav-section { font-family: var(--mono); font-size: 9px; color: var(--text-4); text-transform: uppercase; letter-spacing: 2px; white-space: nowrap; line-height: 1; }
+  .nav-counter { color: var(--text-3); font-size: 12px; letter-spacing: 1px; }
+
 </style>
 </head>
 <body>
@@ -1305,7 +1353,13 @@
       </svg>
     </div>
 
+    <p class="final-caption reveal">Pronto para começar?</p>
     <h2 class="final-tagline reveal">Prepare-se para se tornar uma<br><em>Organização Agêntica</em>.</h2>
+    <div class="final-contact reveal">
+      <span class="final-cta-item">contato@daltonlab.ai</span>
+      <span class="final-cta-sep">·</span>
+      <span class="final-cta-item">daltonlab.ai</span>
+    </div>
   </div>
 
   <div class="slide-footer"><span class="brand">DALTON <strong>LAB</strong></span><span>DALTONLAB.AI</span></div>
@@ -1315,7 +1369,10 @@
 
 <div class="nav">
   <button class="nav-btn" id="prev-btn" aria-label="Anterior">←</button>
-  <div class="nav-counter"><strong id="current">01</strong> / <span id="total"></span></div>
+  <div class="nav-center">
+    <div id="section-label" class="nav-section"></div>
+    <div class="nav-counter"><strong id="current">01</strong> / <span id="total"></span></div>
+  </div>
   <button class="nav-btn" id="next-btn" aria-label="Próximo">→</button>
 </div>
 
@@ -1327,6 +1384,7 @@
   const counter = document.getElementById('current');
   const totalEl = document.getElementById('total');
   if (totalEl) totalEl.textContent = total;
+  const sectionEl = document.getElementById('section-label');
   const prevBtn = document.getElementById('prev-btn');
   const nextBtn = document.getElementById('next-btn');
   let current = 0;
@@ -1338,6 +1396,7 @@
     progress.style.width = ((current + 1) / total * 100) + '%';
     counter.textContent = String(current + 1).padStart(2, '0');
     history.replaceState(null, '', '#' + (current + 1));
+    if (sectionEl) { var tag = slides[current].querySelector('.slide-tag'); sectionEl.textContent = tag ? tag.textContent : ''; }
   }
   function applyHash() {
     const h = parseInt(window.location.hash.replace('#', ''), 10);
@@ -1345,6 +1404,7 @@
   }
   const hash = parseInt(window.location.hash.replace('#', ''), 10);
   if (hash && hash >= 1 && hash <= total) { current = 0; go(hash - 1); } else { progress.style.width = (1 / total * 100) + '%'; }
+  if (sectionEl) { var tag0 = slides[0].querySelector('.slide-tag'); sectionEl.textContent = tag0 ? tag0.textContent : ''; }
   window.addEventListener('hashchange', applyHash);
   prevBtn.addEventListener('click', () => go(current - 1));
   nextBtn.addEventListener('click', () => go(current + 1));
