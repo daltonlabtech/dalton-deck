@@ -106,7 +106,12 @@
   .slide-01 .meta::before, .slide-01 .meta::after { content: ''; width: 36px; height: 1px; background: var(--cyan-dim); }
   .slide-01 h1 { font-size: clamp(38px, 4.8vw, 74px); font-weight: 700; line-height: 1.06; letter-spacing: -0.035em; margin-bottom: 28px; max-width: 20ch; text-wrap: balance; }
   .slide-01 h1 em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); -webkit-text-fill-color: var(--cyan); display: inline-block; }
-  .slide-01 .tagline { font-family: var(--serif); font-style: italic; font-size: clamp(17px, 1.5vw, 23px); color: var(--text-2); font-weight: 300; letter-spacing: 0.01em; }
+  .slide-01 .tagline { font-family: var(--serif); font-style: italic; font-size: clamp(17px, 1.5vw, 23px); color: var(--text-2); font-weight: 300; letter-spacing: 0.01em; margin-bottom: 30px; }
+  .cover-video { position: relative; width: 100%; max-width: 600px; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden; border: 1px solid var(--cyan-faint); box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(51,173,229,0.10); }
+  .cover-video video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cover-video::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(51,173,229,0.08) 0%, transparent 50%); pointer-events: none; z-index: 2; }
+  .cover-corner { position: absolute; top: 14px; left: 14px; background: rgba(8,14,29,0.85); backdrop-filter: blur(8px); border: 1px solid var(--cyan-faint); padding: 5px 11px; border-radius: 6px; font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-2); display: flex; align-items: center; gap: 7px; z-index: 3; }
+  .cover-corner::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
 
   /* ================= SLIDE 02 — O MUNDO MUDOU (dark) ================= */
   .slide-02 .s2-eyebrow-title { font-size: clamp(28px, 3.2vw, 46px); font-weight: 700; letter-spacing: -0.02em; color: var(--cyan); margin-bottom: 3vh; }
@@ -840,6 +845,12 @@
     <div class="meta reveal">Plano de transformação · Neogrid</div>
     <h1 class="reveal">Nosso planejamento para transformar a <em>Neogrid</em><br>em uma Organização Agêntica</h1>
     <p class="tagline reveal">O mesmo time. Resultados completamente diferentes.</p>
+    <div class="cover-video reveal">
+      <div class="cover-corner">Dalton Lab</div>
+      <video autoplay muted loop playsinline preload="auto">
+        <source src="dalton-video.mp4" type="video/mp4">
+      </video>
+    </div>
   </section>
 
 <!-- ============ SLIDE — SEM MASTER FEE ============ -->
