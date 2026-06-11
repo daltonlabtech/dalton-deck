@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dalton Lab · Plano de Transformação Agêntica · Neogrid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a1628; --bg-elevated: #0d1d36;
+    --bg-card: rgba(13, 29, 54, 0.6);
+    --cyan: #33ADE5; --cyan-bright: #5fc3f0;
+    --cyan-dim: rgba(51, 173, 229, 0.4);
+    --cyan-faint: rgba(51, 173, 229, 0.15);
+    --text: #e8eef5; --text-2: #b8c8db;
+    --text-3: #8aa5c2; --text-4: #5f7a98;
+    --warn: #ff8080;
+    --purple: #A855F7;
+    --navy-card: #0c1c33;
+    /* light theme tokens */
+    --l-bg: #ffffff; --l-bg-2: #f6f9fc;
+    --l-text: #0a0a0a; --l-text-2: #3d4a5c; --l-text-3: #6b7a8d; --l-text-4: #9aa7b6;
+    --l-border: #e4ebf2; --l-card: #ffffff;
+    --display: 'Bricolage Grotesque', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    --serif: 'Fraunces', serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--display); -webkit-font-smoothing: antialiased; }
+
+  /* ---------- DECK BACKGROUND (dark base) ---------- */
+  .deck { width: 100vw; height: 100vh; position: relative; background: radial-gradient(ellipse at 80% 20%, rgba(51, 173, 229, 0.10) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%), linear-gradient(180deg, #0a1628 0%, #0d1d36 100%); }
+  .deck::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(51, 173, 229, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(51, 173, 229, 0.035) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); }
+
+  .progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--cyan); width: 0; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100; box-shadow: 0 0 12px rgba(51, 173, 229, 0.6); }
+
+  /* ---------- SLIDE + CINEMATIC TRANSITION ---------- */
+  .slide {
+    position: absolute; inset: 0; padding: 6vh 7vw; display: flex; flex-direction: column;
+    opacity: 0; visibility: hidden;
+    transform: scale(1.045);
+    filter: blur(10px);
+    transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1), transform 0.9s cubic-bezier(0.16,1,0.3,1), filter 0.6s cubic-bezier(0.4,0,0.2,1);
+    z-index: 1;
+  }
+  .slide.active { opacity: 1; visibility: visible; transform: scale(1); filter: blur(0); z-index: 2; }
+  .slide.prev { transform: scale(0.965); }
+
+  /* staggered reveals with depth */
+  .slide.active .reveal { animation: reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .slide.active .reveal:nth-child(1) { animation-delay: 0.15s; }
+  .slide.active .reveal:nth-child(2) { animation-delay: 0.28s; }
+  .slide.active .reveal:nth-child(3) { animation-delay: 0.41s; }
+  .slide.active .reveal:nth-child(4) { animation-delay: 0.54s; }
+  .slide.active .reveal:nth-child(5) { animation-delay: 0.67s; }
+  .slide.active .reveal:nth-child(6) { animation-delay: 0.80s; }
+  @keyframes reveal { from { opacity: 0; transform: translateY(26px); filter: blur(6px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+
+  /* ---------- LIGHT SLIDES ---------- */
+  .slide.light { background: var(--l-bg); color: var(--l-text); }
+  .slide.light::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(51,173,229,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(51,173,229,0.05) 1px, transparent 1px); background-size: 56px 56px; pointer-events: none; mask-image: radial-gradient(ellipse at center, black 25%, transparent 85%); -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 85%); }
+  .slide.light::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--cyan), rgba(51,173,229,0)); }
+  .slide.light .slide-header { color: var(--l-text-3); }
+  .slide.light .slide-num { color: var(--l-text-4); }
+  .slide.light .slide-footer { color: var(--l-text-4); border-top-color: var(--l-border); }
+  .slide.light .slide-footer .brand strong { color: var(--l-text); }
+  .slide.light .display-lg { color: var(--l-text); }
+  .slide.light .body { color: var(--l-text-2); }
+
+  /* ---------- SHARED COMPONENTS ---------- */
+  .slide-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4vh; font-family: var(--mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 2px; position: relative; z-index: 2; }
+  .slide-tag { color: var(--cyan); display: flex; align-items: center; gap: 12px; }
+  .slide-tag::before { content: ''; width: 22px; height: 1px; background: var(--cyan); }
+  .slide-num { color: var(--text-4); }
+  .slide-num strong { color: var(--cyan); }
+  .slide-footer { margin-top: auto; padding-top: 3vh; display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 10px; color: var(--text-4); text-transform: uppercase; letter-spacing: 1.5px; border-top: 1px solid var(--cyan-faint); position: relative; z-index: 2; }
+  .slide-footer .brand { color: var(--cyan); }
+  .slide-footer .brand strong { color: var(--text); }
+
+  .display-lg { font-size: clamp(36px, 4.5vw, 68px); font-weight: 700; line-height: 1.05; letter-spacing: -0.025em; color: var(--text); }
+  .body { font-size: clamp(15px, 1.3vw, 20px); line-height: 1.55; color: var(--text-2); font-weight: 400; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--cyan); text-transform: uppercase; letter-spacing: 2.5px; font-weight: 500; }
+  em.highlight { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); background: none; -webkit-text-fill-color: var(--cyan); }
+
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-mark { width: 38px; height: 38px; border-radius: 8px; box-shadow: 0 0 20px rgba(51, 173, 229, 0.3); overflow: hidden; flex-shrink: 0; }
+  .logo-mark svg { width: 100%; height: 100%; display: block; }
+  .logo-text { font-family: var(--display); font-weight: 600; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--text); }
+  .logo-text span { color: var(--cyan); }
+
+  /* ---------- NAV ---------- */
+  .nav { position: fixed; bottom: 24px; right: 32px; display: flex; align-items: center; gap: 16px; z-index: 50; font-family: var(--mono); }
+  .nav-btn { width: 44px; height: 44px; background: var(--bg-card); backdrop-filter: blur(10px); border: 1px solid var(--cyan-faint); border-radius: 8px; color: var(--text-2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.2s; }
+  .nav-btn:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(51, 173, 229, 0.1); }
+  .nav-counter { color: var(--text-3); font-size: 12px; letter-spacing: 1px; min-width: 56px; text-align: center; }
+  .nav-counter strong { color: var(--cyan); font-weight: 500; }
+
+  /* ================= SLIDE 01 — CAPA (dark) ================= */
+  .slide-01 { justify-content: center; align-items: center; text-align: center; }
+  .slide-01 .cover-logo { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 56px; }
+  .slide-01 .cover-logo .logo-mark { width: 64px; height: 64px; border-radius: 14px; box-shadow: 0 0 40px rgba(51,173,229,0.45); }
+  .slide-01 .cover-logo .logo-text { font-size: 16px; letter-spacing: 4px; }
+  .slide-01 .meta { font-family: var(--mono); color: var(--cyan); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 26px; display: flex; align-items: center; gap: 14px; }
+  .slide-01 .meta::before, .slide-01 .meta::after { content: ''; width: 36px; height: 1px; background: var(--cyan-dim); }
+  .slide-01 h1 { font-size: clamp(38px, 4.8vw, 74px); font-weight: 700; line-height: 1.06; letter-spacing: -0.035em; margin-bottom: 28px; max-width: 20ch; text-wrap: balance; }
+  .slide-01 h1 em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); -webkit-text-fill-color: var(--cyan); display: inline-block; }
+  .slide-01 .tagline { font-family: var(--serif); font-style: italic; font-size: clamp(17px, 1.5vw, 23px); color: var(--text-2); font-weight: 300; letter-spacing: 0.01em; }
+
+  /* ================= SLIDE 02 — O MUNDO MUDOU (dark) ================= */
+  .slide-02 .s2-eyebrow-title { font-size: clamp(28px, 3.2vw, 46px); font-weight: 700; letter-spacing: -0.02em; color: var(--cyan); margin-bottom: 3vh; }
+  .slide-02 .s2-main { display: flex; align-items: flex-end; justify-content: space-between; gap: 6vw; margin: 0; flex-wrap: wrap; }
+  .slide-02 .stat-number { font-size: clamp(96px, 15vw, 230px); font-weight: 700; line-height: 0.82; letter-spacing: -0.04em; background: linear-gradient(180deg, var(--cyan) 0%, rgba(51,173,229,0.35) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; padding: 0 0.12em; margin: 0 -0.12em; }
+  .slide-02 .stat-number .frac { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 0.26em; letter-spacing: 0; -webkit-text-fill-color: var(--text-3); color: var(--text-3); background: none; vertical-align: middle; padding: 0 0.18em; }
+  .slide-02 .stat-label { font-size: clamp(20px, 2.2vw, 34px); font-weight: 500; color: var(--text); line-height: 1.15; margin-top: 14px; max-width: 16ch; }
+  /* outlier visualization */
+  .slide-02 .s2-viz { display: flex; flex-direction: column; gap: 14px; padding-bottom: 6px; }
+  .slide-02 .bars { display: flex; align-items: flex-end; gap: clamp(6px, 0.9vw, 12px); height: clamp(120px, 17vh, 180px); }
+  .slide-02 .bar { width: clamp(20px, 2.4vw, 36px); height: 100%; border-radius: 8px 8px 4px 4px; background: linear-gradient(180deg, rgba(51,173,229,0.55), rgba(51,173,229,0.12)); border: 1px solid var(--cyan-dim); position: relative; }
+  .slide-02 .bar.empty { background: transparent; border: 1px dashed var(--text-4); }
+  .slide-02 .s2-body { margin-top: 5vh; max-width: 64ch; }
+  .slide-02 .s2-source { margin-top: 18px; font-family: var(--mono); font-size: 11px; color: var(--purple); text-transform: uppercase; letter-spacing: 2px; }
+  /* distribution curve */
+  .s2-viz--curve .curve-wrap { position: relative; width: clamp(320px, 36vw, 520px); }
+  .s2-viz--curve svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .s2-viz--curve .curve-area { fill: url(#curveGrad); }
+  .s2-viz--curve .curve-line { fill: none; stroke: var(--cyan); stroke-width: 2; }
+  .s2-viz--curve .axis { stroke: rgba(255,255,255,0.14); stroke-width: 1; }
+  .s2-viz--curve .massdot { fill: rgba(51,173,229,0.55); }
+  .s2-viz--curve .outdot { fill: #eaf6ff; filter: drop-shadow(0 0 8px var(--cyan-bright)); }
+  .s2-viz--curve .out-ring { fill: none; stroke: var(--cyan-bright); stroke-width: 1.5; opacity: 0.6; }
+  .s2-viz--curve .clabel { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; fill: var(--cyan-bright); }
+  .s2-viz--curve .clabel.muted { fill: var(--text-4); }
+
+  /* ================= SLIDE 03 — ORGANIZAÇÃO AGÊNTICA (dark, hero) ================= */
+  .slide-03 .s3-top { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; margin: 0 auto 3.5vh; max-width: 1000px; }
+  .slide-03 .s3-title { font-size: clamp(30px, 3.9vw, 58px); font-weight: 700; line-height: 1.07; letter-spacing: -0.03em; max-width: 22ch; }
+  .slide-03 .s3-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); white-space: nowrap; }
+  .slide-03 .s3-body { font-size: clamp(13px, 1.05vw, 17px); color: var(--text-2); line-height: 1.55; max-width: 60ch; }
+
+  .slide-03 .orgs { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; flex: 1; min-height: 0; }
+  .org-panel { border: 1px solid var(--cyan-faint); border-radius: 16px; padding: 24px 28px 20px; display: flex; flex-direction: column; position: relative; overflow: hidden; background: rgba(13,29,54,0.35); }
+  .org-panel.trad { border-color: rgba(255,255,255,0.10); }
+  .org-panel.agentic::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), transparent); }
+  .org-label { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .org-panel.trad .org-label { color: var(--text-3); }
+  .org-panel.agentic .org-label { color: var(--cyan); }
+  .org-diagram { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; min-height: 0; padding: 12px 0; }
+  .org-caption { margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.07); font-size: clamp(11px, 0.92vw, 13.5px); color: var(--text-3); line-height: 1.4; }
+  .org-panel.agentic .org-caption { color: var(--text-2); border-top-color: var(--cyan-faint); }
+
+  /* traditional tree (gray, widening pyramid) */
+  .tree-level { display: flex; gap: 10px; justify-content: center; align-items: center; }
+  .tick { width: 1px; height: 16px; background: rgba(255,255,255,0.18); }
+  .t-node { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-3); border: 1px solid rgba(255,255,255,0.18); border-radius: 6px; padding: 6px 12px; background: rgba(255,255,255,0.03); }
+  .t-dot { width: 13px; height: 13px; border-radius: 50%; background: rgba(255,255,255,0.16); }
+
+  /* ================= SLIDE 04 — A DIFERENÇA (dark, afirmação) ================= */
+  .slide-04 { justify-content: center; }
+  .slide-04 .s4-wrap { max-width: 860px; }
+  .slide-04 .s4-rule { width: 48px; height: 3px; background: var(--cyan); border-radius: 2px; margin-bottom: 30px; box-shadow: 0 0 16px rgba(51,173,229,0.5); }
+  .slide-04 .s4-title { font-size: clamp(32px, 4.4vw, 66px); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; color: var(--text); }
+  .slide-04 .s4-title .q { color: var(--text-3); font-weight: 700; }
+  .slide-04 .s4-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .slide-04 .s4-body { margin-top: 34px; font-size: clamp(15px, 1.3vw, 20px); color: var(--text-2); line-height: 1.6; max-width: 62ch; }
+  .slide-04 .s4-body em { font-family: var(--serif); font-style: italic; color: var(--text); }
+  .slide-04 .s4-viz { margin-top: clamp(32px, 5vh, 52px); display: flex; flex-direction: column; gap: 16px; width: 100%; }
+  .s4-lane { display: grid; grid-template-columns: 80px 1fr 56px; align-items: center; gap: 24px; padding: clamp(18px, 2.6vh, 28px) clamp(22px, 2vw, 34px); border-radius: 14px; }
+  .s4-lane.wrong { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); }
+  .s4-lane.right { background: rgba(51,173,229,0.07); border: 1px solid var(--cyan-faint); position: relative; overflow: hidden; }
+  .s4-lane.right::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), transparent); }
+  .s4-lane-label { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; text-align: right; padding-right: 12px; border-right: 1px solid; }
+  .s4-lane.wrong .s4-lane-label { color: var(--text-4); border-right-color: rgba(255,255,255,0.1); }
+  .s4-lane.right .s4-lane-label { color: var(--cyan); border-right-color: var(--cyan-dim); }
+  .s4-lane-flow { display: flex; align-items: center; gap: clamp(10px, 1.2vw, 18px); flex-wrap: nowrap; }
+  .s4-lb { border: 1px solid; border-radius: 10px; padding: clamp(10px, 1.4vh, 16px) clamp(16px, 1.6vw, 24px); font-size: clamp(13px, 1.1vw, 17px); font-weight: 500; white-space: nowrap; flex-shrink: 0; }
+  .s4-lane.wrong .s4-lb { border-color: rgba(255,255,255,0.1); color: var(--text-4); background: transparent; }
+  .s4-lane.right .s4-lb { border-color: var(--cyan-faint); color: var(--text-2); background: rgba(51,173,229,0.08); }
+  .s4-arr { flex-shrink: 0; font-size: clamp(14px, 1.2vw, 20px); }
+  .s4-lane.wrong .s4-arr { color: rgba(255,255,255,0.14); }
+  .s4-lane.right .s4-arr { color: var(--cyan-dim); }
+  .s4-orbs { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .s4-orb { width: clamp(26px, 2.8vw, 40px); height: clamp(26px, 2.8vw, 40px); border-radius: 50%; background: radial-gradient(circle at 35% 30%, var(--cyan-bright), #1b6fa0 80%); box-shadow: 0 0 18px rgba(51,173,229,0.7); position: relative; flex-shrink: 0; }
+  .s4-orb::after { content: ''; position: absolute; inset: -6px; border: 1.5px solid var(--cyan-bright); border-radius: 50%; opacity: 0.4; animation: pulse-soft 2.4s ease-out infinite; }
+  .s4-orb:nth-child(2)::after { animation-delay: 0.6s; }
+  .s4-orb:nth-child(3)::after { animation-delay: 1.2s; }
+  .s4-orb:nth-child(4)::after { animation-delay: 1.8s; }
+  .s4-orb-label { font-size: clamp(13px, 1.15vw, 18px); font-weight: 600; color: var(--cyan-bright); white-space: nowrap; margin-left: 6px; }
+  .s4-verdict { font-family: var(--mono); font-size: clamp(15px, 1.4vw, 22px); font-weight: 700; text-align: center; }
+  .s4-lane.wrong .s4-verdict { color: rgba(194,85,79,0.7); }
+  .s4-lane.right .s4-verdict { color: #46e0a0; }
+
+  /* ================= SLIDE 05 — QUEM SOMOS (light) ================= */
+  .slide-05 { justify-content: center; }
+  .slide-05 .s5-head { max-width: 840px; margin: 0 auto clamp(26px, 4vh, 46px); }
+  .slide-05 .s5-kicker { font-family: var(--mono); font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 12px; }
+  .slide-05 .s5-title { font-size: clamp(28px, 3.2vw, 46px); font-weight: 700; letter-spacing: -0.03em; color: var(--l-text); line-height: 1.08; max-width: 20ch; }
+  .slide-05 .s5-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .slide-05 .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 3vw, 52px); max-width: 840px; margin: 0 auto; }
+  .s5-card { display: flex; flex-direction: column; }
+  .s5-photo { width: 100%; aspect-ratio: 3 / 4; border-radius: 14px; overflow: hidden; background: #eef3f8; box-shadow: 0 14px 34px rgba(10, 30, 60, 0.14); }
+  .s5-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 22%; display: block; }
+  .s5-name { margin-top: 18px; font-size: clamp(19px, 1.9vw, 27px); font-weight: 700; color: var(--l-text); letter-spacing: -0.02em; line-height: 1.1; }
+  .s5-role { margin-top: 6px; font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); }
+  .s5-bio { margin-top: 12px; font-size: clamp(12.5px, 1.02vw, 15.5px); color: var(--l-text-2); line-height: 1.5; }
+
+  /* ================= SLIDE 06 — A JORNADA (dark) ================= */
+  .slide-06 { justify-content: center; }
+  .slide-06 .s6-head { max-width: 780px; margin-bottom: clamp(44px, 9vh, 100px); }
+  .slide-06 .s6-title { font-size: clamp(30px, 3.6vw, 54px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.06; color: var(--text); }
+  .slide-06 .s6-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .slide-06 .s6-body { margin-top: 18px; font-size: clamp(14px, 1.15vw, 18px); color: var(--text-2); line-height: 1.55; max-width: 64ch; }
+  .journey { display: flex; align-items: flex-start; }
+  .j-step { flex: 1; padding-top: 30px; border-top: 2px solid var(--cyan-faint); position: relative; padding-right: clamp(14px, 2vw, 32px); }
+  .j-step::before { content: ''; position: absolute; top: -7px; left: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 14px rgba(51,173,229,0.7); }
+  .j-num { font-family: var(--mono); font-size: 13px; letter-spacing: 2px; color: var(--cyan); font-weight: 600; }
+  .j-name { margin-top: 12px; font-size: clamp(22px, 2.4vw, 38px); font-weight: 700; letter-spacing: -0.02em; color: var(--text); line-height: 1.04; }
+  .j-desc { margin-top: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-3); }
+  .j-arrow { flex: 0 0 auto; align-self: flex-start; margin: -13px clamp(8px, 1.4vw, 22px) 0; color: var(--cyan-dim); }
+  .j-arrow svg { width: clamp(22px, 2vw, 30px); height: auto; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; display: block; }
+
+  /* ================= SLIDES 07 / 09 / 10 — ETAPAS (dark, número gigante) ================= */
+  .stage { justify-content: center; }
+  .stage-grid { display: grid; grid-template-columns: minmax(0, auto) 1fr; gap: clamp(36px, 6vw, 104px); align-items: center; }
+  .stage-num { font-family: var(--display); font-size: clamp(170px, 25vw, 360px); font-weight: 800; line-height: 0.78; letter-spacing: -0.06em; background: linear-gradient(160deg, rgba(51,173,229,0.30), rgba(51,173,229,0.04)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; padding-right: 0.06em; user-select: none; }
+  .stage-content { max-width: 640px; }
+  .stage-title { margin-top: 16px; font-size: clamp(28px, 3.4vw, 50px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; color: var(--text); }
+  .stage-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .stage-body { margin-top: 20px; font-size: clamp(14px, 1.2vw, 18px); color: var(--text-2); line-height: 1.6; }
+  .stage-body strong { color: var(--text); font-weight: 600; }
+  .invest { margin-top: 30px; padding-top: 22px; border-top: 1px solid var(--cyan-faint); display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  .invest-label { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); }
+  .invest-value { font-size: clamp(22px, 2.2vw, 34px); font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+  /* etapa — sequência de fases em pills */
+  .stage-flow { display: flex; align-items: center; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
+  .stage-pill { border: 1px solid var(--cyan-faint); background: rgba(51,173,229,0.07); border-radius: 100px; padding: 8px 15px; font-size: clamp(12px, 1vw, 14px); color: var(--text); }
+  .stage-arrow { color: var(--cyan-dim); display: flex; }
+  .stage-arrow svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .stage-incl { margin-top: 16px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-3); }
+  .stage-incl .pin { display: flex; align-items: center; gap: 7px; }
+  .stage-incl .pin::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #46e0a0; box-shadow: 0 0 6px rgba(70,224,160,0.7); }
+  .stage-content--wide { max-width: 940px; }
+  /* etapa 2 — fases em cards com ícones */
+  .phase-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 22px; }
+  .phase { border: 1px solid var(--cyan-faint); border-radius: 12px; padding: 18px 15px; background: rgba(13,29,54,0.32); display: flex; flex-direction: column; gap: 12px; position: relative; }
+  .phase::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), transparent); border-radius: 12px 12px 0 0; }
+  .phase .ph-ico { width: 30px; height: 30px; color: var(--cyan-bright); }
+  .phase .ph-ico svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .phase .ph-step { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; color: var(--cyan); }
+  .phase .ph-name { font-size: clamp(13px, 1.05vw, 16px); font-weight: 600; color: var(--text); line-height: 1.2; margin-top: -2px; }
+  /* etapa 3 — itens contínuos (lista 2x2) */
+  .recur-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 30px; margin-top: 22px; }
+  .recur-item { display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-top: 1px solid rgba(255,255,255,0.07); }
+  .recur-item .r-ico { width: 24px; height: 24px; color: var(--cyan-bright); flex-shrink: 0; margin-top: 1px; }
+  .recur-item .r-ico svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .recur-item .r-name { font-size: clamp(14px, 1.1vw, 17px); font-weight: 600; color: var(--text); line-height: 1.2; }
+  .recur-item .r-desc { font-size: 12.5px; color: var(--text-3); margin-top: 4px; line-height: 1.4; }
+
+  /* ================= SLIDE 14 — TRAÇÃO (dark, mapa-múndi + métricas) ================= */
+  .slide-14 { justify-content: center; }
+  .s14-top { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(28px, 4vw, 64px); align-items: center; }
+  .s14-title { margin-top: 14px; font-size: clamp(28px, 3.6vw, 52px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.08; color: var(--text); }
+  .s14-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .s14-body { margin-top: 18px; font-size: clamp(14px, 1.15vw, 18px); color: var(--text-2); line-height: 1.55; max-width: 46ch; }
+  .worldmap { position: relative; width: 100%; aspect-ratio: 100 / 54; border: 1px solid var(--cyan-faint); border-radius: 16px; background: radial-gradient(ellipse at 58% 42%, rgba(51,173,229,0.10), transparent 70%), rgba(13,29,54,0.40); overflow: hidden; }
+  .worldmap svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .wm-grat { stroke: rgba(255,255,255,0.05); stroke-width: 0.18; }
+  .wm-arc { stroke: var(--cyan-dim); stroke-width: 0.35; fill: none; stroke-dasharray: 1.4 1.4; }
+  .wm-dot { fill: var(--cyan-bright); filter: drop-shadow(0 0 1.2px var(--cyan-bright)); }
+  .wm-ring { fill: none; stroke: var(--cyan-bright); stroke-width: 0.35; transform-box: fill-box; transform-origin: center; animation: wmring 2.6s ease-in-out infinite; }
+  .wm-ring.r2 { animation-delay: 0.6s; } .wm-ring.r3 { animation-delay: 1.2s; } .wm-ring.r4 { animation-delay: 1.8s; }
+  @keyframes wmring { 0%,100% { opacity: 0.55; } 50% { opacity: 0.12; } }
+  .wm-label { fill: var(--text-2); font-family: var(--mono); font-size: 2.3px; letter-spacing: 0.2px; text-transform: uppercase; }
+  .s14-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(14px, 2.5vw, 40px); margin-top: clamp(26px, 5vh, 54px); }
+  .metric-num { font-size: clamp(40px, 5vw, 76px); font-weight: 800; letter-spacing: -0.035em; color: var(--text); line-height: 1; }
+  .metric-num span { color: var(--cyan); }
+  .metric-label { margin-top: 11px; font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-3); }
+  .trac-logos { margin-top: clamp(22px, 4vh, 42px); padding-top: clamp(16px, 2.6vh, 24px); border-top: 1px solid var(--cyan-faint); display: flex; align-items: center; justify-content: center; gap: clamp(20px, 3.2vw, 48px); flex-wrap: wrap; }
+  .trac-logos img { height: clamp(18px, 1.7vw, 26px); width: auto; max-width: 120px; object-fit: contain; opacity: 0.62; }
+
+  /* mapa — opção B: globo */
+  .worldmap--globe { position: relative; width: 100%; aspect-ratio: 100 / 54; display: flex; align-items: center; justify-content: center; }
+  .worldmap--globe svg { height: 100%; width: auto; aspect-ratio: 1; overflow: visible; }
+  .gl-sphere { fill: url(#globeGrad); stroke: var(--cyan-dim); stroke-width: 0.4; }
+  .gl-line { fill: none; stroke: rgba(51,173,229,0.22); stroke-width: 0.3; }
+  .gl-dot { fill: var(--cyan-bright); filter: drop-shadow(0 0 1.4px var(--cyan-bright)); }
+  .gl-ring { fill: none; stroke: var(--cyan-bright); stroke-width: 0.4; transform-box: fill-box; transform-origin: center; animation: wmring 2.6s ease-in-out infinite; }
+  .gl-ring.r2 { animation-delay: 0.6s; } .gl-ring.r3 { animation-delay: 1.2s; } .gl-ring.r4 { animation-delay: 1.8s; }
+  .gl-label { fill: var(--text-2); font-family: var(--mono); font-size: 2.5px; text-transform: uppercase; letter-spacing: 0.2px; }
+
+  /* mapa — opção C: contornos reais */
+  .worldmap--real { position: relative; width: 100%; aspect-ratio: 1010 / 666; border: 1px solid var(--cyan-faint); border-radius: 16px; background: radial-gradient(ellipse at 55% 45%, rgba(51,173,229,0.08), transparent 70%), rgba(13,29,54,0.40); overflow: hidden; }
+  .worldmap--real .wm-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; opacity: 0.95; }
+  .worldmap--real .wm-pins { position: absolute; inset: 0; }
+  .wm-pin { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .wm-pin .pdot { width: 11px; height: 11px; border-radius: 50%; background: var(--cyan-bright); box-shadow: 0 0 12px var(--cyan-bright); position: relative; }
+  .wm-pin .pdot::after { content: ''; position: absolute; inset: -6px; border: 1.5px solid var(--cyan-bright); border-radius: 50%; opacity: 0.55; animation: pulse-soft 2.4s infinite; }
+  .wm-pin .plabel { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text); white-space: nowrap; }
+
+
+  /* ================= SLIDES 11 / 12 / 13 — CASES (light, antes → com IA) ================= */
+  .slide-case { justify-content: center; }
+  .case-head { display: flex; align-items: center; gap: 18px; margin-bottom: clamp(18px, 3vh, 34px); padding-bottom: 16px; border-bottom: 1px solid var(--l-border); }
+  .case-badge { display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid var(--cyan); border-radius: 12px; padding: 8px 16px; background: rgba(51,173,229,0.06); flex-shrink: 0; }
+  .cb-kicker { font-family: var(--mono); font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--cyan); }
+  .cb-num { font-size: clamp(22px, 2.5vw, 36px); font-weight: 800; color: var(--cyan); line-height: 1; letter-spacing: -0.02em; }
+  .case-ctx-title { font-size: clamp(18px, 1.9vw, 27px); font-weight: 700; color: var(--l-text); letter-spacing: -0.02em; line-height: 1.1; }
+  .case-ctx-sub { font-family: var(--mono); font-size: clamp(10px, 0.95vw, 12.5px); color: var(--l-text-3); letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; }
+  .case-of { margin-left: auto; font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; color: var(--l-text-4); text-transform: uppercase; align-self: flex-start; }
+  .case-of b { color: var(--cyan); }
+  .case-problem { margin-bottom: clamp(16px, 2.6vh, 28px); }
+  .cp-label { font-family: var(--mono); font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: #c2554f; font-weight: 600; margin-bottom: 9px; display: flex; align-items: center; gap: 9px; }
+  .cp-label::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #c2554f; }
+  .cp-text { font-size: clamp(14px, 1.2vw, 18px); color: var(--l-text); line-height: 1.5; max-width: 96ch; font-weight: 500; }
+  .cp-text em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .case-cols { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2.5vw, 36px); }
+  .case-col { border: 1px solid var(--l-border); border-radius: 14px; padding: 20px 24px; background: var(--l-card); }
+  .case-col.before { background: var(--l-bg-2); }
+  .case-col.after { border-color: rgba(51,173,229,0.45); box-shadow: 0 14px 34px rgba(51,173,229,0.13); position: relative; overflow: hidden; }
+  .case-col.after::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--cyan), transparent); }
+  .case-col-label { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+  .case-col.before .case-col-label { color: var(--l-text-3); }
+  .case-col.after .case-col-label { color: var(--cyan); }
+  .case-li { display: flex; gap: 11px; align-items: flex-start; padding: 10px 0; font-size: clamp(13px, 1.05vw, 16px); color: var(--l-text); line-height: 1.35; }
+  .case-li + .case-li { border-top: 1px solid var(--l-border); }
+  .case-col.before .case-li { color: var(--l-text-2); }
+  .case-li .mk { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; }
+  .case-li .mk svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .case-col.before .mk { color: #d08a8a; }
+  .case-col.after .mk { color: #1fa971; }
+  .case-result { margin-top: clamp(20px, 3.2vh, 36px); border-left: 4px solid var(--cyan); background: linear-gradient(90deg, rgba(51,173,229,0.12), rgba(51,173,229,0)); border-radius: 0 12px 12px 0; padding: 18px 24px; display: flex; flex-direction: column; gap: 8px; }
+  .cr-label { font-family: var(--mono); font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--cyan); font-weight: 600; }
+  .cr-main { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  .cr-value { font-size: clamp(23px, 2.9vw, 42px); font-weight: 700; color: var(--l-text); letter-spacing: -0.025em; line-height: 1.05; }
+  .cr-value em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .cr-sub { font-size: clamp(12px, 1vw, 15px); color: var(--l-text-2); }
+
+  /* option badge (temporary) */
+  .opt-badge { position: absolute; top: 5vh; left: 7vw; z-index: 5; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--purple); border: 1px solid var(--purple-dim, #6b3aa0); border-radius: 100px; padding: 4px 12px; }
+  .diag-ico { color: var(--cyan-bright); flex-shrink: 0; }
+  .diag-ico svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; display: block; }
+  .blk-label { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); }
+
+  /* Diagnóstico — fluxo horizontal + entregável em destaque */
+  .s7c { justify-content: center; }
+  .s7c-flow { display: flex; align-items: stretch; gap: clamp(8px, 1.2vw, 16px); margin-top: clamp(22px, 3.5vh, 36px); }
+  .s7c-step { flex: 1; border: 1px solid var(--cyan-faint); border-radius: 12px; padding: 18px 16px; background: rgba(13,29,54,0.3); display: flex; flex-direction: column; gap: 10px; }
+  .s7c-step .diag-ico { width: 26px; height: 26px; }
+  .s7c-step .t { font-size: clamp(13px, 1.05vw, 16px); font-weight: 600; color: var(--text); line-height: 1.25; }
+  .s7c-arrow { align-self: center; color: var(--cyan-dim); flex-shrink: 0; }
+  .s7c-arrow svg { width: clamp(18px, 1.6vw, 24px); height: auto; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; display: block; }
+  .s7c-deliv { margin-top: 18px; border: 1px solid var(--cyan); border-radius: 14px; padding: 18px 24px; background: rgba(51,173,229,0.08); display: flex; align-items: center; gap: clamp(18px, 3vw, 40px); flex-wrap: wrap; }
+  .s7c-deliv .blk-label { color: var(--cyan-bright); }
+  .s7c-deliv .items { display: flex; gap: clamp(16px, 2.5vw, 32px); flex-wrap: wrap; }
+  .s7c-deliv .it { display: flex; align-items: center; gap: 9px; font-size: clamp(13px, 1.05vw, 16px); color: var(--text); }
+  .s7c-deliv .it .diag-ico { width: 20px; height: 20px; }
+
+  /* ================= SLIDE 08 — MAPA DALTON LAB OS (dark, imersivo) ================= */
+  .slide-08 { justify-content: center; align-items: center; }
+  .slide-08 .s8-head { text-align: center; margin-bottom: clamp(18px, 3.2vh, 34px); }
+  .slide-08 .s8-title { margin-top: 12px; font-size: clamp(24px, 2.9vw, 44px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.06; color: var(--text); }
+  .slide-08 .s8-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .slide-08 .s8-frame { position: relative; width: 100%; max-width: 1180px; }
+  .slide-08 .s8-frame::before { content: ''; position: absolute; inset: -8% -4%; background: radial-gradient(ellipse at center, rgba(51,173,229,0.25), transparent 70%); filter: blur(30px); z-index: 0; }
+  .slide-08 .s8-frame img { position: relative; z-index: 1; width: 100%; display: block; border-radius: 16px; border: 1px solid var(--cyan-faint); box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+  .slide-08 .s8-note { margin-top: 18px; text-align: center; font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-4); }
+
+  /* agentic panel — Dalton Lab OS map thumbnail */
+  .org-thumb { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; }
+  .org-thumb img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px; border: 1px solid var(--cyan-faint); box-shadow: 0 16px 44px rgba(0,0,0,0.55); }
+
+  /* ================= SLIDE 16 — TIME USA POR DENTRO (dark, vivo) ================= */
+  .slide-16 { justify-content: center; }
+  .s16-head { max-width: 900px; margin-bottom: clamp(20px, 3.6vh, 40px); }
+  .s16-title { font-size: clamp(26px, 3.2vw, 46px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.07; color: var(--text); }
+  .s16-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .s16-body { margin-top: 16px; font-size: clamp(13.5px, 1.1vw, 17px); color: var(--text-2); line-height: 1.55; max-width: 66ch; }
+
+  .agent-list { display: flex; flex-direction: column; gap: clamp(10px, 1.6vh, 16px); }
+  .agent-row { display: grid; grid-template-columns: minmax(0, 0.62fr) clamp(40px, 6vw, 92px) minmax(0, 1.5fr); align-items: center; gap: clamp(8px, 1.2vw, 18px); }
+
+  /* pessoa */
+  .ar-person { display: flex; align-items: center; gap: 12px; }
+  .ar-person-ico { width: clamp(30px, 3vw, 40px); height: clamp(30px, 3vw, 40px); border-radius: 10px; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.04); color: var(--text-3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ar-person-ico svg { width: 56%; height: 56%; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .ar-role { font-size: clamp(14px, 1.45vw, 21px); font-weight: 700; color: var(--text); letter-spacing: -0.02em; line-height: 1.1; }
+
+  /* conector com fluxo animado */
+  .ar-flow { width: 100%; height: 12px; overflow: visible; }
+  .ar-flow .fl-line { stroke: var(--cyan-dim); stroke-width: 1.4; stroke-dasharray: 4 4; animation: flowdash 0.9s linear infinite; }
+  .ar-flow .fl-head { fill: none; stroke: var(--cyan); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  @keyframes flowdash { to { stroke-dashoffset: -8; } }
+
+  /* nó-agente */
+  .ar-agent { display: flex; align-items: center; gap: clamp(12px, 1.4vw, 18px); border: 1px solid var(--cyan-faint); border-radius: 14px; padding: clamp(11px, 1.5vh, 15px) clamp(14px, 1.6vw, 20px); background: linear-gradient(100deg, rgba(51,173,229,0.07), rgba(13,29,54,0.30)); position: relative; overflow: hidden; }
+  .ar-agent::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--cyan), transparent); }
+  .ar-orb { width: clamp(38px, 3.6vw, 50px); height: clamp(38px, 3.6vw, 50px); border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #eaf6ff; background: radial-gradient(circle at 35% 30%, var(--cyan-bright), #1b6fa0 80%); box-shadow: 0 0 18px rgba(51,173,229,0.5); position: relative; }
+  .ar-orb svg { width: 52%; height: 52%; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; position: relative; z-index: 1; }
+  .ar-orb::after { content: ''; position: absolute; inset: -6px; border: 1.5px solid var(--cyan-bright); border-radius: 16px; opacity: 0.5; animation: pulse-soft 2.4s ease-out infinite; }
+  .agent-row:nth-child(2) .ar-orb::after { animation-delay: 0.6s; }
+  .agent-row:nth-child(3) .ar-orb::after { animation-delay: 1.2s; }
+  .agent-row:nth-child(4) .ar-orb::after { animation-delay: 1.8s; }
+  @keyframes pulse-soft { 0% { transform: scale(0.92); opacity: 0.55; } 70% { transform: scale(1.18); opacity: 0; } 100% { opacity: 0; } }
+
+  .ar-agent-main { min-width: 0; flex: 1; }
+  .ar-agent-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .ar-name { font-size: clamp(14px, 1.25vw, 19px); font-weight: 600; color: var(--text); letter-spacing: -0.01em; line-height: 1.1; }
+  .ar-live { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 9.5px; letter-spacing: 1.5px; text-transform: uppercase; color: #46e0a0; border: 1px solid rgba(70,224,160,0.3); border-radius: 100px; padding: 3px 9px; }
+  .ar-live i { width: 6px; height: 6px; border-radius: 50%; background: #46e0a0; box-shadow: 0 0 7px rgba(70,224,160,0.9); animation: blink 1.4s ease-in-out infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+  .ar-activity { margin-top: 6px; font-family: var(--mono); font-size: clamp(10.5px, 0.92vw, 13px); color: var(--text-3); display: flex; align-items: center; line-height: 1.3; }
+  .ar-activity .dim { color: var(--cyan); margin-right: 7px; }
+  .ar-caret { display: inline-block; width: 6px; height: 1.05em; background: var(--cyan); margin-left: 4px; vertical-align: text-bottom; animation: caret 1.05s steps(1) infinite; }
+  @keyframes caret { 50% { opacity: 0; } }
+
+  /* ================= SLIDE 17 — DALTON LAB OS · PRODUTO (dark) ================= */
+  .slide-17 { justify-content: center; }
+  .s17-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(30px, 5vw, 78px); align-items: center; }
+  .s17-name { margin-top: 14px; font-size: clamp(38px, 5vw, 76px); font-weight: 800; letter-spacing: -0.035em; line-height: 0.98; background: linear-gradient(120deg, var(--cyan-bright), var(--cyan) 55%, #2b8fc4); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .s17-sub { margin-top: 16px; font-size: clamp(17px, 1.6vw, 25px); font-weight: 600; color: var(--text); letter-spacing: -0.015em; line-height: 1.15; max-width: 18ch; }
+  .s17-body { margin-top: 16px; font-size: clamp(14px, 1.12vw, 18px); color: var(--text-2); line-height: 1.55; max-width: 44ch; }
+  .s17-pills { margin-top: clamp(22px, 3.5vh, 32px); display: flex; flex-wrap: wrap; gap: 10px; }
+  .s17-pill { border: 1px solid var(--cyan-faint); background: rgba(51,173,229,0.07); border-radius: 100px; padding: 9px 17px; font-size: clamp(12px, 1vw, 15px); color: var(--text); display: inline-flex; align-items: center; gap: 9px; }
+  .s17-pill .pdot { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan-bright); box-shadow: 0 0 8px var(--cyan-bright); }
+  .s17-video { position: relative; width: 100%; }
+  .s17-video::before { content: ''; position: absolute; inset: -6% -3%; background: radial-gradient(ellipse at center, rgba(51,173,229,0.22), transparent 70%); filter: blur(28px); z-index: 0; }
+  .s17-video video { position: relative; z-index: 1; width: 100%; display: block; border-radius: 16px; border: 1px solid var(--cyan-faint); box-shadow: 0 30px 80px rgba(0,0,0,0.6); aspect-ratio: 16 / 9; object-fit: cover; background: #0c1c33; }
+  .s17-badge { position: absolute; z-index: 2; top: 14px; left: 14px; display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #46e0a0; background: rgba(8,18,34,0.7); backdrop-filter: blur(8px); border: 1px solid rgba(70,224,160,0.3); border-radius: 100px; padding: 5px 11px; }
+  .s17-badge i { width: 6px; height: 6px; border-radius: 50%; background: #46e0a0; box-shadow: 0 0 7px rgba(70,224,160,0.9); animation: blink 1.4s ease-in-out infinite; }
+
+  /* ================= SLIDE 18 — GARANTIAS / AI PARTNER (dark) ================= */
+  .slide-18 { justify-content: center; }
+  .s18-head { max-width: 900px; margin-bottom: clamp(26px, 4.2vh, 50px); }
+  .s18-title { font-size: clamp(28px, 3.7vw, 56px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.08; color: var(--text); }
+  .s18-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .s18-body { margin-top: 20px; font-size: clamp(14px, 1.18vw, 18px); color: var(--text-2); line-height: 1.6; max-width: 64ch; }
+  .s18-cards { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2.5vw, 28px); }
+  .guar-card { border: 1px solid var(--cyan-faint); border-radius: 16px; padding: clamp(22px, 3vh, 30px) clamp(22px, 2.6vw, 32px); background: rgba(13,29,54,0.32); position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 14px; }
+  .guar-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), transparent); }
+  .gc-top { display: flex; align-items: center; gap: 15px; }
+  .gc-ico { width: clamp(40px, 3.6vw, 48px); height: clamp(40px, 3.6vw, 48px); border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #eaf6ff; background: radial-gradient(circle at 35% 30%, var(--cyan-bright), #1b6fa0 80%); box-shadow: 0 0 16px rgba(51,173,229,0.45); }
+  .gc-ico svg { width: 52%; height: 52%; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .gc-kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); }
+  .gc-name { font-size: clamp(18px, 1.9vw, 27px); font-weight: 700; color: var(--text); letter-spacing: -0.02em; line-height: 1.1; margin-top: 3px; }
+  .gc-desc { font-size: clamp(13px, 1.1vw, 16.5px); color: var(--text-2); line-height: 1.5; }
+
+  /* ================= SLIDE 19 — FECHAMENTO (dark, espelho da capa) ================= */
+  .slide-19 { justify-content: center; align-items: center; text-align: center; }
+  .slide-19 .cover-logo { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: clamp(36px, 6vh, 56px); }
+  .slide-19 .cover-logo .logo-mark { width: 72px; height: 72px; border-radius: 16px; box-shadow: 0 0 44px rgba(51,173,229,0.5); overflow: hidden; }
+  .slide-19 .cover-logo .logo-mark svg { width: 100%; height: 100%; display: block; }
+  .slide-19 .cover-logo .logo-text { font-family: var(--display); font-weight: 600; font-size: 17px; letter-spacing: 4px; text-transform: uppercase; color: var(--text); }
+  .slide-19 .cover-logo .logo-text span { color: var(--cyan); }
+  .s19-sign { font-family: var(--serif); font-style: italic; font-size: clamp(20px, 2.3vw, 36px); font-weight: 300; color: var(--text-2); line-height: 1.3; max-width: 22ch; letter-spacing: 0.01em; }
+  .s19-sign em { font-style: italic; color: var(--cyan); -webkit-text-fill-color: var(--cyan); }
+  .s19-meta { margin-top: clamp(28px, 5vh, 48px); font-family: var(--mono); color: var(--cyan); font-size: 12px; letter-spacing: 3px; text-transform: uppercase; display: flex; align-items: center; gap: 14px; }
+  .s19-meta::before, .s19-meta::after { content: ''; width: 36px; height: 1px; background: var(--cyan-dim); }
+
+  /* ===== Slide 14 — tração: muro de logos ===== */
+  .s14-head { max-width: 80ch; margin-bottom: clamp(8px, 1.4vh, 16px); }
+  .s14-wall { margin-top: clamp(22px, 4vh, 46px); display: grid; grid-template-columns: repeat(6, 1fr); gap: clamp(20px, 3vh, 40px) clamp(20px, 2.6vw, 44px); align-items: center; justify-items: center; }
+  .s14-wall img { width: 100%; max-width: clamp(118px, 12.5vw, 184px); height: auto; object-fit: contain; opacity: 0.9; }
+  .slide-14 .s14-metrics { margin-top: clamp(20px, 3.4vh, 40px); }
+  .slide-14 .metric-num { font-size: clamp(34px, 4vw, 60px); }
+
+  /* ===== Slide 07 — diagnóstico como device + entregáveis ===== */
+  .s7d-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(36px, 6vw, 90px); align-items: center; }
+  .s7d-device { position: relative; width: 100%; }
+  .s7d-device::before { content: ''; position: absolute; inset: -6% -4%; background: radial-gradient(ellipse at center, rgba(51,173,229,0.22), transparent 70%); filter: blur(28px); z-index: 0; }
+  .s7d-device img { position: relative; z-index: 1; width: 100%; display: block; border-radius: 16px; border: 1px solid var(--cyan-faint); box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+  .s7d-content { max-width: 560px; }
+  .s7d-items { margin-top: clamp(22px, 3.5vh, 32px); display: flex; flex-direction: column; gap: 15px; }
+  .s7d-item { display: flex; align-items: flex-start; gap: 13px; font-size: clamp(15px, 1.3vw, 20px); color: var(--text); line-height: 1.4; }
+  .s7d-ck { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: rgba(70,224,160,0.14); color: #46e0a0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; margin-top: 1px; }
+  .s7d-deadline { margin-top: clamp(24px, 4vh, 36px); padding-top: 20px; border-top: 1px solid var(--cyan-faint); font-size: clamp(20px, 2.1vw, 32px); font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+  .s7d-deadline strong { color: var(--cyan); }
+
+  /* ===== Slide 07 — número da etapa em evidência (fundo) ===== */
+  .slide-07 .s7d-bignum { position: absolute; inset: 0 7vw 0 auto; display: flex; align-items: center; justify-content: flex-end; font-family: var(--display); font-size: clamp(300px, 46vw, 680px); font-weight: 800; letter-spacing: -0.06em; line-height: 0.7; background: linear-gradient(160deg, rgba(51,173,229,0.16), rgba(51,173,229,0.02)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; z-index: 0; pointer-events: none; user-select: none; }
+  .slide-07 .s7d-grid { position: relative; z-index: 1; }
+
+  /* ===== Cases — fluxograma BPMN (antigo / novo) ===== */
+  .case-phase { margin-left: auto; align-self: flex-start; font-family: var(--mono); font-size: clamp(11px, 1vw, 13px); letter-spacing: 2px; text-transform: uppercase; padding: 6px 14px; border-radius: 100px; border: 1px solid; }
+  .case-phase.old { color: #c2554f; border-color: rgba(194,85,79,0.4); background: rgba(194,85,79,0.06); }
+  .case-phase.new { color: var(--cyan); border-color: var(--cyan-faint); background: rgba(51,173,229,0.07); }
+
+  .bpmn { display: flex; align-items: flex-start; justify-content: center; gap: clamp(2px, 0.5vw, 8px); margin-top: clamp(26px, 4.5vh, 56px); }
+  .bpmn.old { --acc: #c2554f; }
+  .bpmn.new { --acc: var(--cyan); }
+  .bstep { display: flex; flex-direction: column; align-items: center; gap: 9px; max-width: clamp(108px, 11vw, 162px); }
+  .bband { height: clamp(58px, 7.5vh, 70px); display: flex; align-items: center; justify-content: center; }
+  .bcap { font-size: clamp(10.5px, 0.92vw, 13.5px); color: var(--l-text-2); text-align: center; line-height: 1.25; }
+  .bev { width: clamp(42px, 4.6vw, 54px); height: clamp(42px, 4.6vw, 54px); border-radius: 50%; border: 2px solid var(--l-text-4); color: var(--l-text-3); background: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .bev svg { width: 44%; height: 44%; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .bev.start { border-color: var(--acc); color: var(--acc); }
+  .bev.end { border-width: 3px; border-color: #1fa971; color: #1fa971; }
+  .bev.bad { border-width: 3px; border-color: #c2554f; color: #c2554f; }
+  .btask { height: 100%; min-width: clamp(96px, 10vw, 148px); border-radius: 12px; border: 1px solid var(--l-border); background: #fff; padding: 10px 14px; display: flex; align-items: center; gap: 9px; box-shadow: 0 6px 16px rgba(10,30,60,0.05); }
+  .btask .ti { width: 20px; height: 20px; color: var(--l-text-3); flex-shrink: 0; }
+  .btask .ti svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .btask .tt { font-size: clamp(11px, 0.95vw, 14px); font-weight: 600; color: var(--l-text); line-height: 1.2; }
+  .btask.agent { border-color: rgba(51,173,229,0.5); background: rgba(51,173,229,0.06); box-shadow: 0 10px 26px rgba(51,173,229,0.14); }
+  .btask.agent .ti { color: var(--cyan); }
+  .bgw { width: clamp(48px, 5vw, 58px); height: clamp(48px, 5vw, 58px); transform: rotate(45deg); border: 2px solid var(--acc); border-radius: 8px; background: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .bgw i { transform: rotate(-45deg); font-style: normal; font-weight: 700; color: var(--acc); font-size: clamp(15px, 1.5vw, 20px); }
+  .barrow { color: var(--l-text-4); display: flex; align-items: center; }
+  .barrow > svg { width: clamp(16px, 1.7vw, 26px); height: auto; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .bpmn > .barrow { height: clamp(58px, 7.5vh, 70px); }
+  .bfork { display: flex; flex-direction: column; gap: clamp(12px, 2vh, 22px); padding-top: clamp(6px, 1vh, 12px); }
+  .bfork-row { display: flex; align-items: center; gap: 8px; }
+  .bfork-row .bev { width: clamp(36px, 3.8vw, 44px); height: clamp(36px, 3.8vw, 44px); }
+  .bfork-row .btask { height: auto; padding: 8px 12px; min-width: 0; }
+  .bfork-cap { font-size: clamp(10.5px, 0.9vw, 13px); color: var(--l-text-2); line-height: 1.2; max-width: 15ch; }
+  .blab { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--l-text-4); }
+  .bnote { margin-top: clamp(24px, 4vh, 48px); border-radius: 14px; padding: 16px 24px; display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  .bnote.warn { border-left: 4px solid #c2554f; background: linear-gradient(90deg, rgba(194,85,79,0.10), rgba(194,85,79,0)); }
+  .bnote.win { border-left: 4px solid var(--cyan); background: linear-gradient(90deg, rgba(51,173,229,0.12), rgba(51,173,229,0)); }
+  .bn-label { font-family: var(--mono); font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; font-weight: 600; }
+  .bnote.warn .bn-label { color: #c2554f; }
+  .bnote.win .bn-label { color: var(--cyan); }
+  .bn-text { font-size: clamp(14px, 1.3vw, 19px); color: var(--l-text); font-weight: 600; line-height: 1.3; }
+  .bn-text em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+
+  @media print {
+    @page { size: A4 landscape; margin: 0; }
+    html, body { overflow: visible; }
+    .nav, .progress { display: none !important; }
+    .slide { position: relative; opacity: 1 !important; visibility: visible !important; transform: none !important; filter: none !important; page-break-after: always; height: 100vh; }
+  }
+
+  /* ================= SLIDE — SERVICE AS A SOFTWARE (dark) ================= */
+  .slide-sas { justify-content: center; }
+  .sas-head { max-width: 900px; margin-bottom: clamp(24px, 4.2vh, 48px); }
+  .sas-title { font-size: clamp(28px, 3.7vw, 56px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.08; color: var(--text); }
+  .sas-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .sas-body { margin-top: 20px; font-size: clamp(14px, 1.18vw, 18px); color: var(--text-2); line-height: 1.6; max-width: 66ch; }
+  .sas-cards { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2.5vw, 28px); }
+  .sas-card { border: 1px solid; border-radius: 16px; padding: clamp(22px, 3vh, 32px) clamp(22px, 2.6vw, 34px); display: flex; flex-direction: column; gap: 13px; position: relative; overflow: hidden; }
+  .sas-card.trad { border-color: rgba(255,255,255,0.10); background: rgba(255,255,255,0.02); }
+  .sas-card.ours { border-color: var(--cyan-faint); background: rgba(51,173,229,0.07); }
+  .sas-card.ours::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), transparent); }
+  .sas-kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+  .sas-card.trad .sas-kicker { color: var(--text-3); }
+  .sas-card.ours .sas-kicker { color: var(--cyan); }
+  .sas-name { font-size: clamp(18px, 2vw, 28px); font-weight: 700; color: var(--text); letter-spacing: -0.02em; line-height: 1.1; }
+  .sas-text { font-size: clamp(13px, 1.1vw, 16.5px); color: var(--text-2); line-height: 1.5; }
+
+  /* ================= SLIDE — A PLATAFORMA (OS + Compass) ================= */
+  .plat-products { display: flex; flex-direction: column; gap: 14px; margin-top: clamp(18px, 3vh, 28px); }
+  .plat-card { border: 1px solid var(--cyan-faint); border-radius: 14px; padding: 17px 20px; background: rgba(13,29,54,0.32); position: relative; overflow: hidden; }
+  .plat-card::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--cyan), transparent); }
+  .plat-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .plat-name { font-size: clamp(17px, 1.6vw, 23px); font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+  .plat-layer { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); }
+  .plat-desc { margin-top: 8px; font-size: clamp(12.5px, 1.02vw, 15.5px); color: var(--text-2); line-height: 1.5; }
+
+  /* ================= SLIDE — GARANTIA (âncora extra p/ slide-18) ================= */
+  .s18-anchor { margin-top: clamp(18px, 3vh, 30px); font-family: var(--serif); font-style: italic; font-size: clamp(15px, 1.45vw, 22px); color: var(--text-2); text-align: center; line-height: 1.35; }
+  .s18-anchor em { color: var(--cyan); -webkit-text-fill-color: var(--cyan); }
+
+  /* ================= SLIDE — POR QUE A DALTON LAB (dark) ================= */
+  .slide-why { justify-content: center; }
+  .why-head { max-width: 1000px; margin-bottom: clamp(18px, 3vh, 32px); }
+  .why-title { font-size: clamp(28px, 3.6vw, 52px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.07; color: var(--text); }
+  .why-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .why-mit { margin-top: 16px; border-left: 4px solid var(--cyan); background: linear-gradient(90deg, rgba(51,173,229,0.12), rgba(51,173,229,0)); border-radius: 0 12px 12px 0; padding: 14px 22px; font-size: clamp(13.5px, 1.1vw, 17px); color: var(--text); line-height: 1.45; max-width: 80ch; }
+  .why-mit b { color: var(--cyan); font-weight: 700; }
+  .why-mit .src { display: block; margin-top: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--purple); }
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(12px, 1.6vw, 18px); margin-top: clamp(10px, 1.8vh, 18px); }
+  .why-card { border: 1px solid var(--cyan-faint); border-radius: 14px; padding: 17px 20px; background: rgba(13,29,54,0.32); position: relative; overflow: hidden; }
+  .why-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), transparent); border-radius: 14px 14px 0 0; }
+  .why-name { font-size: clamp(14px, 1.15vw, 18px); font-weight: 700; color: var(--text); letter-spacing: -0.01em; line-height: 1.15; }
+  .why-desc { margin-top: 8px; font-size: clamp(12.5px, 1vw, 15px); color: var(--text-3); line-height: 1.45; }
+
+  /* ----- Master Fee: comparação visual ----- */
+  .mf-compare { display: grid; grid-template-columns: 1fr auto 1fr; align-items: stretch; gap: clamp(14px, 2vw, 30px); margin-top: clamp(20px, 3.5vh, 42px); }
+  .mf-card { position: relative; border-radius: 16px; padding: 26px 26px 22px; border: 1px solid var(--cyan-faint); background: rgba(13,29,54,0.32); display: flex; flex-direction: column; gap: 8px; }
+  .mf-card.old { opacity: 0.7; }
+  .mf-card.new { border-color: var(--cyan); box-shadow: 0 18px 44px rgba(51,173,229,0.16); background: rgba(51,173,229,0.06); }
+  .mf-verdict { position: absolute; top: 18px; right: 20px; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; }
+  .mf-card.old .mf-verdict { color: #d97b74; border: 1.5px solid rgba(194,85,79,0.5); background: rgba(194,85,79,0.10); }
+  .mf-card.new .mf-verdict { color: #46e0a0; border: 1.5px solid rgba(70,224,160,0.5); background: rgba(70,224,160,0.12); }
+  .mf-kicker { font-family: var(--mono); font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-3); }
+  .mf-name { font-size: clamp(19px, 1.8vw, 26px); font-weight: 700; color: var(--text); letter-spacing: -0.02em; line-height: 1.1; }
+  .mf-card.new .mf-name { color: var(--cyan); }
+  .mf-desc { font-size: clamp(12.5px, 1vw, 15px); color: var(--text-3); line-height: 1.45; }
+  .mf-tag { margin-top: auto; align-self: flex-start; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.5px; color: var(--text-2); border: 1px solid var(--cyan-faint); border-radius: 100px; padding: 6px 13px; }
+  .mf-tag.on { color: var(--cyan-bright); border-color: var(--cyan); background: rgba(51,173,229,0.1); }
+  .mf-arrow { align-self: center; width: 38px; height: 38px; color: var(--cyan); flex-shrink: 0; }
+  .mf-arrow svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ----- Imersão: selo "uma vez" + CTA ----- */
+  .imersao-once { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; font-family: var(--mono); font-size: clamp(10.5px, 1vw, 13px); letter-spacing: 1px; text-transform: uppercase; color: var(--cyan-bright); border: 1px solid var(--cyan); background: rgba(51,173,229,0.08); border-radius: 100px; padding: 7px 15px; }
+  .imersao-cta { display: inline-flex; align-items: center; gap: 10px; margin-top: 22px; font-size: clamp(14px, 1.2vw, 17px); font-weight: 600; color: #04121f; background: var(--cyan); border-radius: 100px; padding: 13px 26px; text-decoration: none; transition: transform .2s, box-shadow .2s; box-shadow: 0 10px 30px rgba(51,173,229,0.3); }
+  .imersao-cta:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(51,173,229,0.42); }
+  .imersao-cta svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  @media (max-width: 760px) { .mf-compare { grid-template-columns: 1fr; } .mf-arrow { transform: rotate(90deg); margin: 0 auto; } }
+
+  /* ----- SaS: contraste explícito (não somos SaaS) ----- */
+  .sas-not { display: inline-flex; align-items: center; gap: 10px; margin-top: 14px; font-family: var(--mono); font-size: clamp(11px, 1.05vw, 14px); letter-spacing: 1.5px; text-transform: uppercase; color: #d97b74; border: 1px solid rgba(194,85,79,0.45); background: rgba(194,85,79,0.08); border-radius: 100px; padding: 8px 16px; }
+  .sas-not b { color: #f0a39c; font-weight: 700; }
+  .sas-cards { align-items: stretch; }
+  .sas-card { gap: 11px; }
+  .sas-verdict { position: absolute; top: 16px; right: 18px; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; }
+  .sas-card.trad { opacity: 0.72; }
+  .sas-card.trad .sas-verdict { color: #d97b74; border: 1.5px solid rgba(194,85,79,0.5); background: rgba(194,85,79,0.10); }
+  .sas-card.ours { box-shadow: 0 16px 42px rgba(51,173,229,0.16); }
+  .sas-card.ours .sas-verdict { color: #46e0a0; border: 1.5px solid rgba(70,224,160,0.5); background: rgba(70,224,160,0.12); }
+  .sas-which { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+  .sas-card.trad .sas-which { color: #c2554f; }
+  .sas-card.ours .sas-which { color: #46e0a0; }
+
+  /* ----- Slide 02: fonte em destaque ----- */
+  .slide-02 .s2-source { margin-top: 22px; display: inline-flex; align-items: center; gap: 11px; font-family: var(--mono); font-size: clamp(11px, 1.05vw, 14px); color: var(--text-2); text-transform: none; letter-spacing: 0.3px; border: 1px solid var(--cyan-faint); background: rgba(51,173,229,0.06); border-radius: 9px; padding: 9px 16px; }
+  .slide-02 .s2-source::before { content: 'Fonte'; font-size: 9.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); border-right: 1px solid var(--cyan-faint); padding-right: 11px; }
+  .slide-02 .s2-source b { color: var(--text); font-weight: 600; }
+
+  /* ----- Plataforma: ícones OS + Compass ----- */
+  .plat-card { padding-left: 58px; }
+  .plat-ico { position: absolute; left: 17px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; color: var(--cyan-bright); }
+  .plat-ico svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ----- Formação: ênfase de add-on ----- */
+  .slide-formacao .eyebrow { color: var(--purple); }
+  .formacao-addon { display: inline-flex; align-items: center; gap: 9px; margin-top: 12px; font-family: var(--mono); font-size: clamp(11px, 1.05vw, 13.5px); letter-spacing: 1.5px; text-transform: uppercase; color: #c79bf2; border: 1px dashed rgba(168,85,247,0.55); background: rgba(168,85,247,0.08); border-radius: 100px; padding: 7px 15px; }
+  .slide-formacao .stage-body { margin-top: 14px; }
+
+  /* ----- Operação: cadência / velocidade ----- */
+  .stage-cadence { margin-top: clamp(20px, 3vh, 30px); border-left: 4px solid var(--cyan); background: linear-gradient(90deg, rgba(51,173,229,0.12), rgba(51,173,229,0)); border-radius: 0 12px 12px 0; padding: 15px 24px; display: flex; flex-wrap: wrap; gap: 12px 30px; align-items: center; }
+  .stage-cadence .cad-item { display: flex; align-items: center; gap: 10px; font-size: clamp(13px, 1.15vw, 17px); color: var(--text); }
+  .stage-cadence .cad-item b { color: var(--cyan); font-weight: 700; }
+  .stage-cadence .cad-ico { width: 20px; height: 20px; color: var(--cyan-bright); flex-shrink: 0; }
+  .stage-cadence .cad-ico svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ----- Sprint: entregáveis ----- */
+  .sprint-deliv { margin-top: clamp(16px, 2.6vh, 24px); display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 26px; }
+  .sprint-deliv .sd { display: flex; align-items: flex-start; gap: 11px; font-size: clamp(13px, 1.08vw, 16px); color: var(--text-2); line-height: 1.35; }
+  .sprint-deliv .sd-ck { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(70,224,160,0.14); color: #46e0a0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; margin-top: 1px; }
+  .sprint-deliv .sd b { color: var(--text); font-weight: 600; }
+
+  /* ================= CASES — fluxograma reforçado (BPMN) ================= */
+  .slide-case { justify-content: flex-start; padding-top: 4.6vh; padding-bottom: 3.6vh; }
+  .case-head { margin-bottom: clamp(14px, 2.2vh, 24px); }
+  .bpmn { gap: clamp(2px, 0.4vw, 6px); margin-top: clamp(18px, 3.4vh, 40px); align-items: flex-start; }
+  .bstep { gap: 10px; max-width: clamp(124px, 13vw, 196px); }
+  .bband { height: clamp(72px, 10.5vh, 98px); }
+  .bcap { font-size: clamp(11px, 1vw, 14.5px); font-weight: 500; }
+  .bev { width: clamp(52px, 5.6vw, 66px); height: clamp(52px, 5.6vw, 66px); }
+  .btask { position: relative; min-width: clamp(116px, 12vw, 180px); padding: 13px 16px; border-width: 1.5px; }
+  .btask .ti { width: 24px; height: 24px; }
+  .btask .tt { font-size: clamp(12px, 1.04vw, 15px); }
+  .bgw { width: clamp(58px, 6vw, 72px); height: clamp(58px, 6vw, 72px); }
+  .bgw i { font-size: clamp(18px, 1.9vw, 25px); }
+  .barrow > svg { width: clamp(20px, 2.2vw, 34px); }
+  .bpmn > .barrow { height: clamp(72px, 10.5vh, 98px); }
+  .bfork { gap: clamp(14px, 2.4vh, 26px); }
+  .bfork-row .bev { width: clamp(40px, 4.2vw, 50px); height: clamp(40px, 4.2vw, 50px); }
+  .bfork-cap { font-size: clamp(11px, 0.96vw, 14px); max-width: 17ch; }
+
+  /* papel de quem executa cada passo */
+  .brole { font-family: var(--mono); font-size: 9.5px; letter-spacing: 1.4px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; align-self: center; }
+  .brole::before { content: ''; width: 7px; height: 7px; border-radius: 50%; }
+  .brole.human { color: #c2554f; }
+  .brole.human::before { background: #c2554f; }
+  .brole.agent { color: var(--cyan); }
+  .brole.agent::before { background: var(--cyan-bright); box-shadow: 0 0 7px var(--cyan-bright); }
+  .brole.system { color: var(--l-text-3); }
+  .brole.system::before { background: var(--l-text-4); }
+  .brole.bottleneck { color: #fff; background: #c2554f; border-radius: 100px; padding: 4px 11px; box-shadow: 0 5px 14px rgba(194,85,79,0.42); }
+  .brole.bottleneck::before { content: '\26A0'; width: auto; height: auto; background: none; border-radius: 0; font-size: 11px; }
+
+  /* tarefa humana = gargalo */
+  .btask.human { border-color: rgba(194,85,79,0.5); background: rgba(194,85,79,0.07); }
+  .btask.human .ti { color: #c2554f; }
+  .btask.bottleneck { border-color: #c2554f; border-width: 2px; background: rgba(194,85,79,0.12); animation: bottleneck-pulse 2.3s ease-in-out infinite; }
+  .btask.bottleneck .ti, .btask.bottleneck .tt { color: #a83c36; }
+  @keyframes bottleneck-pulse { 0%, 100% { box-shadow: 0 10px 28px rgba(194,85,79,0.16); } 50% { box-shadow: 0 12px 40px rgba(194,85,79,0.42); } }
+  .bpmn.old .bgw { box-shadow: 0 8px 22px rgba(194,85,79,0.16); }
+  .bpmn.new .btask.agent { box-shadow: 0 10px 28px rgba(51,173,229,0.16); }
+
+  /* ----- Cases: alinhamento em grade + moldura (v2) ----- */
+  .slide-case { justify-content: center; padding-top: 4vh; padding-bottom: 3.4vh; }
+  .bpmn { --bandH: clamp(68px, 9.6vh, 92px); align-items: flex-start; justify-content: center; gap: clamp(2px, 0.4vw, 8px); background: var(--l-bg-2); border: 1px solid var(--l-border); border-radius: 18px; padding: clamp(20px, 3.4vh, 38px) clamp(16px, 2vw, 36px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.6); }
+  .bstep { display: grid; grid-template-rows: 20px var(--bandH) auto; row-gap: 9px; align-items: center; justify-items: center; }
+  .bstep > .brole { grid-row: 1; }
+  .bstep > .bband { grid-row: 2; height: var(--bandH); }
+  .bstep > .bcap { grid-row: 3; }
+  .bpmn > .barrow { align-self: flex-start; margin-top: calc(20px + 9px); height: var(--bandH); align-items: center; }
+  .bfork { align-self: flex-start; margin-top: calc(20px + 9px); }
+  .brole { height: 20px; }
+  .brole.bottleneck { height: 20px; padding: 3px 10px; font-size: 9px; }
+
+  /* Sprint: caber tudo sem estourar */
+  .slide-09 .phase-grid { margin-top: 15px; gap: 10px; }
+  .slide-09 .sprint-deliv { margin-top: 13px; }
+  .slide-09 .stage-cadence { margin-top: 13px; padding: 11px 20px; gap: 10px 24px; }
+
+  /* ----- Cases v3: respiro nos textos ----- */
+  .bpmn { --bandH: clamp(76px, 10.6vh, 102px); }
+  .bstep { max-width: clamp(128px, 14vw, 206px); }
+  .bstep:has(.bgw) { max-width: clamp(144px, 16vw, 230px); }
+  .btask { min-width: clamp(120px, 12.6vw, 190px); }
+  .btask .tt { font-size: clamp(11.5px, 1vw, 14px); line-height: 1.32; }
+  .bcap { font-size: clamp(10.5px, 0.95vw, 13.5px); line-height: 1.36; }
+  .bfork-cap { line-height: 1.34; }
+
+  /* ================= MOBILE / RETRATO (≤ 760px) ================= */
+  @media (max-width: 760px) {
+    /* dynamic viewport height — evita corte pela barra de URL no celular */
+    html, body, .deck { height: 100dvh; }
+
+    /* cada slide rola na vertical se o conteúdo for mais alto que a tela */
+    .slide {
+      padding: 58px 20px 104px;
+      justify-content: flex-start;
+      overflow-y: auto; overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    .slide-01 { justify-content: center; text-align: center; }
+    .slide-01 h1 { font-size: clamp(30px, 8.5vw, 44px); }
+    .slide-01 .cover-logo { margin-bottom: 36px; }
+
+    .slide-header { margin-bottom: 20px; font-size: 9px; letter-spacing: 1.2px; }
+    .slide-footer { padding-top: 16px; font-size: 8px; gap: 8px; }
+
+    /* títulos grandes: garantir que nunca estourem a largura */
+    .display-lg, .s4-title, .stage-title, .s14-title, .sas-title,
+    .s6-title, .s2-eyebrow-title, .case-ctx-title { word-break: break-word; hyphens: auto; }
+
+    /* ---- colapsar grids de várias colunas para 1 coluna ---- */
+    .slide-03 .orgs,
+    .stage-grid,
+    .s14-top,
+    .case-cols,
+    .agent-row,
+    .s17-grid,
+    .s18-cards,
+    .s7d-grid,
+    .sas-cards,
+    .why-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+    /* murais 4-up / 6-up → 2 / 3 colunas */
+    .phase-grid, .s14-metrics, .sprint-deliv, .recur-grid,
+    .slide-05 .trio { grid-template-columns: 1fr 1fr !important; }
+    .s14-wall { grid-template-columns: repeat(3, 1fr) !important; gap: 18px 16px !important; }
+
+    /* raias "errado / certo": 3 col → empilha, rótulo vira topo */
+    .s4-lane { grid-template-columns: 1fr !important; gap: 12px !important; padding: 16px 18px; }
+    .s4-lane-label { text-align: left; border-right: none !important; border-bottom: 1px solid; padding: 0 0 8px 0; }
+    .s4-lane.wrong .s4-lane-label { border-bottom-color: rgba(255,255,255,0.1); }
+    .s4-lane.right .s4-lane-label { border-bottom-color: var(--cyan-dim); }
+    .s4-lane-flow { flex-wrap: wrap; }
+
+    /* fluxo do diagnóstico e fases: deixa quebrar */
+    .s7c-flow { flex-direction: column; }
+    .s7c-arrow { transform: rotate(90deg); }
+
+    /* jornada: horizontal → vertical, seta gira 90° */
+    .journey { flex-direction: column; align-items: stretch; gap: 2px; }
+    .j-step { padding-right: 0; padding-top: 20px; }
+    .j-arrow { align-self: center; margin: 4px 0; transform: rotate(90deg); }
+    .slide-06 .s6-head { margin-bottom: 26px; }
+
+    /* números gigantes: domar pra não vazar */
+    .stage-num { font-size: clamp(88px, 32vw, 140px); }
+    .slide-02 .stat-number { font-size: clamp(70px, 28vw, 120px); }
+    .slide-02 .s2-main { gap: 24px; align-items: flex-start; }
+    .slide-02 .s2-viz, .s2-viz--curve .curve-wrap { width: 100%; max-width: 360px; }
+    .metric-num { font-size: clamp(34px, 13vw, 56px); }
+
+    /* mapa da empresa (imagem larga): caber na tela */
+    .slide-08 .s8-frame, .slide-07 .s8-frame { max-width: 100%; }
+
+    /* nav maior, centralizado embaixo, fácil pro polegar */
+    .nav { bottom: 16px; right: 50%; transform: translateX(50%); gap: 18px;
+           background: rgba(10,22,40,0.72); backdrop-filter: blur(12px);
+           padding: 8px 16px; border-radius: 100px; border: 1px solid var(--cyan-faint); }
+    .nav-btn { width: 50px; height: 50px; font-size: 18px; }
+    .nav-counter { font-size: 13px; min-width: 50px; }
+
+    /* dica de swipe (some sozinha) */
+    .swipe-hint { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%);
+      z-index: 60; font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--text-2); background: rgba(10,22,40,0.82);
+      border: 1px solid var(--cyan-faint); border-radius: 100px; padding: 8px 16px;
+      display: flex; align-items: center; gap: 8px; animation: hintfade 0.4s ease backwards; }
+    @keyframes hintfade { from { opacity: 0; transform: translate(-50%, 6px); }
+                          to { opacity: 1; transform: translate(-50%, 0); } }
+  }
+
+  /* ================= GANTT (Neogrid) ================= */
+  .gantt { margin-top: 3vh; display: flex; flex-direction: column; gap: 12px; }
+  .gantt-scale { display: grid; grid-template-columns: 110px repeat(16, 1fr); font-family: var(--mono); font-size: 9.5px; color: var(--text-4); letter-spacing: 0.3px; }
+  .gantt-scale span { text-align: center; padding-bottom: 8px; }
+  .gantt-scale .gantt-spacer { grid-column: 1; }
+  .gantt-row { display: grid; grid-template-columns: 110px repeat(16, 1fr); align-items: center; }
+  .gantt-label { grid-column: 1; font-size: 14px; font-weight: 600; color: var(--text); padding-right: 14px; }
+  .gbar { height: 42px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; padding: 0 12px; text-align: center; line-height: 1.1; overflow: hidden; }
+  .gbar.poc { background: rgba(255,255,255,0.06); border: 1px dashed var(--text-4); color: var(--text-2); }
+  .gbar.imersao { background: linear-gradient(90deg, rgba(168,85,247,0.9), rgba(168,85,247,0.5)); color: #fff; }
+  .gbar.sprint { background: linear-gradient(90deg, var(--cyan), rgba(51,173,229,0.5)); color: #04121f; }
+  .gbar.operacao { background: rgba(51,173,229,0.14); border: 1px dashed var(--cyan-dim); color: var(--cyan-bright); }
+  .gantt-pays { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 3.2vh; }
+  .gpay { font-family: var(--mono); font-size: 11px; color: var(--text-2); border: 1px solid var(--cyan-faint); border-radius: 999px; padding: 7px 14px; background: rgba(13,29,54,0.4); }
+  .gpay.milestone { border-color: var(--cyan); color: var(--cyan-bright); background: rgba(51,173,229,0.1); font-weight: 600; }
+
+  /* ================= INVESTIMENTO (Neogrid) ================= */
+  .invest-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 2vw, 24px); margin-top: 3vh; }
+  .ic { border: 1px solid var(--cyan-faint); border-radius: 16px; padding: clamp(22px, 3vh, 32px) clamp(20px, 2.4vw, 28px); background: rgba(13,29,54,0.32); display: flex; flex-direction: column; gap: 9px; position: relative; }
+  .ic.featured { border-color: var(--cyan); background: rgba(51,173,229,0.07); }
+  .ic.featured::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), transparent); }
+  .ic-step { font-family: var(--mono); font-size: 10.5px; color: var(--cyan); letter-spacing: 2px; text-transform: uppercase; }
+  .ic-name { font-size: clamp(16px, 1.4vw, 20px); font-weight: 700; color: var(--text); line-height: 1.15; }
+  .ic-price { font-size: clamp(28px, 3vw, 42px); font-weight: 700; color: var(--cyan-bright); letter-spacing: -0.02em; margin-top: 4px; }
+  .ic-price .ic-was { font-size: 0.46em; color: var(--text-4); text-decoration: line-through; font-weight: 500; margin-right: 8px; -webkit-text-fill-color: var(--text-4); }
+  .ic-price .ic-to { display: block; font-size: 0.32em; color: var(--text-3); font-weight: 500; font-family: var(--mono); letter-spacing: 0.5px; margin-top: 6px; }
+  .ic-note { font-size: 12.5px; color: var(--text-3); line-height: 1.45; margin-top: auto; padding-top: 8px; }
+
+  @media (max-width: 760px) {
+    .gantt-scale, .gantt-row { grid-template-columns: 76px repeat(16, 1fr); }
+    .gantt-label { font-size: 11px; padding-right: 8px; }
+    .gbar { font-size: 8.5px; height: 36px; padding: 0 4px; }
+    .gantt-scale { font-size: 7px; }
+    .invest-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+  <div class="progress" id="progress"></div>
+
+  <!-- ============ SLIDE 01 — CAPA ============ -->
+  <section class="slide slide-01 active" data-theme="dark">
+    <div class="cover-logo reveal">
+      <div class="logo-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080"><defs><linearGradient id="logoGrad" x1="75.42" y1="540" x2="1004.58" y2="540" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#157e9c"/><stop offset=".39" stop-color="#0d5f72"/><stop offset=".72" stop-color="#208ea0"/><stop offset="1" stop-color="#0d5f72"/></linearGradient></defs><rect x="82.92" y="82.92" width="914.16" height="914.16" rx="118.23" ry="118.23" fill="#010a18" stroke="url(#logoGrad)" stroke-miterlimit="10" stroke-width="15"/><path d="M769.93,540.54c0,49.36-13.81,95.49-37.77,134.75-5.32,8.7-11.13,17.09-17.42,25.09-42.83,54.54-107.11,91.45-180.11,98.06h-224.55v-98.06h200.87c31.64,0,61.14-9.2,85.96-25.09,44.3-28.38,73.68-78.04,73.68-134.56,0-69.82-44.82-129.18-107.27-150.85-16.41-5.71-34.03-8.79-52.38-8.79h-102.8v180.74l-41.89,46.42-56.18,62.26v-388.96h200.87c44.29,0,85.98,11.12,122.43,30.72,31.78,17.07,59.58,40.6,81.65,68.82,34.41,43.95,54.91,99.31,54.91,159.45Z" fill="#dfe9ea"/></svg></div>
+      <div class="logo-text">DALTON <span>LAB</span></div>
+    </div>
+    <div class="meta reveal">Plano de transformação · Neogrid</div>
+    <h1 class="reveal">Nosso planejamento para transformar a <em>Neogrid</em><br>em uma Organização Agêntica</h1>
+    <p class="tagline reveal">O mesmo time. Resultados completamente diferentes.</p>
+  </section>
+
+  <!-- ============ SLIDE — O NOVO JOGO (condensa mundo mudou + org agentica + a diferenca + service as a software) ============ -->
+  <section class="slide" data-theme="dark">
+    <div class="reveal" style="max-width:1080px;">
+      <div class="eyebrow">O novo jogo</div>
+      <h2 class="s4-title" style="margin-top:8px;">Quase toda empresa usa IA. <em>Poucas viraram o jogo.</em></h2>
+      <p class="s4-body" style="margin-top:16px;max-width:74ch;">9 em cada 10 empresas já usam IA de alguma forma. Mas só algumas se tornaram <span class="highlight">organizações agênticas</span>, com humanos e agentes em sincronia, crescendo em escala sem contratar na mesma proporção. A diferença não está na ferramenta. Está na ordem: primeiro o processo, depois as pessoas, e só então os agentes.</p>
+    </div>
+    <div class="reveal" style="margin-top:30px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:clamp(13px,1.1vw,16px);">
+      <span style="padding:11px 20px;border:1px solid var(--cyan-faint);border-radius:10px;color:var(--text);background:rgba(13,29,54,0.45);">Processo</span>
+      <span style="color:var(--cyan);font-size:22px;">&rarr;</span>
+      <span style="padding:11px 20px;border:1px solid var(--cyan-faint);border-radius:10px;color:var(--text);background:rgba(13,29,54,0.45);">Pessoas</span>
+      <span style="color:var(--cyan);font-size:22px;">&rarr;</span>
+      <span style="padding:11px 20px;border:1px solid var(--cyan);border-radius:10px;color:#04121f;background:var(--cyan);font-weight:700;">Agentes</span>
+    </div>
+    <div class="reveal" style="margin-top:30px;display:inline-flex;align-items:center;gap:14px;border:1px solid var(--cyan-faint);background:rgba(51,173,229,0.08);border-radius:12px;padding:15px 24px;max-width:82ch;">
+      <span style="font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan-bright);white-space:nowrap;">Service as a Software</span>
+      <span style="font-size:clamp(14px,1.15vw,18px);color:var(--text);line-height:1.4;">Você recebe o <b style="color:var(--cyan);">resultado pronto</b>, não mais uma ferramenta para a sua equipe operar.</span>
+    </div>
+  </section>
+
+    <!-- ============ SLIDE — SEM MASTER FEE ============ -->
+  <section class="slide" data-theme="dark">
+    <div class="s18-head reveal">
+      <div class="eyebrow">Modelo comercial · Neogrid</div>
+      <h2 class="s18-title">Ajustamos a proposta: <em>sem Master Fee</em>.</h2>
+      <p class="s18-body">Conversamos e ajustamos o modelo para a Neogrid. Como a infraestrutura será de vocês, não vamos cobrar Master Fee. Em vez disso, vocês pagam por cada agente que colocamos em produção. O Master Fee só existe para custear a nossa infraestrutura de tokens, quando a IA roda do nosso lado, e esse não é o caso aqui.</p>
+    </div>
+    <div class="mf-compare reveal">
+      <div class="mf-card old">
+        <div class="mf-verdict">✗</div>
+        <div class="mf-kicker">Proposta padrão</div>
+        <div class="mf-name">Master Fee + consumo</div>
+        <p class="mf-desc">Taxa fixa para custear a nossa infraestrutura de tokens, somada ao consumo de cada agente.</p>
+        <div class="mf-tag">A IA roda na infra da Dalton Lab</div>
+      </div>
+      <div class="mf-arrow"><svg viewBox="0 0 24 24"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13 6 20 12 13 18"/></svg></div>
+      <div class="mf-card new">
+        <div class="mf-verdict">✓</div>
+        <div class="mf-kicker">Para a Neogrid</div>
+        <div class="mf-name">Pagamento por agente</div>
+        <p class="mf-desc">Sem Master Fee e sem margem sobre consumo. Vocês pagam por cada agente no ar e os tokens vão direto ao provedor, no custo.</p>
+        <div class="mf-tag on">A IA roda na infra da Neogrid</div>
+      </div>
+    </div>
+    <p class="s18-anchor reveal">A infraestrutura é da Neogrid. Vocês pagam por agente, no custo. <em>Transparência total.</em></p>
+  </section>
+
+  <!-- ============ SLIDE 14 — TRAÇÃO ============ -->
+  <section class="slide slide-14" data-theme="dark">
+    <div class="s14-head reveal">
+      <div class="eyebrow">Tração</div>
+      <h2 class="s14-title">21 empresas. <em>Mais de 80 agentes</em> rodando agora.</h2>
+      <p class="s14-body">De saúde a logística, de previdência privada a software. Implementações ativas em clientes de 4 continentes.</p>
+    </div>
+    <div class="s14-wall reveal">
+      <img src="logos/mono/imperatriz.png" alt="Supermercados Imperatriz">
+      <img src="logos/mono/mundial-mix.png" alt="Grupo Mundial Mix">
+      <img src="logos/mono/jeisys.png" alt="Jeisys">
+      <img src="logos/mono/unymos.png" alt="Unymos">
+      <img src="logos/mono/fialdini.png" alt="Fialdini Advogados">
+      <img src="logos/mono/accesstage.png" alt="Accesstage">
+      <img src="logos/mono/vero.png" alt="Vero">
+      <img src="logos/mono/rumo.png" alt="Rumo">
+      <img src="logos/mono/simtt.png" alt="SIMTT & Company">
+      <img src="logos/mono/smartrisk.png" alt="SmartRisk">
+      <img src="logos/mono/umuprev.png" alt="Umuprev">
+      <img src="logos/mono/wemoveit.png" alt="We Move It">
+      <img src="logos/mono/bdb.png" alt="Billion Dollar Boy">
+      <img src="logos/mono/topchairs.png" alt="TopChairs">
+      <img src="logos/mono/practical-center.png" alt="Practical Center">
+      <img src="logos/mono/vicky-beauty.png" alt="Vicky Beauty">
+      <img src="logos/mono/ac.png" alt="AC">
+    </div>
+    <div class="s14-metrics reveal">
+      <div class="metric"><div class="metric-num">21</div><div class="metric-label">Empresas atendidas</div></div>
+      <div class="metric"><div class="metric-num">80<span>+</span></div><div class="metric-label">Agentes rodando agora</div></div>
+      <div class="metric"><div class="metric-num">4</div><div class="metric-label">Continentes</div></div>
+      <div class="metric"><div class="metric-num">24<span>/</span>7</div><div class="metric-label">Operação contínua</div></div>
+    </div>
+  </section>
+
+    <!-- ============ SLIDE 06 — A JORNADA ============ -->
+  <section class="slide slide-06" data-theme="dark">
+    <div class="s6-head reveal">
+      <h2 class="s6-title">Uma jornada em <em>quatro etapas</em>.</h2>
+      <p class="s6-body">Cada empresa começa pela Imersão, que acontece uma única vez. Depois entra no Sprint, onde os agentes vão para produção. Quem quer continuar evoluindo pode nos manter operando a IA, e formar o próprio time. É uma progressão.</p>
+    </div>
+    <div class="journey reveal">
+      <div class="j-step">
+        <div class="j-num">01</div>
+        <div class="j-name">Imersão Agêntica</div>
+        <div class="j-desc">3 semanas · uma vez</div>
+      </div>
+      <div class="j-arrow"><svg viewBox="0 0 24 24"><polyline points="9,5 16,12 9,19"/></svg></div>
+      <div class="j-step">
+        <div class="j-num">02</div>
+        <div class="j-name">Sprint Agêntico</div>
+        <div class="j-desc">Em menos de 12 semanas</div>
+      </div>
+      <div class="j-arrow"><svg viewBox="0 0 24 24"><polyline points="9,5 16,12 9,19"/></svg></div>
+      <div class="j-step">
+        <div class="j-num">03</div>
+        <div class="j-name">Operação Agêntica</div>
+        <div class="j-desc">Opcional · mensal</div>
+      </div>
+      <div class="j-arrow"><svg viewBox="0 0 24 24"><polyline points="9,5 16,12 9,19"/></svg></div>
+      <div class="j-step">
+        <div class="j-num">04</div>
+        <div class="j-name">Formação Agêntica</div>
+        <div class="j-desc">Add-on</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 07 — DIAGNÓSTICO (device + entregáveis) ============ -->
+  <section class="slide slide-07 stage" data-theme="dark">
+    <div class="s7d-bignum">01</div>
+    <div class="s7d-grid reveal">
+      <div class="s7d-device">
+        <img src="mapa-empresa.png" alt="Dalton Lab OS — aba de imersão agêntica: organograma agêntico da empresa">
+      </div>
+      <div class="s7d-content">
+        <div class="eyebrow">Etapa 1 · Imersão Agêntica</div>
+        <h2 class="stage-title">Entramos na sua operação e <em>mapeamos onde usar IA</em>.</h2>
+        <div class="imersao-once">Acontece uma única vez · ponto de partida da jornada</div>
+        <div class="s7d-items">
+          <div class="s7d-item"><span class="s7d-ck">✓</span>Entrevistas com o time e mapeamento de processos</div>
+          <div class="s7d-item"><span class="s7d-ck">✓</span>O organograma agêntico da sua empresa</div>
+          <div class="s7d-item"><span class="s7d-ck">✓</span>Mapa de prioridades com retorno estimado</div>
+        </div>
+        <div class="s7d-deadline">Tudo entregue em <strong>3 semanas</strong>.</div>
+        <a class="imersao-cta" href="https://daltonlab-propostas-production.up.railway.app/neogrid" target="_blank" rel="noopener">Quero mais detalhes
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 09 — ETAPA 2: IMPLEMENTAÇÃO ============ -->
+  <section class="slide slide-09 stage" data-theme="dark">
+    <div class="stage-grid reveal">
+      <div class="stage-num">02</div>
+      <div class="stage-content stage-content--wide">
+        <div class="eyebrow">Etapa 2 · Sprint Agêntico · em menos de 12 semanas</div>
+        <h2 class="stage-title">Construímos e entregamos os <em>agentes</em>.</h2>
+        <p class="stage-body">Uma implementação pode envolver vários agentes.<br>Do desenho à produção, com o seu time por perto em cada passo.</p>
+        <div class="phase-grid">
+          <div class="phase">
+            <span class="ph-ico"><svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+            <span class="ph-step">01</span>
+            <span class="ph-name">Arquitetura</span>
+          </div>
+          <div class="phase">
+            <span class="ph-ico"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+            <span class="ph-step">02</span>
+            <span class="ph-name">Desenvolvimento</span>
+          </div>
+          <div class="phase">
+            <span class="ph-ico"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+            <span class="ph-step">03</span>
+            <span class="ph-name">Testes com o time</span>
+          </div>
+          <div class="phase">
+            <span class="ph-ico"><svg viewBox="0 0 24 24"><path d="M12 19V5"/><polyline points="6 11 12 5 18 11"/></svg></span>
+            <span class="ph-step">04</span>
+            <span class="ph-name">Entrega em produção</span>
+          </div>
+        </div>
+        <div class="sprint-deliv">
+          <div class="sd"><span class="sd-ck">✓</span><span><b>Agentes em produção</b>, integrados aos seus sistemas</span></div>
+          <div class="sd"><span class="sd-ck">✓</span><span><b>Time treinado</b>, com KPIs medidos do antes ao depois</span></div>
+        </div>
+        <div class="stage-cadence">
+          <span class="cad-item"><span class="cad-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg></span><b>Checkpoint semanal</b> com o seu time</span>
+          <span class="cad-item"><span class="cad-ico"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span>Contato constante, envolvimento próximo</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 10 — ETAPA 3: RECORRÊNCIA ============ -->
+  <section class="slide slide-10 stage" data-theme="dark">
+    <div class="stage-grid reveal">
+      <div class="stage-num">03</div>
+      <div class="stage-content stage-content--wide">
+        <div class="eyebrow">Etapa 3 · Operação Agêntica · opcional · mensal</div>
+        <h2 class="stage-title">Para quem quer <em>continuar evoluindo</em>.</h2>
+        <div class="recur-grid">
+          <div class="recur-item">
+            <span class="r-ico"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.5 9a9 9 0 0 1 14.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0 0 20.5 15"/></svg></span>
+            <div><div class="r-name">Agentes ativos e atualizados</div><div class="r-desc">sempre no ar, sempre na versão mais nova</div></div>
+          </div>
+          <div class="recur-item">
+            <span class="r-ico"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+            <div><div class="r-name">Monitoramento de resultados</div><div class="r-desc">acompanhamento contínuo dos indicadores</div></div>
+          </div>
+          <div class="recur-item">
+            <span class="r-ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            <div><div class="r-name">Governança em tempo real</div><div class="r-desc">controle, segurança e auditoria</div></div>
+          </div>
+          <div class="recur-item">
+            <span class="r-ico"><svg viewBox="0 0 24 24"><path d="M12 2l2.3 6.2L21 9l-5 4 1.7 7L12 16l-5.7 4L8 13 3 9l6.7-.8z"/></svg></span>
+            <div><div class="r-name">Novas features e curadoria de modelos</div><div class="r-desc">evolução e otimização constante</div></div>
+          </div>
+          <div class="recur-item">
+            <span class="r-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></span>
+            <div><div class="r-name">Acesso ao Dalton Lab OS</div><div class="r-desc">o painel de controle dos agentes, vivo enquanto a Operação estiver ativa</div></div>
+          </div>
+          <div class="recur-item">
+            <span class="r-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+            <div><div class="r-name">Dalton Compass</div><div class="r-desc">leitura estratégica e roadmap dos próximos agentes</div></div>
+          </div>
+        </div>
+        <p style="margin-top:22px;font-family:var(--mono);font-size:12px;color:var(--cyan-bright);letter-spacing:0.4px;line-height:1.5;">O acesso ao Dalton Lab OS e ao Compass faz parte da Operação Agêntica. Não está incluído no Sprint.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE — ETAPA 4: FORMAÇÃO AGÊNTICA ============ -->
+  <section class="slide slide-formacao stage" data-theme="dark">
+    <div class="stage-grid reveal">
+      <div class="stage-num">04</div>
+      <div class="stage-content stage-content--wide">
+        <div class="eyebrow">Etapa 4 · Formação Agêntica · add-on</div>
+        <h2 class="stage-title">O time aprende a <em>pensar e operar com agentes</em>.</h2>
+        <div class="formacao-addon">Add-on · opcional · uma camada a mais</div>
+        <p class="stage-body">Uma camada extra e opcional, fora do pacote principal. O objetivo é a empresa passar a pensar com os agentes, além de operá-los.</p>
+        <div class="recur-grid">
+          <div class="recur-item">
+            <span class="r-ico"><svg viewBox="0 0 24 24"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg></span>
+            <div><div class="r-name">Capacitação prática</div><div class="r-desc">do uso no dia a dia à supervisão dos agentes</div></div>
+          </div>
+          <div class="recur-item">
+            <span class="r-ico"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+            <div><div class="r-name">Letramento em IA</div><div class="r-desc">uma linguagem comum entre todas as áreas</div></div>
+          </div>
+          <div class="recur-item">
+            <span class="r-ico"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+            <div><div class="r-name">Novos papéis</div><div class="r-desc">o time sobe para decisão, criação e relacionamento</div></div>
+          </div>
+          <div class="recur-item">
+            <span class="r-ico"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+            <div><div class="r-name">Cultura de evolução</div><div class="r-desc">a empresa passa a enxergar novas oportunidades sozinha</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE — GANTT (Neogrid) ============ -->
+  <section class="slide slide-gantt" data-theme="dark">
+    <div class="gantt-head reveal">
+      <div class="eyebrow">O calendário</div>
+      <h2 class="stage-title">Imersão e primeira implementação <em>caminham juntas</em>.</h2>
+      <p class="stage-body">Já estamos no final das três semanas de POC da primeira implementação, a etapa que antecede as dez semanas de construção. Para ganhar tempo, a Imersão roda em paralelo com essa primeira implementação, em vez de esperar uma terminar para a outra começar.</p>
+    </div>
+    <div class="gantt reveal">
+      <div class="gantt-scale">
+        <span class="gantt-spacer"></span>
+        <span>S1</span><span>S2</span><span>S3</span><span>S4</span><span>S5</span><span>S6</span><span>S7</span><span>S8</span><span>S9</span><span>S10</span><span>S11</span><span>S12</span><span>S13</span><span>S14</span><span>S15</span><span>S16+</span>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">POC 1ª impl.</div>
+        <div class="gbar poc" style="grid-column: 2 / 5;">3 semanas · concluindo agora</div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">Imersão</div>
+        <div class="gbar imersao" style="grid-column: 5 / 8;">3 semanas · em paralelo</div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">1ª Implementação</div>
+        <div class="gbar sprint" style="grid-column: 5 / 15;">10 semanas · Arquitetura → Desenvolvimento → Testes → Produção</div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">Operação</div>
+        <div class="gbar operacao" style="grid-column: 15 / 18;">Go-live · mensal · contínuo →</div>
+      </div>
+    </div>
+    <div class="gantt-pays reveal">
+      <span class="gpay">Imersão · em paralelo</span>
+      <span class="gpay">1ª Implementação · 10 semanas</span>
+      <span class="gpay milestone">Go-live · operação inicia</span>
+    </div>
+    <p class="s18-anchor reveal">POC concluindo, Imersão e implementação em paralelo, primeiro agente no ar em ~10 semanas. <em>Velocidade com método.</em></p>
+  </section>
+
+  <!-- ============ SLIDE — INVESTIMENTO (Neogrid) ============ -->
+  <section class="slide slide-invest" data-theme="dark">
+    <div class="invest-head reveal">
+      <div class="eyebrow">Investimento</div>
+      <h2 class="stage-title">O que cada etapa <em>custa</em>.</h2>
+      <p class="stage-body">Valores desenhados para o porte da Neogrid. A operação só passa a ser cobrada quando o primeiro agente entra em produção.</p>
+    </div>
+    <div class="invest-grid reveal">
+      <div class="ic">
+        <div class="ic-step">Etapa 1</div>
+        <div class="ic-name">Imersão Agêntica</div>
+        <div class="ic-price">R$ 60k</div>
+        <div class="ic-note">R$ 30k no início e R$ 30k na entrega.</div>
+      </div>
+      <div class="ic featured">
+        <div class="ic-step">Etapa 2</div>
+        <div class="ic-name">Sprint Agêntico<br>por implementação</div>
+        <div class="ic-price">R$ 70–150k</div>
+        <div class="ic-note">Conforme a complexidade de cada implementação. Agentes em produção, integrados aos seus sistemas.</div>
+      </div>
+      <div class="ic">
+        <div class="ic-step">Etapa 3</div>
+        <div class="ic-name">Operação Agêntica<br>mensal</div>
+        <div class="ic-price">5–10%<span class="ic-to">do valor da implementação / mês</span></div>
+        <div class="ic-note">Inclui o acesso ao Dalton Lab OS + Compass. Inicia no go-live de cada implementação. Tokens de produção pagos pela Neogrid, na própria infra, sem Master Fee.</div>
+      </div>
+    </div>
+    <p class="s18-anchor reveal">Ex.: implementação de R$ 120k → operação de <em>R$ 6k a 12k/mês</em> a partir do go-live.</p>
+  </section>
+
+  <!-- ============ SLIDE — GARANTIA ============ -->
+  <section class="slide slide-18" data-theme="dark">
+    <div class="s18-head reveal">
+      <div class="eyebrow">Garantia</div>
+      <h2 class="s18-title">Uma garantia em <em>duas camadas</em>.</h2>
+      <p class="s18-body">Nós garantimos o que controlamos: a clareza da Imersão e o KPI técnico do agente. O ROI financeiro depende dos seus dados e da sua operação, então fica de fora da promessa.</p>
+    </div>
+    <div class="s18-cards reveal">
+      <div class="guar-card">
+        <div class="gc-top">
+          <span class="gc-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <div><div class="gc-kicker">Camada 1 · na entrada</div><div class="gc-name">Garantia da Imersão</div></div>
+        </div>
+        <p class="gc-desc">Se a Imersão não identificar pelo menos um business case com retorno viável, você escolhe: crédito integral no Sprint ou reembolso em até 30 dias.</p>
+      </div>
+      <div class="guar-card">
+        <div class="gc-top">
+          <span class="gc-ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></span>
+          <div><div class="gc-kicker">Camada 2 · na entrega</div><div class="gc-name">Compromisso de resultado</div></div>
+        </div>
+        <p class="gc-desc">Se em 90 dias após o go-live o agente não atingir o KPI técnico cravado em contrato, nós continuamos operando e ajustando, sem custo adicional, até atingir.</p>
+      </div>
+    </div>
+    <p class="s18-anchor reveal">Você contrata um <em>problema resolvido</em>, com KPI definido em contrato.</p>
+  </section>
+
+  <!-- ============ SLIDE — A PLATAFORMA · DALTON LAB OS + COMPASS · antes dos cases ============ -->
+  <section class="slide slide-17" data-theme="dark">
+    <div class="s17-grid">
+      <div class="reveal">
+        <div class="eyebrow">A plataforma</div>
+        <div class="s17-name">Dalton Lab OS</div>
+        <div class="s17-sub">O painel de controle dos agentes da sua empresa. Faz parte da Operação Agêntica mensal.</div>
+        <div class="plat-products">
+          <div class="plat-card">
+            <span class="plat-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></span>
+            <div class="plat-top"><span class="plat-name">Dalton Lab OS</span><span class="plat-layer">Camada operacional · ao vivo</span></div>
+            <p class="plat-desc">Tudo o que os seus agentes fazem em um só lugar, auditável e em tempo real. Você vê, controla e evolui a operação sem depender de ninguém.</p>
+          </div>
+          <div class="plat-card">
+            <span class="plat-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+            <div class="plat-top"><span class="plat-name">Dalton Compass</span><span class="plat-layer">Camada estratégica</span></div>
+            <p class="plat-desc">A leitura estratégica da operação: aponta onde há novas oportunidades de agente e mantém vivo o seu roadmap de expansão.</p>
+          </div>
+        </div>
+      </div>
+      <div class="s17-video reveal">
+        <span class="s17-badge"><i></i>Ao vivo</span>
+        <video src="dalton-lab-os.mp4" autoplay muted loop playsinline preload="auto" controls></video>
+      </div>
+    </div>
+  </section>
+
+    <!-- ============ SLIDE — POR QUE A DALTON LAB ============ -->
+  <section class="slide slide-why" data-theme="dark">
+    <div class="why-head reveal">
+      <div class="eyebrow">Por que a Dalton Lab</div>
+      <h2 class="why-title">O que sustenta cada <em>entrega</em>.</h2>
+      <div class="why-mit">Segundo o MIT, ter um parceiro especializado tem cerca de <b>3× mais chance</b> de dar certo do que deixar tudo no time de tecnologia interno. Por isso trabalhamos junto do seu time, não no lugar dele.<span class="src">MIT NANDA · 2025</span></div>
+    </div>
+    <div class="why-grid reveal">
+      <div class="why-card"><div class="why-name">Business case travado</div><div class="why-desc">Toda entrega parte de um problema dimensionado, com KPI de antes e depois.</div></div>
+      <div class="why-card"><div class="why-name">Governança auditável</div><div class="why-desc">Visibilidade total pelo Dalton Lab OS, no padrão que uma empresa de capital aberto exige.</div></div>
+      <div class="why-card"><div class="why-name">Agentes que são seus</div><div class="why-desc">Rodam na sua infra, sob o seu controle, com cláusula de saída em contrato.</div></div>
+      <div class="why-card"><div class="why-name">Feito para a sua realidade</div><div class="why-desc">Processos de empresa de verdade, com a velocidade de decisão que a IA exige.</div></div>
+      <div class="why-card"><div class="why-name">Nós vivemos o modelo</div><div class="why-desc">A Dalton Lab opera como uma organização agêntica.</div></div>
+      <div class="why-card"><div class="why-name">Expansão contínua</div><div class="why-desc">A cada trimestre, novos problemas resolvidos sem refazer a descoberta.</div></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE — PARCERIA / GANHO COMPARTILHADO ============ -->
+  <section class="slide" data-theme="dark">
+    <div class="s18-head reveal">
+      <div class="eyebrow">O próximo passo</div>
+      <h2 class="s18-title">Depois dos primeiros resultados, <em>nós dividimos o ganho</em>.</h2>
+      <p class="s18-body">Trabalhar sobre o ganho é o modelo mais alinhado que existe. Mas ele só funciona sobre uma relação madura: dados abertos, confiança e uma linha de base medida em conjunto.</p>
+    </div>
+    <div class="s18-cards reveal">
+      <div class="guar-card">
+        <div class="gc-top"><div><div class="gc-kicker">Primeiros 6 meses</div><div class="gc-name">Resultado real, medido</div></div></div>
+        <p class="gc-desc">Entregamos as implementações e operamos com KPI cravado. Você vê o ganho acontecer, com número de antes e depois.</p>
+      </div>
+      <div class="guar-card">
+        <div class="gc-top"><div><div class="gc-kicker">A partir daí</div><div class="gc-name">Modelo de ganho compartilhado</div></div></div>
+        <p class="gc-desc">Com a base de confiança construída e os dados na mesa, avaliamos juntos um modelo de % sobre o ganho gerado. Risco e resultado dos dois lados.</p>
+      </div>
+    </div>
+    <p class="s18-anchor reveal">Começamos provando. <em>Depois, crescemos juntos.</em></p>
+  </section>
+
+  <!-- ============ SLIDE — FAQ (tudo em um slide, formato de perguntas) ============ -->
+  <section class="slide slide-why" data-theme="dark">
+    <div class="why-head reveal">
+      <div class="eyebrow">FAQ</div>
+      <h2 class="why-title">As perguntas que <em>importam</em>.</h2>
+    </div>
+    <div class="why-grid reveal">
+      <div class="why-card"><div class="why-name">Imersão e implementação andam em paralelo?</div><div class="why-desc">Sim. A Imersão roda junto com a primeira implementação, sem esperar uma terminar para a outra começar.</div></div>
+      <div class="why-card"><div class="why-name">A POC conecta com o quê?</div><div class="why-desc">A POC é a primeira implementação. Estamos no final das três semanas de POC, que antecedem as dez semanas de construção.</div></div>
+      <div class="why-card"><div class="why-name">O que a Imersão entrega?</div><div class="why-desc">Mapeamento de processos, o organograma agêntico da Neogrid e um mapa de prioridades com o retorno estimado de cada agente.</div></div>
+      <div class="why-card"><div class="why-name">A Imersão acontece quantas vezes?</div><div class="why-desc">Uma única vez. É o ponto de partida da jornada e não se repete a cada implementação.</div></div>
+      <div class="why-card"><div class="why-name">Qual o prazo da Imersão?</div><div class="why-desc">Três semanas, do início à entrega do mapa de prioridades.</div></div>
+      <div class="why-card"><div class="why-name">Qual o modelo comercial?</div><div class="why-desc">Sem Master Fee. A infraestrutura é da Neogrid e os tokens são pagos direto ao provedor. Imersão R$ 60k. Vocês pagam por cada agente em produção.</div></div>
+    </div>
+  </section>
+
+    <!-- ============ SLIDE 19 — FECHAMENTO ============ -->
+  <section class="slide slide-19" data-theme="dark">
+    <div class="cover-logo reveal">
+      <div class="logo-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080"><defs><linearGradient id="logoGrad2" x1="75.42" y1="540" x2="1004.58" y2="540" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#157e9c"/><stop offset=".39" stop-color="#0d5f72"/><stop offset=".72" stop-color="#208ea0"/><stop offset="1" stop-color="#0d5f72"/></linearGradient></defs><rect x="82.92" y="82.92" width="914.16" height="914.16" rx="118.23" ry="118.23" fill="#010a18" stroke="url(#logoGrad2)" stroke-miterlimit="10" stroke-width="15"/><path d="M769.93,540.54c0,49.36-13.81,95.49-37.77,134.75-5.32,8.7-11.13,17.09-17.42,25.09-42.83,54.54-107.11,91.45-180.11,98.06h-224.55v-98.06h200.87c31.64,0,61.14-9.2,85.96-25.09,44.3-28.38,73.68-78.04,73.68-134.56,0-69.82-44.82-129.18-107.27-150.85-16.41-5.71-34.03-8.79-52.38-8.79h-102.8v180.74l-41.89,46.42-56.18,62.26v-388.96h200.87c44.29,0,85.98,11.12,122.43,30.72,31.78,17.07,59.58,40.6,81.65,68.82,34.41,43.95,54.91,99.31,54.91,159.45Z" fill="#dfe9ea"/></svg></div>
+      <div class="logo-text">DALTON <span>LAB</span></div>
+    </div>
+    <p class="s19-sign reveal">A empresa que te ajuda a se tornar uma <em>organização agêntica</em>.</p>
+    <div class="s19-meta reveal">daltonlab.ai</div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button class="nav-btn" id="prev-btn" aria-label="Anterior">&#8592;</button>
+  <span class="nav-counter"><strong id="current">01</strong> / <span id="total">18</span></span>
+  <button class="nav-btn" id="next-btn" aria-label="Próximo">&#8594;</button>
+</div>
+
+<script>
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const built = slides.length;
+  const total = built;
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('current');
+  const totalEl = document.getElementById('total');
+  if (totalEl) totalEl.textContent = total;
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  let current = 0;
+  function go(i) {
+    if (i < 0 || i >= built) return;
+    slides[current].classList.remove('active');
+    slides[current].classList.add('prev');
+    current = i;
+    slides[current].classList.remove('prev');
+    slides[current].classList.add('active');
+    slides[current].scrollTop = 0;
+    progress.style.width = ((current + 1) / total * 100) + '%';
+    counter.textContent = String(current + 1).padStart(2, '0');
+    history.replaceState(null, '', '#' + (current + 1));
+  }
+  const hash = parseInt(window.location.hash.replace('#', ''), 10);
+  if (hash && hash >= 1 && hash <= built) { go(hash - 1); } else { progress.style.width = (1 / total * 100) + '%'; }
+  window.addEventListener('hashchange', function(){ const h = parseInt(window.location.hash.replace('#',''),10); if (h && h>=1 && h<=built) go(h-1); });
+  prevBtn.addEventListener('click', () => go(current - 1));
+  nextBtn.addEventListener('click', () => go(current + 1));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); go(current + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(current - 1); }
+    else if (e.key === 'Home') { go(0); }
+    else if (e.key === 'End') { go(built - 1); }
+    else if (e.key === 'f' || e.key === 'F') { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+    else if (/^\d$/.test(e.key)) { const n = parseInt(e.key, 10); if (n >= 1 && n <= built) go(n - 1); }
+  });
+
+  /* ---- navegação por toque (mobile): swipe horizontal = trocar slide ---- */
+  const deck = document.querySelector('.deck');
+  let tsX = 0, tsY = 0, tsT = 0;
+  deck.addEventListener('touchstart', (e) => {
+    const t = e.changedTouches[0]; tsX = t.clientX; tsY = t.clientY; tsT = e.timeStamp;
+  }, { passive: true });
+  deck.addEventListener('touchend', (e) => {
+    const t = e.changedTouches[0];
+    const dx = t.clientX - tsX, dy = t.clientY - tsY, dt = e.timeStamp - tsT;
+    /* horizontal o suficiente, rápido, e mais horizontal que vertical (preserva o scroll) */
+    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.5 && dt < 800) {
+      if (dx < 0) go(current + 1); else go(current - 1);
+      const h = document.querySelector('.swipe-hint'); if (h) h.remove();
+    }
+  }, { passive: true });
+
+  /* força o play do vídeo do Dalton Lab OS quando o slide entra (autoplay costuma ser bloqueado) */
+  document.querySelectorAll('video').forEach(function(v){
+    v.muted = true;
+    var kick = function(){ var p = v.play(); if (p && p.catch) p.catch(function(){}); };
+    kick();
+    v.addEventListener('canplay', kick, { once: true });
+  });
+
+  /* dica de swipe — só em telas pequenas com toque, some sozinha */
+  if (window.matchMedia('(max-width: 760px)').matches && ('ontouchstart' in window)) {
+    const hint = document.createElement('div');
+    hint.className = 'swipe-hint';
+    hint.textContent = '‹  deslize para navegar  ›';
+    document.body.appendChild(hint);
+    setTimeout(() => { if (hint.parentNode) hint.remove(); }, 4500);
+  }
+})();
+
+/* ---- Slide 02 statistical visuals ---- */
+(function(){
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  function rnd(){ return Math.random(); }
+  function gauss(){ return (rnd()+rnd()+rnd()+rnd()-2)/2; } // ~normal, range ~[-1,1]
+
+  // distribution curve with mass under it + outlier on the tail
+  document.querySelectorAll('svg.dist').forEach(function(svg){
+    var W = 520, base = 250, cx = 195, sigma = 60, amp = 188;
+    function gy(x){ return base - amp * Math.exp(-((x-cx)*(x-cx))/(2*sigma*sigma)); }
+    function mk(tag, attrs){ var e = document.createElementNS(SVGNS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
+    // axis
+    svg.appendChild(mk('line', {class:'axis', x1:20, y1:base, x2:500, y2:base}));
+    // area + line path
+    var d = 'M 30 ' + base;
+    for (var x = 30; x <= 372; x += 3){ d += ' L ' + x + ' ' + gy(x).toFixed(1); }
+    var dLine = d;
+    d += ' L 372 ' + base + ' Z';
+    svg.appendChild(mk('path', {class:'curve-area', d:d}));
+    svg.appendChild(mk('path', {class:'curve-line', d:dLine}));
+    // mass dots under the curve
+    for (var i = 0; i < 60; i++){
+      var px = cx + gauss() * sigma * 1.15;
+      if (px < 36 || px > 366) continue;
+      var top = gy(px) + 5, bottom = base - 4;
+      if (bottom <= top) continue;
+      var py = top + rnd() * (bottom - top);
+      svg.appendChild(mk('circle', {class:'massdot', cx:px.toFixed(1), cy:py.toFixed(1), r:(1.6 + rnd()*1.2).toFixed(1)}));
+    }
+    // outlier on the far-right tail
+    var ox = 462, oy = base - 64;
+    svg.appendChild(mk('circle', {class:'out-ring', cx:ox, cy:oy, r:11}));
+    svg.appendChild(mk('circle', {class:'outdot', cx:ox, cy:oy, r:5.5}));
+    svg.appendChild(mk('text', {class:'clabel', x:ox, y:oy-18, 'text-anchor':'middle'}, )).textContent = 'o outlier';
+    var ml = mk('text', {class:'clabel muted', x:cx, y:base+20, 'text-anchor':'middle'}); ml.textContent = 'a grande massa'; svg.appendChild(ml);
+  });
+})();
+</script>
+</body>
+</html>
