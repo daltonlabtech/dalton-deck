@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POC Agente de Homologação SalesDesk — Dalton Lab para Neogrid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a1628; --bg-elevated: #0d1d36;
+    --bg-card: rgba(13, 29, 54, 0.6);
+    --cyan: #33ADE5; --cyan-bright: #5fc3f0;
+    --cyan-dim: rgba(51, 173, 229, 0.4);
+    --cyan-faint: rgba(51, 173, 229, 0.15);
+    --text: #e8eef5; --text-2: #b8c8db;
+    --text-3: #8aa5c2; --text-4: #5f7a98;
+    --warn: #ff8080;
+    --purple: #A855F7;
+    --navy-card: #0c1c33;
+    /* light theme tokens */
+    --l-bg: #ffffff; --l-bg-2: #f6f9fc;
+    --l-text: #0a0a0a; --l-text-2: #3d4a5c; --l-text-3: #6b7a8d; --l-text-4: #9aa7b6;
+    --l-border: #e4ebf2; --l-card: #ffffff;
+    --display: 'Bricolage Grotesque', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    --serif: 'Fraunces', serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--display); -webkit-font-smoothing: antialiased; }
+
+  /* ---------- DECK BACKGROUND (dark base) ---------- */
+  .deck { width: 100vw; height: 100vh; position: relative; background: radial-gradient(ellipse at 80% 20%, rgba(51, 173, 229, 0.10) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%), linear-gradient(180deg, #0a1628 0%, #0d1d36 100%); }
+  .deck::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(51, 173, 229, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(51, 173, 229, 0.035) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); }
+
+  .progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--cyan); width: 0; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100; box-shadow: 0 0 12px rgba(51, 173, 229, 0.6); }
+
+  /* ---------- SLIDE + CINEMATIC TRANSITION ---------- */
+  .slide {
+    position: absolute; inset: 0; padding: 6vh 7vw; display: flex; flex-direction: column;
+    opacity: 0; visibility: hidden;
+    transform: scale(1.045);
+    filter: blur(10px);
+    transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1), transform 0.9s cubic-bezier(0.16,1,0.3,1), filter 0.6s cubic-bezier(0.4,0,0.2,1);
+    z-index: 1;
+  }
+  .slide.active { opacity: 1; visibility: visible; transform: scale(1); filter: blur(0); z-index: 2; }
+  .slide.prev { transform: scale(0.965); }
+
+  /* staggered reveals with depth */
+  .slide.active .reveal { animation: reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .slide.active .reveal:nth-child(1) { animation-delay: 0.15s; }
+  .slide.active .reveal:nth-child(2) { animation-delay: 0.28s; }
+  .slide.active .reveal:nth-child(3) { animation-delay: 0.41s; }
+  .slide.active .reveal:nth-child(4) { animation-delay: 0.54s; }
+  .slide.active .reveal:nth-child(5) { animation-delay: 0.67s; }
+  .slide.active .reveal:nth-child(6) { animation-delay: 0.80s; }
+  @keyframes reveal { from { opacity: 0; transform: translateY(26px); filter: blur(6px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+
+  /* ---------- LIGHT SLIDES ---------- */
+  .slide.light { background: var(--l-bg); color: var(--l-text); }
+  .slide.light::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(51,173,229,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(51,173,229,0.05) 1px, transparent 1px); background-size: 56px 56px; pointer-events: none; mask-image: radial-gradient(ellipse at center, black 25%, transparent 85%); -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 85%); }
+  .slide.light::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--cyan), rgba(51,173,229,0)); }
+  .slide.light .slide-header { color: var(--l-text-3); }
+  .slide.light .slide-num { color: var(--l-text-4); }
+  .slide.light .slide-footer { color: var(--l-text-4); border-top-color: var(--l-border); }
+  .slide.light .slide-footer .brand strong { color: var(--l-text); }
+  .slide.light .display-lg { color: var(--l-text); }
+  .slide.light .body { color: var(--l-text-2); }
+
+  /* ---------- SHARED COMPONENTS ---------- */
+  .slide-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4vh; font-family: var(--mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 2px; position: relative; z-index: 2; }
+  .slide-tag { color: var(--cyan); display: flex; align-items: center; gap: 12px; }
+  .slide-tag::before { content: ''; width: 22px; height: 1px; background: var(--cyan); }
+  .slide-num { color: var(--text-4); }
+  .slide-num strong { color: var(--cyan); }
+  .slide-footer { margin-top: auto; padding-top: 3vh; display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 10px; color: var(--text-4); text-transform: uppercase; letter-spacing: 1.5px; border-top: 1px solid var(--cyan-faint); position: relative; z-index: 2; }
+  .slide-footer .brand { color: var(--cyan); }
+  .slide-footer .brand strong { color: var(--text); }
+
+  .display-lg { font-size: clamp(36px, 4.5vw, 68px); font-weight: 700; line-height: 1.05; letter-spacing: -0.025em; color: var(--text); }
+  .body { font-size: clamp(15px, 1.3vw, 20px); line-height: 1.55; color: var(--text-2); font-weight: 400; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--cyan); text-transform: uppercase; letter-spacing: 2.5px; font-weight: 500; }
+  em.highlight { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); background: none; -webkit-text-fill-color: var(--cyan); }
+
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-mark { width: 38px; height: 38px; border-radius: 8px; box-shadow: 0 0 20px rgba(51, 173, 229, 0.3); overflow: hidden; flex-shrink: 0; }
+  .logo-mark svg { width: 100%; height: 100%; display: block; }
+  .logo-text { font-family: var(--display); font-weight: 600; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--text); }
+  .logo-text span { color: var(--cyan); }
+
+  /* ---------- NAV ---------- */
+  .nav { position: fixed; bottom: 24px; right: 32px; display: flex; align-items: center; gap: 16px; z-index: 50; font-family: var(--mono); }
+  .nav-btn { width: 44px; height: 44px; background: var(--bg-card); backdrop-filter: blur(10px); border: 1px solid var(--cyan-faint); border-radius: 8px; color: var(--text-2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.2s; }
+  .nav-btn:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(51, 173, 229, 0.1); }
+  .nav-counter { color: var(--text-3); font-size: 12px; letter-spacing: 1px; min-width: 56px; text-align: center; }
+  .nav-counter strong { color: var(--cyan); font-weight: 500; }
+
+  /* ================= SLIDE 01 — CAPA (dark) ================= */
+  .slide-01 { justify-content: center; align-items: center; text-align: center; }
+  .slide-01 .cover-logo { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 56px; }
+  .slide-01 .cover-logo .logo-mark { width: 64px; height: 64px; border-radius: 14px; box-shadow: 0 0 40px rgba(51,173,229,0.45); }
+  .slide-01 .cover-logo .logo-text { font-size: 16px; letter-spacing: 4px; }
+  .slide-01 .meta { font-family: var(--mono); color: var(--cyan); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 26px; display: flex; align-items: center; gap: 14px; }
+  .slide-01 .meta::before, .slide-01 .meta::after { content: ''; width: 36px; height: 1px; background: var(--cyan-dim); }
+  .slide-01 h1 { font-size: clamp(38px, 4.8vw, 74px); font-weight: 700; line-height: 1.06; letter-spacing: -0.035em; margin-bottom: 28px; max-width: 20ch; text-wrap: balance; }
+  .slide-01 h1 em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); -webkit-text-fill-color: var(--cyan); display: inline-block; }
+  .slide-01 .tagline { font-family: var(--serif); font-style: italic; font-size: clamp(17px, 1.5vw, 23px); color: var(--text-2); font-weight: 300; letter-spacing: 0.01em; }
+
+  /* ================= SLIDE 02 — O MUNDO MUDOU (dark) ================= */
+  .slide-02 .s2-main { display: flex; align-items: flex-end; justify-content: space-between; gap: 6vw; margin: auto 0 0; flex-wrap: wrap; }
+  .slide-02 .stat-number { font-size: clamp(96px, 15vw, 230px); font-weight: 700; line-height: 0.82; letter-spacing: -0.04em; background: linear-gradient(180deg, var(--cyan) 0%, rgba(51,173,229,0.35) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; padding: 0 0.12em; margin: 0 -0.12em; }
+  .slide-02 .stat-number .frac { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 0.26em; letter-spacing: 0; -webkit-text-fill-color: var(--text-3); color: var(--text-3); background: none; vertical-align: middle; padding: 0 0.18em; }
+  .slide-02 .stat-label { font-size: clamp(20px, 2.2vw, 34px); font-weight: 500; color: var(--text); line-height: 1.15; margin-top: 14px; max-width: 16ch; }
+  /* outlier visualization */
+  .slide-02 .s2-viz { display: flex; flex-direction: column; gap: 14px; padding-bottom: 6px; }
+  .slide-02 .bars { display: flex; align-items: flex-end; gap: clamp(6px, 0.9vw, 12px); height: clamp(120px, 17vh, 180px); }
+  .slide-02 .bar { width: clamp(20px, 2.4vw, 36px); height: 100%; border-radius: 8px 8px 4px 4px; background: linear-gradient(180deg, rgba(51,173,229,0.55), rgba(51,173,229,0.12)); border: 1px solid var(--cyan-dim); position: relative; }
+  .slide-02 .bar.empty { background: transparent; border: 1px dashed var(--text-4); }
+  .slide-02 .s2-body { margin-top: 5vh; max-width: 64ch; }
+  .slide-02 .s2-source { margin-top: 18px; font-family: var(--mono); font-size: 11px; color: var(--purple); text-transform: uppercase; letter-spacing: 2px; }
+  /* distribution curve */
+  .s2-viz--curve .curve-wrap { position: relative; width: clamp(320px, 36vw, 520px); }
+  .s2-viz--curve svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .s2-viz--curve .curve-area { fill: url(#curveGrad); }
+  .s2-viz--curve .curve-line { fill: none; stroke: var(--cyan); stroke-width: 2; }
+  .s2-viz--curve .axis { stroke: rgba(255,255,255,0.14); stroke-width: 1; }
+  .s2-viz--curve .massdot { fill: rgba(51,173,229,0.55); }
+  .s2-viz--curve .outdot { fill: #eaf6ff; filter: drop-shadow(0 0 8px var(--cyan-bright)); }
+  .s2-viz--curve .out-ring { fill: none; stroke: var(--cyan-bright); stroke-width: 1.5; opacity: 0.6; }
+  .s2-viz--curve .clabel { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; fill: var(--cyan-bright); }
+  .s2-viz--curve .clabel.muted { fill: var(--text-4); }
+
+  /* ================= SLIDE 03 — ORGANIZAÇÃO AGÊNTICA (dark, hero) ================= */
+  .slide-03 .s3-top { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; margin: 0 auto 3.5vh; max-width: 1000px; }
+  .slide-03 .s3-title { font-size: clamp(30px, 3.9vw, 58px); font-weight: 700; line-height: 1.07; letter-spacing: -0.03em; max-width: 22ch; }
+  .slide-03 .s3-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); white-space: nowrap; }
+  .slide-03 .s3-body { font-size: clamp(13px, 1.05vw, 17px); color: var(--text-2); line-height: 1.55; max-width: 60ch; }
+
+  .slide-03 .orgs { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; flex: 1; min-height: 0; }
+  .org-panel { border: 1px solid var(--cyan-faint); border-radius: 16px; padding: 24px 28px 20px; display: flex; flex-direction: column; position: relative; overflow: hidden; background: rgba(13,29,54,0.35); }
+  .org-panel.trad { border-color: rgba(255,255,255,0.10); }
+  .org-panel.agentic::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), transparent); }
+  .org-label { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .org-panel.trad .org-label { color: var(--text-3); }
+  .org-panel.agentic .org-label { color: var(--cyan); }
+  .org-diagram { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; min-height: 0; padding: 12px 0; }
+  .org-caption { margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.07); font-size: clamp(11px, 0.92vw, 13.5px); color: var(--text-3); line-height: 1.4; }
+  .org-panel.agentic .org-caption { color: var(--text-2); border-top-color: var(--cyan-faint); }
+
+  /* traditional tree (gray, widening pyramid) */
+  .tree-level { display: flex; gap: 10px; justify-content: center; align-items: center; }
+  .tick { width: 1px; height: 16px; background: rgba(255,255,255,0.18); }
+  .t-node { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-3); border: 1px solid rgba(255,255,255,0.18); border-radius: 6px; padding: 6px 12px; background: rgba(255,255,255,0.03); }
+  .t-dot { width: 13px; height: 13px; border-radius: 50%; background: rgba(255,255,255,0.16); }
+
+  /* ================= SLIDE 04 — A DIFERENÇA (dark, afirmação) ================= */
+  .slide-04 { justify-content: center; }
+  .slide-04 .s4-wrap { max-width: 860px; }
+  .slide-04 .s4-rule { width: 48px; height: 3px; background: var(--cyan); border-radius: 2px; margin-bottom: 30px; box-shadow: 0 0 16px rgba(51,173,229,0.5); }
+  .slide-04 .s4-title { font-size: clamp(32px, 4.4vw, 66px); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; color: var(--text); }
+  .slide-04 .s4-title .q { color: var(--text-3); font-weight: 700; }
+  .slide-04 .s4-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .slide-04 .s4-body { margin-top: 34px; font-size: clamp(15px, 1.3vw, 20px); color: var(--text-2); line-height: 1.6; max-width: 62ch; }
+  .slide-04 .s4-body em { font-family: var(--serif); font-style: italic; color: var(--text); }
+
+  /* ================= SLIDE 05 — QUEM SOMOS (light) ================= */
+  .slide-05 { justify-content: center; }
+  .slide-05 .s5-head { max-width: 840px; margin: 0 auto clamp(26px, 4vh, 46px); }
+  .slide-05 .s5-kicker { font-family: var(--mono); font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 12px; }
+  .slide-05 .s5-title { font-size: clamp(28px, 3.2vw, 46px); font-weight: 700; letter-spacing: -0.03em; color: var(--l-text); line-height: 1.08; max-width: 20ch; }
+  .slide-05 .s5-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .slide-05 .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 3vw, 52px); max-width: 840px; margin: 0 auto; }
+  .s5-card { display: flex; flex-direction: column; }
+  .s5-photo { width: 100%; aspect-ratio: 3 / 4; border-radius: 14px; overflow: hidden; background: #eef3f8; box-shadow: 0 14px 34px rgba(10, 30, 60, 0.14); }
+  .s5-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 22%; display: block; }
+  .s5-name { margin-top: 18px; font-size: clamp(19px, 1.9vw, 27px); font-weight: 700; color: var(--l-text); letter-spacing: -0.02em; line-height: 1.1; }
+  .s5-role { margin-top: 6px; font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); }
+  .s5-bio { margin-top: 12px; font-size: clamp(12.5px, 1.02vw, 15.5px); color: var(--l-text-2); line-height: 1.5; }
+
+  /* ================= SLIDE 06 — A JORNADA (dark) ================= */
+  .slide-06 { justify-content: center; }
+  .slide-06 .s6-head { max-width: 780px; margin-bottom: clamp(44px, 9vh, 100px); }
+  .slide-06 .s6-title { font-size: clamp(30px, 3.6vw, 54px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.06; color: var(--text); }
+  .slide-06 .s6-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .slide-06 .s6-body { margin-top: 18px; font-size: clamp(14px, 1.15vw, 18px); color: var(--text-2); line-height: 1.55; max-width: 64ch; }
+  .journey { display: flex; align-items: flex-start; }
+  .j-step { flex: 1; padding-top: 30px; border-top: 2px solid var(--cyan-faint); position: relative; padding-right: clamp(14px, 2vw, 32px); }
+  .j-step::before { content: ''; position: absolute; top: -7px; left: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 14px rgba(51,173,229,0.7); }
+  .j-num { font-family: var(--mono); font-size: 13px; letter-spacing: 2px; color: var(--cyan); font-weight: 600; }
+  .j-name { margin-top: 12px; font-size: clamp(22px, 2.4vw, 38px); font-weight: 700; letter-spacing: -0.02em; color: var(--text); line-height: 1.04; }
+  .j-desc { margin-top: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-3); }
+  .j-arrow { flex: 0 0 auto; align-self: flex-start; margin: -13px clamp(8px, 1.4vw, 22px) 0; color: var(--cyan-dim); }
+  .j-arrow svg { width: clamp(22px, 2vw, 30px); height: auto; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; display: block; }
+
+  /* ================= SLIDES 07 / 09 / 10 — ETAPAS (dark, número gigante) ================= */
+  .stage { justify-content: center; }
+  .stage-grid { display: grid; grid-template-columns: minmax(0, auto) 1fr; gap: clamp(36px, 6vw, 104px); align-items: center; }
+  .stage-num { font-family: var(--display); font-size: clamp(170px, 25vw, 360px); font-weight: 800; line-height: 0.78; letter-spacing: -0.06em; background: linear-gradient(160deg, rgba(51,173,229,0.30), rgba(51,173,229,0.04)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; padding-right: 0.06em; user-select: none; }
+  .stage-content { max-width: 640px; }
+  .stage-title { margin-top: 16px; font-size: clamp(28px, 3.4vw, 50px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; color: var(--text); }
+  .stage-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .stage-body { margin-top: 20px; font-size: clamp(14px, 1.2vw, 18px); color: var(--text-2); line-height: 1.6; }
+  .stage-body strong { color: var(--text); font-weight: 600; }
+  .invest { margin-top: 30px; padding-top: 22px; border-top: 1px solid var(--cyan-faint); display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  .invest-label { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); }
+  .invest-value { font-size: clamp(22px, 2.2vw, 34px); font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+  /* etapa — sequência de fases em pills */
+  .stage-flow { display: flex; align-items: center; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
+  .stage-pill { border: 1px solid var(--cyan-faint); background: rgba(51,173,229,0.07); border-radius: 100px; padding: 8px 15px; font-size: clamp(12px, 1vw, 14px); color: var(--text); }
+  .stage-arrow { color: var(--cyan-dim); display: flex; }
+  .stage-arrow svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .stage-incl { margin-top: 16px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-3); }
+  .stage-incl .pin { display: flex; align-items: center; gap: 7px; }
+  .stage-incl .pin::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #46e0a0; box-shadow: 0 0 6px rgba(70,224,160,0.7); }
+  .stage-content--wide { max-width: 940px; }
+  /* etapa 2 — fases em cards com ícones */
+  .phase-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 22px; }
+  .phase { border: 1px solid var(--cyan-faint); border-radius: 12px; padding: 18px 15px; background: rgba(13,29,54,0.32); display: flex; flex-direction: column; gap: 12px; position: relative; }
+  .phase::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), transparent); border-radius: 12px 12px 0 0; }
+  .phase .ph-ico { width: 30px; height: 30px; color: var(--cyan-bright); }
+  .phase .ph-ico svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .phase .ph-step { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; color: var(--cyan); }
+  .phase .ph-name { font-size: clamp(13px, 1.05vw, 16px); font-weight: 600; color: var(--text); line-height: 1.2; margin-top: -2px; }
+  /* etapa 3 — itens contínuos (lista 2x2) */
+  .recur-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 30px; margin-top: 22px; }
+  .recur-item { display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-top: 1px solid rgba(255,255,255,0.07); }
+  .recur-item .r-ico { width: 24px; height: 24px; color: var(--cyan-bright); flex-shrink: 0; margin-top: 1px; }
+  .recur-item .r-ico svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .recur-item .r-name { font-size: clamp(14px, 1.1vw, 17px); font-weight: 600; color: var(--text); line-height: 1.2; }
+  .recur-item .r-desc { font-size: 12.5px; color: var(--text-3); margin-top: 4px; line-height: 1.4; }
+
+  /* ================= SLIDE 14 — TRAÇÃO (dark, mapa-múndi + métricas) ================= */
+  .slide-14 { justify-content: center; }
+  .s14-top { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(28px, 4vw, 64px); align-items: center; }
+  .s14-title { margin-top: 14px; font-size: clamp(28px, 3.6vw, 52px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.08; color: var(--text); }
+  .s14-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .s14-body { margin-top: 18px; font-size: clamp(14px, 1.15vw, 18px); color: var(--text-2); line-height: 1.55; max-width: 46ch; }
+  .worldmap { position: relative; width: 100%; aspect-ratio: 100 / 54; border: 1px solid var(--cyan-faint); border-radius: 16px; background: radial-gradient(ellipse at 58% 42%, rgba(51,173,229,0.10), transparent 70%), rgba(13,29,54,0.40); overflow: hidden; }
+  .worldmap svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .wm-grat { stroke: rgba(255,255,255,0.05); stroke-width: 0.18; }
+  .wm-arc { stroke: var(--cyan-dim); stroke-width: 0.35; fill: none; stroke-dasharray: 1.4 1.4; }
+  .wm-dot { fill: var(--cyan-bright); filter: drop-shadow(0 0 1.2px var(--cyan-bright)); }
+  .wm-ring { fill: none; stroke: var(--cyan-bright); stroke-width: 0.35; transform-box: fill-box; transform-origin: center; animation: wmring 2.6s ease-in-out infinite; }
+  .wm-ring.r2 { animation-delay: 0.6s; } .wm-ring.r3 { animation-delay: 1.2s; } .wm-ring.r4 { animation-delay: 1.8s; }
+  @keyframes wmring { 0%,100% { opacity: 0.55; } 50% { opacity: 0.12; } }
+  .wm-label { fill: var(--text-2); font-family: var(--mono); font-size: 2.3px; letter-spacing: 0.2px; text-transform: uppercase; }
+  .s14-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(14px, 2.5vw, 40px); margin-top: clamp(26px, 5vh, 54px); }
+  .metric-num { font-size: clamp(40px, 5vw, 76px); font-weight: 800; letter-spacing: -0.035em; color: var(--text); line-height: 1; }
+  .metric-num span { color: var(--cyan); }
+  .metric-label { margin-top: 11px; font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-3); }
+  .trac-logos { margin-top: clamp(22px, 4vh, 42px); padding-top: clamp(16px, 2.6vh, 24px); border-top: 1px solid var(--cyan-faint); display: flex; align-items: center; justify-content: center; gap: clamp(20px, 3.2vw, 48px); flex-wrap: wrap; }
+  .trac-logos img { height: clamp(18px, 1.7vw, 26px); width: auto; max-width: 120px; object-fit: contain; opacity: 0.62; }
+
+  /* mapa — opção B: globo */
+  .worldmap--globe { position: relative; width: 100%; aspect-ratio: 100 / 54; display: flex; align-items: center; justify-content: center; }
+  .worldmap--globe svg { height: 100%; width: auto; aspect-ratio: 1; overflow: visible; }
+  .gl-sphere { fill: url(#globeGrad); stroke: var(--cyan-dim); stroke-width: 0.4; }
+  .gl-line { fill: none; stroke: rgba(51,173,229,0.22); stroke-width: 0.3; }
+  .gl-dot { fill: var(--cyan-bright); filter: drop-shadow(0 0 1.4px var(--cyan-bright)); }
+  .gl-ring { fill: none; stroke: var(--cyan-bright); stroke-width: 0.4; transform-box: fill-box; transform-origin: center; animation: wmring 2.6s ease-in-out infinite; }
+  .gl-ring.r2 { animation-delay: 0.6s; } .gl-ring.r3 { animation-delay: 1.2s; } .gl-ring.r4 { animation-delay: 1.8s; }
+  .gl-label { fill: var(--text-2); font-family: var(--mono); font-size: 2.5px; text-transform: uppercase; letter-spacing: 0.2px; }
+
+  /* mapa — opção C: contornos reais */
+  .worldmap--real { position: relative; width: 100%; aspect-ratio: 1010 / 666; border: 1px solid var(--cyan-faint); border-radius: 16px; background: radial-gradient(ellipse at 55% 45%, rgba(51,173,229,0.08), transparent 70%), rgba(13,29,54,0.40); overflow: hidden; }
+  .worldmap--real .wm-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; opacity: 0.95; }
+  .worldmap--real .wm-pins { position: absolute; inset: 0; }
+  .wm-pin { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .wm-pin .pdot { width: 11px; height: 11px; border-radius: 50%; background: var(--cyan-bright); box-shadow: 0 0 12px var(--cyan-bright); position: relative; }
+  .wm-pin .pdot::after { content: ''; position: absolute; inset: -6px; border: 1.5px solid var(--cyan-bright); border-radius: 50%; opacity: 0.55; animation: pulse-soft 2.4s infinite; }
+  .wm-pin .plabel { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text); white-space: nowrap; }
+
+
+  /* ================= SLIDES 11 / 12 / 13 — CASES (light, antes → com IA) ================= */
+  .slide-case { justify-content: center; }
+  .case-head { display: flex; align-items: center; gap: 18px; margin-bottom: clamp(18px, 3vh, 34px); padding-bottom: 16px; border-bottom: 1px solid var(--l-border); }
+  .case-badge { display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid var(--cyan); border-radius: 12px; padding: 8px 16px; background: rgba(51,173,229,0.06); flex-shrink: 0; }
+  .cb-kicker { font-family: var(--mono); font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--cyan); }
+  .cb-num { font-size: clamp(22px, 2.5vw, 36px); font-weight: 800; color: var(--cyan); line-height: 1; letter-spacing: -0.02em; }
+  .case-ctx-title { font-size: clamp(18px, 1.9vw, 27px); font-weight: 700; color: var(--l-text); letter-spacing: -0.02em; line-height: 1.1; }
+  .case-ctx-sub { font-family: var(--mono); font-size: clamp(10px, 0.95vw, 12.5px); color: var(--l-text-3); letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; }
+  .case-of { margin-left: auto; font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; color: var(--l-text-4); text-transform: uppercase; align-self: flex-start; }
+  .case-of b { color: var(--cyan); }
+  .case-problem { margin-bottom: clamp(16px, 2.6vh, 28px); }
+  .cp-label { font-family: var(--mono); font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: #c2554f; font-weight: 600; margin-bottom: 9px; display: flex; align-items: center; gap: 9px; }
+  .cp-label::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #c2554f; }
+  .cp-text { font-size: clamp(14px, 1.2vw, 18px); color: var(--l-text); line-height: 1.5; max-width: 96ch; font-weight: 500; }
+  .cp-text em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .case-cols { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2.5vw, 36px); }
+  .case-col { border: 1px solid var(--l-border); border-radius: 14px; padding: 20px 24px; background: var(--l-card); }
+  .case-col.before { background: var(--l-bg-2); }
+  .case-col.after { border-color: rgba(51,173,229,0.45); box-shadow: 0 14px 34px rgba(51,173,229,0.13); position: relative; overflow: hidden; }
+  .case-col.after::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--cyan), transparent); }
+  .case-col-label { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+  .case-col.before .case-col-label { color: var(--l-text-3); }
+  .case-col.after .case-col-label { color: var(--cyan); }
+  .case-li { display: flex; gap: 11px; align-items: flex-start; padding: 10px 0; font-size: clamp(13px, 1.05vw, 16px); color: var(--l-text); line-height: 1.35; }
+  .case-li + .case-li { border-top: 1px solid var(--l-border); }
+  .case-col.before .case-li { color: var(--l-text-2); }
+  .case-li .mk { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; }
+  .case-li .mk svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .case-col.before .mk { color: #d08a8a; }
+  .case-col.after .mk { color: #1fa971; }
+  .case-result { margin-top: clamp(20px, 3.2vh, 36px); border-left: 4px solid var(--cyan); background: linear-gradient(90deg, rgba(51,173,229,0.12), rgba(51,173,229,0)); border-radius: 0 12px 12px 0; padding: 18px 24px; display: flex; flex-direction: column; gap: 8px; }
+  .cr-label { font-family: var(--mono); font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--cyan); font-weight: 600; }
+  .cr-main { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  .cr-value { font-size: clamp(23px, 2.9vw, 42px); font-weight: 700; color: var(--l-text); letter-spacing: -0.025em; line-height: 1.05; }
+  .cr-value em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .cr-sub { font-size: clamp(12px, 1vw, 15px); color: var(--l-text-2); }
+
+  /* option badge (temporary) */
+  .opt-badge { position: absolute; top: 5vh; left: 7vw; z-index: 5; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--purple); border: 1px solid var(--purple-dim, #6b3aa0); border-radius: 100px; padding: 4px 12px; }
+  .diag-ico { color: var(--cyan-bright); flex-shrink: 0; }
+  .diag-ico svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; display: block; }
+  .blk-label { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); }
+
+  /* Diagnóstico — fluxo horizontal + entregável em destaque */
+  .s7c { justify-content: center; }
+  .s7c-flow { display: flex; align-items: stretch; gap: clamp(8px, 1.2vw, 16px); margin-top: clamp(22px, 3.5vh, 36px); }
+  .s7c-step { flex: 1; border: 1px solid var(--cyan-faint); border-radius: 12px; padding: 18px 16px; background: rgba(13,29,54,0.3); display: flex; flex-direction: column; gap: 10px; }
+  .s7c-step .diag-ico { width: 26px; height: 26px; }
+  .s7c-step .t { font-size: clamp(13px, 1.05vw, 16px); font-weight: 600; color: var(--text); line-height: 1.25; }
+  .s7c-arrow { align-self: center; color: var(--cyan-dim); flex-shrink: 0; }
+  .s7c-arrow svg { width: clamp(18px, 1.6vw, 24px); height: auto; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; display: block; }
+  .s7c-deliv { margin-top: 18px; border: 1px solid var(--cyan); border-radius: 14px; padding: 18px 24px; background: rgba(51,173,229,0.08); display: flex; align-items: center; gap: clamp(18px, 3vw, 40px); flex-wrap: wrap; }
+  .s7c-deliv .blk-label { color: var(--cyan-bright); }
+  .s7c-deliv .items { display: flex; gap: clamp(16px, 2.5vw, 32px); flex-wrap: wrap; }
+  .s7c-deliv .it { display: flex; align-items: center; gap: 9px; font-size: clamp(13px, 1.05vw, 16px); color: var(--text); }
+  .s7c-deliv .it .diag-ico { width: 20px; height: 20px; }
+
+  /* ================= SLIDE 08 — MAPA DALTON LAB OS (dark, imersivo) ================= */
+  .slide-08 { justify-content: center; align-items: center; }
+  .slide-08 .s8-head { text-align: center; margin-bottom: clamp(18px, 3.2vh, 34px); }
+  .slide-08 .s8-title { margin-top: 12px; font-size: clamp(24px, 2.9vw, 44px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.06; color: var(--text); }
+  .slide-08 .s8-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+  .slide-08 .s8-frame { position: relative; width: 100%; max-width: 1180px; }
+  .slide-08 .s8-frame::before { content: ''; position: absolute; inset: -8% -4%; background: radial-gradient(ellipse at center, rgba(51,173,229,0.25), transparent 70%); filter: blur(30px); z-index: 0; }
+  .slide-08 .s8-frame img { position: relative; z-index: 1; width: 100%; display: block; border-radius: 16px; border: 1px solid var(--cyan-faint); box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+  .slide-08 .s8-note { margin-top: 18px; text-align: center; font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-4); }
+
+  /* agentic panel — Dalton Lab OS map thumbnail */
+  .org-thumb { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; }
+  .org-thumb img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px; border: 1px solid var(--cyan-faint); box-shadow: 0 16px 44px rgba(0,0,0,0.55); }
+
+  /* ---------- MOBILE (desktop intacto: só telas estreitas) ---------- */
+  @media (max-width: 820px) {
+    html, body { overflow-x: hidden; overflow-y: auto; height: auto; }
+    .deck { height: auto; min-height: 100vh; }
+    .deck::before { position: fixed; }
+    .slide {
+      position: relative; inset: auto;
+      opacity: 1 !important; visibility: visible !important;
+      transform: none !important; filter: none !important;
+      height: auto; min-height: 100svh; padding: 8vh 7vw; overflow: visible;
+      border-bottom: 1px solid var(--cyan-faint);
+    }
+    .slide.light { border-bottom-color: var(--l-border); }
+    .slide .reveal { animation: none !important; }
+    .nav, .progress { display: none !important; }
+    .slide-header { margin-bottom: 3.2vh; }
+    .slide-footer { flex-wrap: wrap; gap: 6px; }
+    /* tipografia: capar números/títulos gigantes */
+    .stat-number { font-size: clamp(64px, 19vw, 128px) !important; }
+    .display-lg, .s6-title, .s5-title, .s14-title, .slide-01 h1 { font-size: clamp(30px, 7.6vw, 44px) !important; }
+    .stat-label { font-size: clamp(18px, 5vw, 26px) !important; }
+    /* reempilhar colunas */
+    .cf-grid, .cr-grid { grid-template-columns: 1fr !important; gap: 22px !important; }
+    .ba-row { flex-direction: column !important; gap: 16px !important; }
+    .ba-row svg { transform: rotate(90deg); }
+    /* timeline vira lista vertical */
+    .tl-line { display: none !important; }
+    .tl-grid { grid-template-columns: 1fr !important; gap: 4px !important; }
+    .tl-grid > div { padding: 12px 0 !important; border-top: 1px solid rgba(255,255,255,0.07); }
+    .tl-grid > div:first-child { border-top: none; }
+  }
+
+  @media print {
+    @page { size: A4 landscape; margin: 0; }
+    html, body { overflow: visible; }
+    .nav, .progress { display: none !important; }
+    .slide { position: relative; opacity: 1 !important; visibility: visible !important; transform: none !important; filter: none !important; page-break-after: always; height: 100vh; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+  <div class="progress" id="progress"></div>
+
+  <!-- ============ SLIDE 01 — O EXCESSO (central) ============ -->
+  <section class="slide active" data-theme="dark">
+    <div class="slide-header reveal"><span class="slide-tag">O gargalo da homologação</span><span class="slide-num"><strong>01</strong> / 10</span></div>
+    <div class="reveal" style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; min-height:0;">
+      <div class="eyebrow">O volume</div>
+      <h2 class="display-lg" style="margin-top:16px; max-width:18ch;">Toda oportunidade ganha entra na <em class="highlight">fila de homologação</em>.</h2>
+      <div style="width:min(720px,84%); margin-top:clamp(44px,8vh,86px);">
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px;">
+          <span style="font-family:var(--mono); font-size:13px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-3);">Demanda</span>
+          <span style="font-weight:800; font-size:clamp(30px,3.2vw,50px); color:var(--text); letter-spacing:-0.02em;">484<span style="font-size:0.42em; color:var(--text-3); font-weight:600;"> / mês</span></span>
+        </div>
+        <div style="height:clamp(36px,4.8vh,58px); width:100%; border-radius:10px; background:linear-gradient(90deg, var(--cyan), rgba(51,173,229,0.32)); border:1px solid var(--cyan-faint);"></div>
+      </div>
+      <p class="body" style="margin-top:clamp(30px,5vh,50px); max-width:42ch; font-size:clamp(16px,1.35vw,21px);">Cada uma passa por um checklist de 39 critérios.</p>
+    </div>
+    <div class="slide-footer"><span class="brand"><strong>Dalton Lab</strong> × Neogrid</span><span>O que entra precisa ser homologado antes de virar contrato</span></div>
+  </section>
+
+  <!-- ============ SLIDE 02 — A CAPACIDADE (central) ============ -->
+  <section class="slide" data-theme="dark">
+    <div class="slide-header reveal"><span class="slide-tag">O gargalo da homologação</span><span class="slide-num"><strong>02</strong> / 10</span></div>
+    <div class="reveal" style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; min-height:0;">
+      <div class="eyebrow">A capacidade</div>
+      <h2 class="display-lg" style="margin-top:16px; max-width:16ch;">O time dá conta de <em class="highlight">144</em>.</h2>
+      <div style="width:min(720px,84%); margin-top:clamp(40px,7vh,76px);">
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px;">
+          <span style="font-family:var(--mono); font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-4);">Demanda</span>
+          <span style="font-weight:700; font-size:clamp(18px,1.7vw,26px); color:var(--text-3);">484 / mês</span>
+        </div>
+        <div style="height:clamp(30px,4vh,48px); width:100%; border-radius:9px; background:rgba(255,255,255,0.05); border:1px dashed var(--text-4);"></div>
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin:22px 0 10px;">
+          <span style="font-family:var(--mono); font-size:13px; letter-spacing:1.5px; text-transform:uppercase; color:var(--cyan);">Capacidade do time</span>
+          <span style="font-weight:800; font-size:clamp(24px,2.4vw,38px); color:var(--cyan); letter-spacing:-0.02em;">144 / mês</span>
+        </div>
+        <div style="height:clamp(30px,4vh,48px); width:29.7%; border-radius:9px; background:linear-gradient(90deg, var(--cyan), rgba(51,173,229,0.5)); box-shadow:0 0 18px rgba(51,173,229,0.35);"></div>
+      </div>
+      <p class="body" style="margin-top:clamp(28px,5vh,48px); max-width:30ch; font-size:clamp(16px,1.35vw,21px);"><strong style="color:var(--text);">340 não cabem.</strong></p>
+    </div>
+    <div class="slide-footer"><span class="brand"><strong>Dalton Lab</strong> × Neogrid</span><span>O time faz o melhor possível. O gargalo é o volume.</span></div>
+  </section>
+
+  <!-- ============ SLIDE 03 — O TRANSBORDO (central) ============ -->
+  <section class="slide" data-theme="dark">
+    <div class="slide-header reveal"><span class="slide-tag">O gargalo da homologação</span><span class="slide-num"><strong>03</strong> / 10</span></div>
+    <div class="reveal" style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; min-height:0;">
+      <div class="eyebrow">O transbordo</div>
+      <div class="stat-number" style="font-size:clamp(110px,16vw,250px); line-height:0.82; margin-top:6px;">709<span class="frac" style="padding-left:0.42em;">dias</span></div>
+      <div class="stat-label" style="margin-top:8px; font-size:clamp(20px,2.2vw,34px);">parados na fila, em média.</div>
+      <div style="width:min(720px,84%); margin-top:clamp(32px,6vh,58px);">
+        <div style="display:flex; height:clamp(36px,4.8vh,58px); border-radius:10px; overflow:hidden; border:1px solid var(--cyan-faint);">
+          <div style="flex:0 0 29.7%; background:linear-gradient(90deg, var(--cyan), rgba(51,173,229,0.5)); display:flex; align-items:center; justify-content:center; font-weight:700; color:#08263c; font-size:clamp(13px,1.1vw,16px);">144</div>
+          <div style="flex:1; background:repeating-linear-gradient(45deg, rgba(255,128,128,0.30), rgba(255,128,128,0.30) 8px, rgba(255,128,128,0.10) 8px, rgba(255,128,128,0.10) 16px); display:flex; align-items:center; justify-content:center; font-weight:700; color:#ff9a9a; font-size:clamp(13px,1.1vw,16px);">+340</div>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:12px; font-family:var(--mono); font-size:12px; letter-spacing:1px; text-transform:uppercase;">
+          <span style="color:var(--cyan-bright);">144 homologados</span>
+          <span style="color:#ffb3b3;">+340 transbordam / mês</span>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand"><strong>Dalton Lab</strong> × Neogrid</span><span>A fila não anda. Ela represa.</span></div>
+  </section>
+
+  <!-- ============ SLIDE 04 — TIMELINE DA POC ============ -->
+  <section class="slide" data-theme="dark">
+    <div class="slide-header reveal"><span class="slide-tag">Como trabalhamos</span><span class="slide-num"><strong>04</strong> / 10</span></div>
+    <div class="reveal" style="flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0;">
+      <div class="s6-head" style="margin-bottom:clamp(46px,9vh,96px);">
+        <h2 class="s6-title">A <em>POC</em> no ar em 3 semanas, contadas a partir do acesso.</h2>
+        <p class="s6-body" style="font-size:clamp(16px,1.35vw,21px);">A preparação rodou em paralelo. O relógio de verdade só começa quando o acesso técnico é liberado.</p>
+      </div>
+      <div style="position:relative;">
+        <div class="tl-line" style="position:absolute; top:11px; left:6%; right:6%; height:4px; border-radius:3px; background:linear-gradient(90deg, var(--text-4) 0%, var(--text-4) 50%, var(--cyan) 50%, var(--cyan-bright) 100%);"></div>
+        <div class="tl-grid" style="display:grid; grid-template-columns:repeat(4,1fr); position:relative;">
+          <div style="text-align:center; padding:0 10px;">
+            <div style="width:22px;height:22px;border-radius:50%;background:var(--text-3);margin:0 auto;border:4px solid var(--bg);"></div>
+            <div style="font-family:var(--mono);font-size:14px;color:var(--text-3);margin-top:18px;letter-spacing:1px;">08/05</div>
+            <div style="font-size:clamp(19px,2.1vw,30px);font-weight:700;color:var(--text);margin-top:8px;line-height:1.05;">Diagnóstico</div>
+            <div style="font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--text-4);margin-top:8px;">escopo definido</div>
+          </div>
+          <div style="text-align:center; padding:0 10px;">
+            <div style="width:22px;height:22px;border-radius:50%;background:var(--text-3);margin:0 auto;border:4px solid var(--bg);"></div>
+            <div style="font-family:var(--mono);font-size:14px;color:var(--text-3);margin-top:18px;letter-spacing:1px;">11–15/05</div>
+            <div style="font-size:clamp(19px,2.1vw,30px);font-weight:700;color:var(--text);margin-top:8px;line-height:1.05;">Estudo do processo</div>
+            <div style="font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--text-4);margin-top:8px;">playbook · walkthrough</div>
+          </div>
+          <div style="text-align:center; padding:0 10px;">
+            <div style="width:30px;height:30px;border-radius:50%;background:var(--cyan-bright);margin:-4px auto 0;border:4px solid var(--bg);box-shadow:0 0 18px rgba(51,173,229,0.8);"></div>
+            <div style="font-family:var(--mono);font-size:14px;color:var(--cyan-bright);margin-top:14px;letter-spacing:1px;font-weight:600;">★ 26/05</div>
+            <div style="font-size:clamp(19px,2.1vw,30px);font-weight:700;color:var(--cyan-bright);margin-top:8px;line-height:1.05;">Acesso liberado</div>
+            <div style="font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--cyan);margin-top:8px;">o relógio começa aqui</div>
+          </div>
+          <div style="text-align:center; padding:0 10px;">
+            <div style="width:22px;height:22px;border-radius:50%;background:var(--cyan-bright);margin:0 auto;border:4px solid var(--bg);box-shadow:0 0 12px rgba(51,173,229,0.6);"></div>
+            <div style="font-family:var(--mono);font-size:14px;color:var(--cyan-bright);margin-top:18px;letter-spacing:1px;">16/06</div>
+            <div style="font-size:clamp(19px,2.1vw,30px);font-weight:700;color:var(--text);margin-top:8px;line-height:1.05;">POC ao vivo</div>
+            <div style="font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--text-4);margin-top:8px;">296 opps reais triadas</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:center; margin-top:clamp(34px,6vh,64px);">
+        <div style="display:flex; align-items:baseline; gap:18px; border:1px solid var(--cyan-faint); background:rgba(51,173,229,0.08); border-radius:16px; padding:16px 30px;">
+          <span style="font-size:clamp(46px,6vw,84px); font-weight:800; color:var(--cyan); letter-spacing:-0.03em; line-height:1;">21</span>
+          <span style="font-size:clamp(16px,1.4vw,21px); color:var(--text-2); max-width:26ch; text-align:left;">dias entre o acesso e a POC processando 296 oportunidades reais.</span>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand"><strong>Dalton Lab</strong> × Neogrid</span><span>Somente leitura · dados mascarados · na dúvida, o humano decide</span></div>
+  </section>
+
+  <!-- ============ SLIDE 05 — O QUE FIZEMOS (light) ============ -->
+  <section class="slide light" data-theme="light">
+    <div class="slide-header reveal"><span class="slide-tag">O que fizemos</span><span class="slide-num"><strong>05</strong> / 10</span></div>
+    <div class="reveal" style="flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0; align-items:center; text-align:center;">
+      <div style="max-width:1000px;">
+        <div class="eyebrow">No ambiente de homologação de vocês, com o playbook de vocês</div>
+        <h2 class="display-lg" style="margin-top:12px;">296 oportunidades reais, <em class="highlight">triadas ao vivo</em>.</h2>
+      </div>
+      <div class="ba-row" style="display:flex; align-items:center; justify-content:center; gap:clamp(28px,5vw,80px); margin-top:clamp(34px,6vh,66px);">
+        <div style="text-align:center;">
+          <div style="font-family:var(--mono); font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--l-text-3);">Antes</div>
+          <div style="font-size:clamp(48px,6.5vw,94px); font-weight:800; letter-spacing:-0.03em; color:var(--l-text); line-height:1; margin-top:10px;">~15 min</div>
+          <div style="font-size:clamp(14px,1.1vw,17px); color:var(--l-text-2); margin-top:10px; max-width:18ch;">de conferência manual por oportunidade</div>
+        </div>
+        <div style="color:var(--cyan);"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></div>
+        <div style="text-align:center;">
+          <div style="font-family:var(--mono); font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--cyan);">Agora</div>
+          <div style="font-size:clamp(48px,6.5vw,94px); font-weight:800; letter-spacing:-0.03em; color:var(--cyan); line-height:1; margin-top:10px;">~1 seg</div>
+          <div style="font-size:clamp(14px,1.1vw,17px); color:var(--l-text-2); margin-top:10px; max-width:18ch;">com o agente</div>
+        </div>
+      </div>
+      <p style="font-size:clamp(15px,1.2vw,18px); color:var(--l-text-3); margin-top:26px;">Os 39 critérios do playbook, rodados em cada uma das 296.</p>
+      <div style="margin-top:clamp(28px,5vh,52px); border:1px solid var(--l-border); border-left:4px solid var(--cyan); border-radius:0 12px 12px 0; padding:20px 28px; max-width:800px; background:var(--l-bg-2);">
+        <span style="font-weight:700; color:var(--l-text); font-size:clamp(15px,1.25vw,19px);">Sem caixa-preta.</span> <span style="color:var(--l-text-2); font-size:clamp(15px,1.25vw,19px);">100% das decisões vêm com o campo e o valor que as sustentaram, rastreável até a origem.</span>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand"><strong>Dalton Lab</strong> × Neogrid</span><span>POC · Agente de Homologação SalesDesk</span></div>
+  </section>
+
+  <!-- ============ SLIDE 06 — COMO FUNCIONA ============ -->
+  <section class="slide" data-theme="dark">
+    <div class="slide-header reveal"><span class="slide-tag">Como funciona</span><span class="slide-num"><strong>06</strong> / 10</span></div>
+    <div class="reveal" style="flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0;">
+      <div class="s6-head" style="margin-bottom:clamp(26px,4.5vh,44px);">
+        <h2 class="s6-title" style="font-size:clamp(30px,3.4vw,50px);">O agente lê a cadeia e <em>mostra onde ela quebra</em>.</h2>
+        <p class="s6-body" style="font-size:clamp(16px,1.3vw,20px);">Um caso real, do começo ao veredito.</p>
+      </div>
+      <div class="cf-grid" style="display:grid; grid-template-columns:1.15fr 1fr; gap:clamp(28px,4vw,60px); align-items:center;">
+        <div>
+          <div style="display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-family:var(--mono); font-size:13px; color:var(--text-4); width:16px;">1</span><span style="flex:1; font-size:clamp(15px,1.25vw,19px); color:var(--text);">Porte da conta</span><span style="font-family:var(--mono); font-size:12px; letter-spacing:1px; text-transform:uppercase; color:#46e0a0;">conferido</span></div>
+          <div style="display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.06);"><span style="font-family:var(--mono); font-size:13px; color:var(--text-4); width:16px;">2</span><span style="flex:1; font-size:clamp(15px,1.25vw,19px); color:var(--text);">Solução <span style="color:var(--text-4); font-family:var(--mono); font-size:12px;">(EDI)</span></span><span style="font-family:var(--mono); font-size:12px; letter-spacing:1px; text-transform:uppercase; color:#46e0a0;">conferido</span></div>
+          <div style="padding:12px 10px; border-bottom:1px solid var(--cyan-faint); background:rgba(255,128,128,0.06); border-radius:8px; margin:3px 0;">
+            <div style="display:flex; align-items:center; gap:14px;"><span style="font-family:var(--mono); font-size:13px; color:var(--warn); width:16px;">3</span><span style="flex:1; font-size:clamp(15px,1.25vw,19px); color:var(--text); font-weight:600;">Lista de preço</span><span style="font-family:var(--mono); font-size:12px; letter-spacing:1px; text-transform:uppercase; color:var(--warn);">falha &#9664; para aqui</span></div>
+            <div style="font-family:var(--mono); font-size:12px; color:var(--text-3); margin-top:8px; padding-left:30px;">aplicada: «Tabela DAD» &nbsp;·&nbsp; esperada p/ EDI: «Tabela EDI»</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.06); opacity:0.42;"><span style="font-family:var(--mono); font-size:13px; color:var(--text-4); width:16px;">4</span><span style="flex:1; font-size:clamp(15px,1.25vw,19px); color:var(--text);">Itens da venda</span><span style="font-family:var(--mono); font-size:12px; letter-spacing:1px; text-transform:uppercase; color:var(--text-4);">não avaliado</span></div>
+          <div style="display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.06); opacity:0.42;"><span style="font-family:var(--mono); font-size:13px; color:var(--text-4); width:16px;">5</span><span style="flex:1; font-size:clamp(15px,1.25vw,19px); color:var(--text);">Proposta</span><span style="font-family:var(--mono); font-size:12px; letter-spacing:1px; text-transform:uppercase; color:var(--text-4);">não avaliado</span></div>
+          <div style="display:flex; align-items:center; gap:14px; padding:12px 0; opacity:0.42;"><span style="font-family:var(--mono); font-size:13px; color:var(--text-4); width:16px;">6</span><span style="flex:1; font-size:clamp(15px,1.25vw,19px); color:var(--text);">Contrato no ERP</span><span style="font-family:var(--mono); font-size:12px; letter-spacing:1px; text-transform:uppercase; color:var(--text-4);">não avaliado</span></div>
+        </div>
+        <div style="border:1px solid var(--cyan-faint); border-left:4px solid var(--warn); border-radius:14px; padding:26px 28px; background:rgba(255,128,128,0.05);">
+          <div style="font-family:var(--mono); font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--warn);">Veredito</div>
+          <div style="font-size:clamp(26px,2.8vw,40px); font-weight:700; letter-spacing:-0.02em; margin-top:8px; color:var(--text);">Reprovado</div>
+          <p class="body" style="margin-top:14px; font-size:clamp(15px,1.2vw,18px);">A lista de preço aplicada não corresponde à solução vendida. O agente para no elo exato e mostra a evidência.</p>
+          <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--cyan-faint); font-family:var(--mono); font-size:12px; color:var(--text-3); line-height:1.5;">Evidência: campo de lista de preço aponta para a tabela de outra solução.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand"><strong>Dalton Lab</strong> × Neogrid</span><span>Cada veredito aponta o dado de origem no CRM</span></div>
+  </section>
+
+  <!-- ============ SLIDE 07 — CRESCER SEM CONTRATAR ============ -->
+  <section class="slide" data-theme="dark">
+    <div class="slide-header reveal"><span class="slide-tag">O que isso destrava</span><span class="slide-num"><strong>07</strong> / 10</span></div>
+    <div class="reveal" style="flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0;">
+      <div class="s6-head" style="margin-bottom:clamp(22px,3.5vh,40px);">
+        <h2 class="s6-title">Fazer mais com o time que <em>já existe</em>.</h2>
+        <p class="s6-body" style="font-size:clamp(16px,1.3vw,21px);">A meta que vocês definiram no diagnóstico: crescer em volume sem crescer o quadro.</p>
+      </div>
+      <div class="cr-grid" style="display:grid; grid-template-columns:1.25fr 0.9fr; gap:clamp(30px,4vw,64px); align-items:center;">
+        <div>
+          <svg viewBox="0 0 580 300" style="width:100%; height:auto; overflow:visible;">
+            <defs><linearGradient id="agentFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(51,173,229,0.42)"/><stop offset="1" stop-color="rgba(51,173,229,0.05)"/></linearGradient></defs>
+            <line x1="44" y1="250" x2="556" y2="250" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+            <line x1="44" y1="40" x2="44" y2="250" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+            <path d="M44 250 L44 212 L556 212 L556 250 Z" fill="rgba(255,255,255,0.12)"/>
+            <path d="M44 212 L44 206 C 200 198, 360 150, 556 64 L556 212 Z" fill="url(#agentFill)"/>
+            <path d="M44 206 C 200 198, 360 150, 556 64" fill="none" stroke="var(--cyan)" stroke-width="2.6"/>
+            <circle cx="556" cy="64" r="5" fill="#eaf6ff"/>
+            <text x="392" y="232" fill="var(--text-3)" font-family="'JetBrains Mono', monospace" font-size="13" letter-spacing="1">tempo &#8594;</text>
+          </svg>
+          <div style="display:flex; gap:clamp(16px,2.5vw,30px); flex-wrap:wrap; margin-top:18px; font-family:var(--mono); font-size:12px; letter-spacing:0.5px; text-transform:uppercase;">
+            <span style="display:flex; align-items:center; gap:8px; color:var(--text-2);"><span style="width:26px;height:3px;background:var(--cyan); border-radius:2px;"></span>demanda crescente</span>
+            <span style="display:flex; align-items:center; gap:8px; color:var(--text-2);"><span style="width:14px;height:14px;border-radius:3px;background:rgba(51,173,229,0.4);"></span>o agente preenche</span>
+            <span style="display:flex; align-items:center; gap:8px; color:var(--text-3);"><span style="width:14px;height:14px;border-radius:3px;background:rgba(255,255,255,0.14);"></span>equipe (sem contratar)</span>
+          </div>
+        </div>
+        <div>
+          <div class="stat-number" style="font-size:clamp(56px,7vw,120px); line-height:0.88;">57<span class="frac" style="padding:0 0.14em;">a</span>70</div>
+          <div class="stat-label" style="font-size:clamp(18px,1.7vw,26px); margin-top:6px; max-width:16ch;">horas / mês devolvidas ao time</div>
+          <p class="body" style="margin-top:clamp(20px,3vh,30px); font-size:clamp(14px,1.2vw,18px);">A analista vira <strong style="color:var(--text);">gestora de exceção</strong>: confirma, em vez de investigar. O déficit de <strong style="color:var(--text);">+340/mês para de crescer</strong>.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand"><strong>Dalton Lab</strong> × Neogrid</span><span>Horas devolvidas · projeção sobre o volume real, a validar</span></div>
+  </section>
+
+  <!-- ============ SLIDE 08 — 15 MIN -> 1 SEG ============ -->
+  <section class="slide" data-theme="dark">
+    <div class="slide-header reveal"><span class="slide-tag">O salto</span><span class="slide-num"><strong>08</strong> / 10</span></div>
+    <div class="reveal" style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; min-height:0;">
+      <h2 class="display-lg" style="max-width:24ch;">O que levava <em class="highlight">~15 minutos</em> agora leva ~1 segundo.</h2>
+      <div style="width:100%; max-width:900px; margin-top:clamp(36px,7vh,72px); display:flex; flex-direction:column; gap:clamp(22px,4vh,44px);">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px;"><span style="font-family:var(--mono); font-size:13px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-3);">Antes · conferência manual</span><span style="font-weight:800; font-size:clamp(24px,2.4vw,38px); color:var(--text);">~15 min</span></div>
+          <div style="height:clamp(28px,4vh,46px); width:100%; border-radius:8px; background:linear-gradient(90deg, rgba(255,128,128,0.5), rgba(255,128,128,0.16)); border:1px solid rgba(255,128,128,0.3);"></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px;"><span style="font-family:var(--mono); font-size:13px; letter-spacing:1.5px; text-transform:uppercase; color:var(--cyan);">Agora · com o agente</span><span style="font-weight:800; font-size:clamp(24px,2.4vw,38px); color:var(--cyan);">~1 seg</span></div>
+          <div style="height:clamp(28px,4vh,46px); width:8px; min-width:8px; border-radius:8px; background:linear-gradient(180deg, var(--cyan), rgba(51,173,229,0.6)); box-shadow:0 0 18px rgba(51,173,229,0.7);"></div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand"><strong>Dalton Lab</strong> × Neogrid</span><span>Mesma análise, dos 39 critérios, em uma fração do tempo</span></div>
+  </section>
+
+  <!-- ============ SLIDE 09 — 900x + SUCESSO ============ -->
+  <section class="slide" data-theme="dark">
+    <div class="slide-header reveal"><span class="slide-tag">O salto</span><span class="slide-num"><strong>09</strong> / 10</span></div>
+    <div class="reveal" style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; min-height:0;">
+      <div class="stat-number" style="font-size:clamp(120px,18vw,300px); line-height:0.84;">~900<span class="frac" style="padding-left:0.3em;">×</span></div>
+      <div class="stat-label" style="max-width:22ch; margin-top:12px; font-size:clamp(23px,2.5vw,40px);">mais rápido. A represa de 709 dias deixa de fazer sentido.</div>
+      <div style="margin-top:clamp(32px,5.5vh,58px); border:1px solid var(--cyan-faint); border-left:4px solid var(--cyan); background:linear-gradient(90deg, rgba(51,173,229,0.14), rgba(51,173,229,0.02)); border-radius:0 14px 14px 0; padding:24px 34px; max-width:880px; text-align:left;">
+        <div style="font-weight:700; font-size:clamp(19px,1.9vw,28px); letter-spacing:-0.01em; color:var(--text);">POC realizada com sucesso. Próximo passo: a implementação completa.</div>
+        <p class="body" style="margin-top:12px; font-size:clamp(15px,1.3vw,19px);">Em produção, com permissão de escrita, o agente deixa de só apontar e passa a resolver. A cobertura cresce mês a mês, com curadoria mensal e otimizações sob medida.</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand"><strong>Dalton Lab</strong> × Neogrid</span><span>POC · Agente de Homologação SalesDesk</span></div>
+  </section>
+
+  <!-- ============ SLIDE 10 — FECHAMENTO ============ -->
+  <section class="slide slide-01" data-theme="dark">
+    <div class="cover-logo reveal">
+      <div class="logo-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080"><defs><linearGradient id="logoGrad2" x1="75.42" y1="540" x2="1004.58" y2="540" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#157e9c"/><stop offset=".39" stop-color="#0d5f72"/><stop offset=".72" stop-color="#208ea0"/><stop offset="1" stop-color="#0d5f72"/></linearGradient></defs><rect x="82.92" y="82.92" width="914.16" height="914.16" rx="118.23" ry="118.23" fill="#010a18" stroke="url(#logoGrad2)" stroke-miterlimit="10" stroke-width="15"/><path d="M769.93,540.54c0,49.36-13.81,95.49-37.77,134.75-5.32,8.7-11.13,17.09-17.42,25.09-42.83,54.54-107.11,91.45-180.11,98.06h-224.55v-98.06h200.87c31.64,0,61.14-9.2,85.96-25.09,44.3-28.38,73.68-78.04,73.68-134.56,0-69.82-44.82-129.18-107.27-150.85-16.41-5.71-34.03-8.79-52.38-8.79h-102.8v180.74l-41.89,46.42-56.18,62.26v-388.96h200.87c44.29,0,85.98,11.12,122.43,30.72,31.78,17.07,59.58,40.6,81.65,68.82,34.41,43.95,54.91,99.31,54.91,159.45Z" fill="#dfe9ea"/></svg></div>
+      <div class="logo-text">DALTON <span>LAB</span> &nbsp;×&nbsp; NEOGRID</div>
+    </div>
+    <div class="meta reveal">296 oportunidades · ~900× mais rápido · POC realizada</div>
+    <h1 class="reveal" style="font-size:clamp(58px,7.5vw,118px);">Vamos <em>construir</em>.</h1>
+    <p class="tagline reveal" style="font-size:clamp(20px,1.9vw,28px); max-width:42ch;">A implementação completa começa quando vocês decidirem.</p>
+    <div class="reveal" style="margin-top:48px; display:flex; align-items:center; gap:16px; font-family:var(--mono); font-size:13px; letter-spacing:1.5px; color:var(--text-3);">
+      <span style="width:32px;height:1px;background:var(--cyan-dim);"></span>
+      Marcelo Ramos &nbsp;·&nbsp; COO &nbsp;·&nbsp; marcelo@daltonlab.ai
+      <span style="width:32px;height:1px;background:var(--cyan-dim);"></span>
+    </div>
+  </section>
+
+
+</div>
+
+<div class="nav">
+  <button class="nav-btn" id="prev-btn" aria-label="Anterior">&#8592;</button>
+  <span class="nav-counter"><strong id="current">01</strong> / <span id="total">19</span></span>
+  <button class="nav-btn" id="next-btn" aria-label="Próximo">&#8594;</button>
+</div>
+
+<script>
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const total = 10; /* alvo final do deck */
+  const built = slides.length;
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('current');
+  const totalEl = document.getElementById('total');
+  if (totalEl) totalEl.textContent = total;
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  let current = 0;
+  function go(i) {
+    if (i < 0 || i >= built) return;
+    slides[current].classList.remove('active');
+    slides[current].classList.add('prev');
+    current = i;
+    slides[current].classList.remove('prev');
+    slides[current].classList.add('active');
+    progress.style.width = ((current + 1) / total * 100) + '%';
+    counter.textContent = String(current + 1).padStart(2, '0');
+    history.replaceState(null, '', '#' + (current + 1));
+  }
+  const hash = parseInt(window.location.hash.replace('#', ''), 10);
+  if (hash && hash >= 1 && hash <= built) { go(hash - 1); } else { progress.style.width = (1 / total * 100) + '%'; }
+  window.addEventListener('hashchange', function(){ const h = parseInt(window.location.hash.replace('#',''),10); if (h && h>=1 && h<=built) go(h-1); });
+  prevBtn.addEventListener('click', () => go(current - 1));
+  nextBtn.addEventListener('click', () => go(current + 1));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); go(current + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(current - 1); }
+    else if (e.key === 'Home') { go(0); }
+    else if (e.key === 'End') { go(built - 1); }
+    else if (e.key === 'f' || e.key === 'F') { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+    else if (/^\d$/.test(e.key)) { const n = parseInt(e.key, 10); if (n >= 1 && n <= built) go(n - 1); }
+  });
+})();
+
+/* ---- Slide 02 statistical visuals ---- */
+(function(){
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  function rnd(){ return Math.random(); }
+  function gauss(){ return (rnd()+rnd()+rnd()+rnd()-2)/2; } // ~normal, range ~[-1,1]
+
+  // distribution curve with mass under it + outlier on the tail
+  document.querySelectorAll('svg.dist').forEach(function(svg){
+    var W = 520, base = 250, cx = 195, sigma = 60, amp = 188;
+    function gy(x){ return base - amp * Math.exp(-((x-cx)*(x-cx))/(2*sigma*sigma)); }
+    function mk(tag, attrs){ var e = document.createElementNS(SVGNS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
+    // axis
+    svg.appendChild(mk('line', {class:'axis', x1:20, y1:base, x2:500, y2:base}));
+    // area + line path
+    var d = 'M 30 ' + base;
+    for (var x = 30; x <= 372; x += 3){ d += ' L ' + x + ' ' + gy(x).toFixed(1); }
+    var dLine = d;
+    d += ' L 372 ' + base + ' Z';
+    svg.appendChild(mk('path', {class:'curve-area', d:d}));
+    svg.appendChild(mk('path', {class:'curve-line', d:dLine}));
+    // mass dots under the curve
+    for (var i = 0; i < 60; i++){
+      var px = cx + gauss() * sigma * 1.15;
+      if (px < 36 || px > 366) continue;
+      var top = gy(px) + 5, bottom = base - 4;
+      if (bottom <= top) continue;
+      var py = top + rnd() * (bottom - top);
+      svg.appendChild(mk('circle', {class:'massdot', cx:px.toFixed(1), cy:py.toFixed(1), r:(1.6 + rnd()*1.2).toFixed(1)}));
+    }
+    // outlier on the far-right tail
+    var ox = 462, oy = base - 64;
+    svg.appendChild(mk('circle', {class:'out-ring', cx:ox, cy:oy, r:11}));
+    svg.appendChild(mk('circle', {class:'outdot', cx:ox, cy:oy, r:5.5}));
+    svg.appendChild(mk('text', {class:'clabel', x:ox, y:oy-18, 'text-anchor':'middle'}, )).textContent = 'o outlier';
+    var ml = mk('text', {class:'clabel muted', x:cx, y:base+20, 'text-anchor':'middle'}); ml.textContent = 'a grande massa'; svg.appendChild(ml);
+  });
+})();
+</script>
+</body>
+</html>

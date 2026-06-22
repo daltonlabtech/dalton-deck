@@ -1,0 +1,22 @@
+# render / preview artifacts
+_n*.png
+_s*.png
+_v*.png
+_m*.png
+_a*.png
+_b*.png
+_check.png
+_compare_ab.png
+_intro_check.png
+_imgs_view.png
+_mobile*.png
+_test_gemini*.png
+POC_Neogrid_deck*.png
+# experimentos / temporários
+_m_test.html
+index-a.html
+index-b.html
+_deployname.txt
+# saídas de build/deploy
+dist/
+deploy_*/
